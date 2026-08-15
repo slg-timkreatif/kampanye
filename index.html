@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Kreatif Kampanye - Tim Kreatif Selogiri</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/slg-timkreatif/app/refs/heads/main/1768315347206.png">
+    
     <!-- Script Tema Gelap/Terang Adaptif -->
     <script>
         try {
@@ -35,15 +38,20 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Fabric.js untuk Canvas -->
+    <!-- Fabric.js untuk Manipulasi Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 
     <style>
         body { -webkit-tap-highlight-color: transparent; }
+        
+        /* Background Pattern Modern */
         .bg-wave { background-color: #f8fafc; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cpath d='M0,20 Q25,0 50,20 T100,20' fill='none' stroke='%23cbd5e1' stroke-width='1' stroke-opacity='0.4'/%3E%3C/svg%3E"); background-size: 100px 40px; }
         .dark .bg-wave { background-color: #0f172a; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cpath d='M0,20 Q25,0 50,20 T100,20' fill='none' stroke='%23334155' stroke-width='1' stroke-opacity='0.4'/%3E%3C/svg%3E"); }
         
+        /* Memastikan Canvas responsif di dalam kontainernya */
         .canvas-container, .canvas-container canvas { width: 100% !important; height: 100% !important; }
+        
+        /* Mencegah scroll saat modal terbuka */
         .modal-open { overflow: hidden; }
     </style>
 </head>
@@ -51,7 +59,7 @@
 
     <main class="flex-1 w-full max-w-6xl mx-auto px-5 py-8 md:py-12 z-10">
         
-        <!-- Header -->
+        <!-- Header Utama -->
         <div class="text-center mb-8 md:mb-12">
             <h1 class="font-extrabold text-3xl md:text-4xl text-slate-900 dark:text-white tracking-tight">Kreatif Kampanye</h1>
             <p class="text-[11px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mt-2">Satu Bingkai, Beragam Cerita.</p>
@@ -59,7 +67,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
             
-            <!-- KOLOM KIRI: Info & Preview -->
+            <!-- KOLOM KIRI: Informasi & Pratinjau Bingkai -->
             <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200 dark:border-slate-700">
                 <div class="mb-6 border-b border-slate-100 dark:border-slate-700/50 pb-5">
                     <div class="flex items-center gap-2 mb-2">
@@ -71,7 +79,7 @@
 
                 <div>
                     <h3 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3 pl-1">Pratinjau Bingkai</h3>
-                    <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-2 md:p-3 border border-slate-100 dark:border-slate-700/50 shadow-inner flex justify-center">
+                    <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-2 md:p-3 border border-slate-100 dark:border-slate-700/50 shadow-inner flex justify-center min-h-[200px]">
                         <img id="preview-img" src="" class="w-full max-w-[250px] h-auto object-cover rounded-xl shadow-sm border border-slate-200 dark:border-slate-700" style="display: none;">
                         <div id="loading-preview" class="py-12 flex flex-col items-center justify-center text-slate-400">
                             <i data-lucide="image" class="w-10 h-10 mb-2 opacity-50"></i>
@@ -81,38 +89,41 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: Ruang Kerja -->
+            <!-- KOLOM KANAN: Ruang Kerja (Awalnya diburamkan sampai data siap) -->
             <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col pointer-events-none opacity-50 transition-all duration-500" id="area-kerja">
                 
-                <!-- Opsi Sumber Foto -->
+                <!-- Opsi Sumber Foto: Upload atau Selfie -->
                 <div class="grid grid-cols-2 gap-3 mb-5">
-                    <label for="upload-foto" class="w-full bg-slate-900 dark:bg-blue-600 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center gap-2 cursor-pointer">
+                    <label for="upload-foto" class="w-full bg-slate-900 dark:bg-blue-600 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 cursor-pointer">
                         <i data-lucide="image-plus" class="w-4 h-4 md:w-5 md:h-5"></i><span>Pilih Foto</span>
                     </label>
                     <input type="file" id="upload-foto" accept="image/png, image/jpeg, image/jpg" class="hidden">
 
-                    <button id="btn-selfie" class="w-full bg-emerald-600 dark:bg-emerald-500 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center gap-2">
+                    <button id="btn-selfie" class="w-full bg-emerald-600 dark:bg-emerald-500 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
                         <i data-lucide="camera" class="w-4 h-4 md:w-5 md:h-5"></i><span>Ambil Selfie</span>
                     </button>
                 </div>
 
-                <!-- Canvas -->
+                <!-- Area Canvas Penggabungan -->
                 <div class="w-full aspect-square border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-50 dark:bg-slate-900 relative flex justify-center items-center mb-5 group">
                     <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 opacity-50 group-hover:opacity-10 transition-opacity pointer-events-none z-0">
                         <i data-lucide="move" class="w-8 h-8 mb-2"></i>
-                        <span class="text-[10px] font-bold uppercase tracking-widest">Area Geser & Zoom</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Cubit Untuk Menyesuaikan Foto</span>
                     </div>
-                    <div class="w-full h-full relative z-10"><canvas id="twibbon-canvas"></canvas></div>
+                    <div class="w-full h-full relative z-10">
+                        <canvas id="twibbon-canvas"></canvas>
+                    </div>
                 </div>
 
-                <button id="btn-download" class="w-full bg-blue-600 text-white font-bold py-3.5 md:py-4 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center gap-2 mt-auto">
+                <!-- Tombol Unduh Akhir -->
+                <button id="btn-download" class="w-full bg-blue-600 text-white font-bold py-3.5 md:py-4 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 mt-auto">
                     <i data-lucide="download" class="w-5 h-5"></i><span>Unduh Hasil Karya</span>
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- Modal WebRTC Kamera -->
+    <!-- Modal WebRTC Kamera (Muncul saat tombol Selfie ditekan) -->
     <div id="kamera-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4 transition-opacity">
         <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-[2rem] w-full max-w-sm flex flex-col items-center shadow-2xl relative border border-slate-200 dark:border-slate-700">
             <button id="close-kamera" class="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-full hover:bg-slate-200 transition">
@@ -121,7 +132,7 @@
             <h3 class="font-extrabold text-slate-800 dark:text-white mb-4 text-lg mt-2">Ambil Selfie</h3>
             
             <div class="w-full aspect-square bg-black rounded-2xl overflow-hidden mb-4 relative border-2 border-slate-200 dark:border-slate-700">
-                <!-- Transform scale-x-[-1] membuat efek cermin -->
+                <!-- Transform scale-x-[-1] membuat efek layaknya cermin -->
                 <video id="kamera-stream" class="w-full h-full object-cover transform scale-x-[-1]" autoplay playsinline></video>
             </div>
             
@@ -143,28 +154,43 @@
         </button>
     </footer>
 
+    <!-- LOGIKA JAVASCRIPT -->
     <script>
+        // Render ikon Lucide ke dalam HTML
         lucide.createIcons();
+        
+        // Fungsi penggantian tema Manual
         function toggleTheme() {
             const html = document.documentElement;
-            if (html.classList.contains('dark')) { html.classList.remove('dark'); localStorage.setItem('theme', 'light'); } 
-            else { html.classList.add('dark'); localStorage.setItem('theme', 'dark'); }
+            if (html.classList.contains('dark')) { 
+                html.classList.remove('dark'); 
+                localStorage.setItem('theme', 'light'); 
+            } else { 
+                html.classList.add('dark'); 
+                localStorage.setItem('theme', 'dark'); 
+            }
         }
 
         // ==========================================
-        // KONFIGURASI API & CANVAS
+        // KONFIGURASI API & INISIALISASI CANVAS
         // ==========================================
-        // URL Web App GAS Anda
+        // URL Web App GAS Final Anda
         const urlWebAppGAS = "https://script.google.com/macros/s/AKfycbyZ0pYMppaNyrD9TTmw7iOUx685WiJwMGlE8nivtzQLphXCM3Jg87Z5ZTSSbSS0Ed2R/exec";
         
         const urlParams = new URLSearchParams(window.location.search);
         const idKampanye = urlParams.get('id');
 
-        const canvas = new fabric.Canvas('twibbon-canvas', { width: 1080, height: 1080, preserveObjectStacking: true });
-        let fileBingkaiURL = ""; // Akan diisi dari database
+        // Resolusi tinggi agar hasil download jernih dan tidak pecah
+        const canvas = new fabric.Canvas('twibbon-canvas', { 
+            width: 1080, 
+            height: 1080, 
+            preserveObjectStacking: true 
+        });
+        
+        let fileBingkaiURL = "";
 
         // ==========================================
-        // FETCH DATA DARI GOOGLE SHEETS
+        // FUNGSI MENARIK DATA (FETCH) DARI SPREADSHEET
         // ==========================================
         if (idKampanye) {
             fetch(`${urlWebAppGAS}?id=${idKampanye}`)
@@ -174,11 +200,14 @@
                     indikator.classList.remove('animate-pulse', 'bg-yellow-500');
                     
                     if (data.status === 'success') {
+                        // Data ditemukan, tampilkan UI
                         indikator.classList.add('bg-blue-600');
                         document.getElementById('judul-kampanye').innerText = data.nama;
                         document.getElementById('deskripsi-kampanye').innerText = data.deskripsi;
                         
                         fileBingkaiURL = data.url_bingkai;
+                        
+                        // Menangani Preview Gambar
                         const imgPreview = document.getElementById('preview-img');
                         imgPreview.src = fileBingkaiURL;
                         imgPreview.onload = () => {
@@ -186,11 +215,11 @@
                             imgPreview.style.display = "block";
                         };
 
-                        // Aktifkan Area Kerja
+                        // Membuka kunci Area Kerja (hilangkan efek blur)
                         const areaKerja = document.getElementById('area-kerja');
                         areaKerja.classList.remove('pointer-events-none', 'opacity-50');
 
-                        // Muat Bingkai ke Canvas
+                        // Masukkan bingkai dari URL CDN ke dalam Canvas sebagai lapisan Overlay
                         fabric.Image.fromURL(fileBingkaiURL, function(img) {
                             canvas.setOverlayImage(img, canvas.renderAll.bind(canvas), {
                                 scaleX: canvas.width / img.width,
@@ -200,6 +229,7 @@
                         }, { crossOrigin: 'anonymous' });
 
                     } else {
+                        // Data tidak valid atau non-aktif
                         indikator.classList.add('bg-red-500');
                         document.getElementById('judul-kampanye').innerText = "Gagal Memuat";
                         document.getElementById('deskripsi-kampanye').innerText = data.message;
@@ -208,15 +238,19 @@
                     }
                 })
                 .catch(error => {
+                    // Penanganan Error Jaringan
+                    document.getElementById('status-indikator').classList.replace('bg-yellow-500', 'bg-red-500');
+                    document.getElementById('status-indikator').classList.remove('animate-pulse');
                     document.getElementById('judul-kampanye').innerText = "Koneksi Terputus";
                     document.getElementById('deskripsi-kampanye').innerText = "Pastikan Anda terhubung ke internet.";
                 });
         } else {
+            // Jika link dibuka tanpa parameter ?id=
             document.getElementById('status-indikator').classList.replace('bg-yellow-500', 'bg-slate-400');
             document.getElementById('status-indikator').classList.remove('animate-pulse');
             document.getElementById('judul-kampanye').innerText = "Selamat Datang";
-            document.getElementById('deskripsi-kampanye').innerText = "Silakan akses halaman ini melalui tautan kampanye yang dibagikan panitia.";
-            document.getElementById('loading-preview').innerHTML = `<i data-lucide="link" class="w-10 h-10 mb-2 opacity-50"></i><span class="text-xs font-bold uppercase tracking-widest">ID URL KOSONG</span>`;
+            document.getElementById('deskripsi-kampanye').innerText = "Silakan akses halaman ini melalui tautan kampanye yang dibagikan oleh panitia.";
+            document.getElementById('loading-preview').innerHTML = `<i data-lucide="link" class="w-10 h-10 mb-2 opacity-50"></i><span class="text-xs font-bold uppercase tracking-widest text-center px-4">Parameter ID Kosong</span>`;
             lucide.createIcons();
         }
 
@@ -226,10 +260,13 @@
         document.getElementById('upload-foto').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
+            
             const reader = new FileReader();
-            reader.onload = function(event) { renderKeCanvas(event.target.result); };
+            reader.onload = function(event) { 
+                renderKeCanvas(event.target.result); 
+            };
             reader.readAsDataURL(file);
-            e.target.value = ""; // Reset input
+            e.target.value = ""; // Membersihkan input setelah di-load
         });
 
         // ==========================================
@@ -241,21 +278,27 @@
         
         document.getElementById('btn-selfie').addEventListener('click', async () => {
             modalKamera.classList.remove('hidden');
+            modalKamera.classList.add('flex'); // Pastikan flexbox aktif
             document.body.classList.add('modal-open');
+            
             try {
+                // Mencoba memanggil kamera depan
                 streamKamera = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'user', width: { ideal: 1080 }, height: { ideal: 1080 } } 
                 });
                 videoElemen.srcObject = streamKamera;
             } catch (err) {
-                alert("Gagal mengakses kamera. Pastikan koneksi aman (HTTPS) dan izin diberikan.");
+                alert("Gagal mengakses kamera. Pastikan koneksi aman (HTTPS) dan izin kamera telah diberikan.");
                 matikanKamera();
             }
         });
 
         const matikanKamera = () => {
-            if (streamKamera) streamKamera.getTracks().forEach(track => track.stop());
+            if (streamKamera) {
+                streamKamera.getTracks().forEach(track => track.stop());
+            }
             modalKamera.classList.add('hidden');
+            modalKamera.classList.remove('flex');
             document.body.classList.remove('modal-open');
         };
 
@@ -267,9 +310,11 @@
             tempCanvas.height = videoElemen.videoHeight;
             const ctx = tempCanvas.getContext('2d');
             
-            // Mirror image (Balik horizontal)
+            // Membalikkan gambar (Mirror) agar foto tidak terbalik secara horizontal
             ctx.translate(tempCanvas.width, 0);
             ctx.scale(-1, 1);
+            
+            // Menyalin frame dari video ke dalam canvas
             ctx.drawImage(videoElemen, 0, 0, tempCanvas.width, tempCanvas.height);
             
             renderKeCanvas(tempCanvas.toDataURL('image/png'));
@@ -277,24 +322,38 @@
         });
 
         // ==========================================
-        // FUNGSI RENDER & DOWNLOAD
+        // FUNGSI EKSEKUSI (RENDER KE CANVAS UTAMA)
         // ==========================================
         function renderKeCanvas(dataUrl) {
             fabric.Image.fromURL(dataUrl, function(img) {
+                // Mengecilkan skala foto awal agar tidak memenuhi seluruh layar
                 const skala = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
                 img.scale(skala);
+                
                 canvas.centerObject(img);
-                canvas.clear(); 
+                
+                // PERBAIKAN: Menghapus objek foto sebelumnya tanpa menghapus bingkai (overlay)
+                canvas.getObjects().forEach(function(obj) {
+                    canvas.remove(obj);
+                });
+                
                 canvas.add(img);
-                canvas.setActiveObject(img);
+                canvas.setActiveObject(img); // Langsung mengaktifkan binding rotasi/geser
             });
         }
 
+        // ==========================================
+        // FUNGSI DOWNLOAD (EKSPOR)
+        // ==========================================
         document.getElementById('btn-download').addEventListener('click', function() {
+            // Menonaktifkan garis kotak seleksi (bounding box) agar tidak ikut terunduh
             canvas.discardActiveObject(); 
             canvas.renderAll();
             
+            // Konversi canvas menjadi gambar PNG murni
             const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
+            
+            // Memanggil fitur unduh di browser
             const link = document.createElement('a');
             link.download = `Kampanye-${idKampanye || 'Kreatif'}.png`;
             link.href = dataURL;
