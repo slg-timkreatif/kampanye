@@ -43,10 +43,15 @@
 
     <style>
         body { -webkit-tap-highlight-color: transparent; }
+        
+        /* Background Pattern Modern */
         .bg-wave { background-color: #f8fafc; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cpath d='M0,20 Q25,0 50,20 T100,20' fill='none' stroke='%23cbd5e1' stroke-width='1' stroke-opacity='0.4'/%3E%3C/svg%3E"); background-size: 100px 40px; }
         .dark .bg-wave { background-color: #0f172a; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cpath d='M0,20 Q25,0 50,20 T100,20' fill='none' stroke='%23334155' stroke-width='1' stroke-opacity='0.4'/%3E%3C/svg%3E"); }
         
+        /* Memastikan Canvas responsif di dalam kontainernya */
         .canvas-container, .canvas-container canvas { width: 100% !important; height: 100% !important; }
+        
+        /* Mencegah scroll saat modal terbuka */
         .modal-open { overflow: hidden; }
         
         /* Transisi Modal Halus */
@@ -58,7 +63,7 @@
 
     <main class="flex-1 w-full max-w-6xl mx-auto px-5 py-8 md:py-12 z-10">
         
-        <!-- Header -->
+        <!-- Header Utama -->
         <div class="text-center mb-8 md:mb-12">
             <h1 class="font-extrabold text-3xl md:text-4xl text-slate-900 dark:text-white tracking-tight">Kreatif Kampanye</h1>
             <p class="text-[11px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mt-2">Satu Bingkai, Beragam Cerita.</p>
@@ -91,6 +96,7 @@
             <!-- KOLOM KANAN: Ruang Kerja -->
             <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col pointer-events-none opacity-50 transition-all duration-500" id="area-kerja">
                 
+                <!-- Opsi Sumber Foto -->
                 <div class="grid grid-cols-2 gap-3 mb-5">
                     <label for="upload-foto" class="w-full bg-slate-900 dark:bg-blue-600 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 cursor-pointer">
                         <i data-lucide="image-plus" class="w-4 h-4 md:w-5 md:h-5"></i><span>Pilih Foto</span>
@@ -102,18 +108,20 @@
                     </button>
                 </div>
 
-                <div class="w-full aspect-square border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-50 dark:bg-slate-900 relative flex justify-center items-center mb-5 group">
+                <!-- Area Canvas Penggabungan (Menggunakan id="canvas-wrapper" untuk dinamis) -->
+                <div id="canvas-wrapper" class="w-full border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-50 dark:bg-slate-900 relative flex justify-center items-center mb-5 group">
                     <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 opacity-50 group-hover:opacity-10 transition-opacity pointer-events-none z-0">
                         <i data-lucide="move" class="w-8 h-8 mb-2"></i>
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Cubit Untuk Menyesuaikan Foto</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Tarik Sudut Untuk Menyesuaikan Foto</span>
                     </div>
                     <div class="w-full h-full relative z-10">
                         <canvas id="twibbon-canvas"></canvas>
                     </div>
                 </div>
 
+                <!-- Tombol Unduh Akhir -->
                 <div class="mt-auto">
-                    <button id="btn-download" class="w-full bg-blue-600 dark:bg-blue-500 text-white text-[13px] md:text-sm font-bold py-4 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
+                    <button id="btn-download" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
                         <i data-lucide="download" class="w-5 h-5"></i><span>Unduh Karya</span>
                     </button>
                 </div>
@@ -246,19 +254,21 @@
         const urlParams = new URLSearchParams(window.location.search);
         const idKampanye = urlParams.get('id');
 
+        // Menginisialisasi Canvas (Resolusi & Kualitas)
         const canvas = new fabric.Canvas('twibbon-canvas', { 
             width: 1080, 
             height: 1080, 
             preserveObjectStacking: true,
-            controlsAboveOverlay: true 
+            controlsAboveOverlay: true // PENTING: Memastikan kontrol (zoom/geser) ada di atas bingkai
         });
 
+        // Mempercantik titik kontrol Canvas untuk pengguna HP
         fabric.Object.prototype.set({
             transparentCorners: false,
             cornerColor: '#2563eb',
             cornerStrokeColor: '#ffffff',
             borderColor: '#2563eb',
-            cornerSize: 40, 
+            cornerSize: 40, // Diperbesar agar mudah disentuh jari
             padding: 10,
             cornerStyle: 'circle',
             borderDashArray: [7, 7]
@@ -291,13 +301,29 @@
 
                         document.getElementById('area-kerja').classList.remove('pointer-events-none', 'opacity-50');
 
+                        // Masukkan bingkai dari URL CDN ke dalam Canvas sebagai lapisan Overlay
                         fabric.Image.fromURL(fileBingkaiURL, function(img) {
+                            
+                            // 1. Hitung rasio gambar asli
+                            const rasio = img.height / img.width;
+                            
+                            // 2. Sesuaikan ukuran internal canvas secara dinamis (Resolusi optimal)
+                            const lebarCanvas = 1080;
+                            const tinggiCanvas = lebarCanvas * rasio;
+                            canvas.setWidth(lebarCanvas);
+                            canvas.setHeight(tinggiCanvas);
+                            
+                            // 3. Ubah rasio kotak pembungkus (wrapper) di UI HTML
+                            document.getElementById('canvas-wrapper').style.aspectRatio = img.width + " / " + img.height;
+
+                            // 4. Pasang bingkai ke canvas
                             canvas.setOverlayImage(img, canvas.renderAll.bind(canvas), {
                                 scaleX: canvas.width / img.width,
                                 scaleY: canvas.height / img.height,
                                 crossOrigin: 'anonymous'
                             });
                         }, { crossOrigin: 'anonymous' });
+
                     } else {
                         indikator.classList.add('bg-red-500');
                         document.getElementById('judul-kampanye').innerText = "Gagal Memuat";
@@ -317,10 +343,10 @@
             document.getElementById('status-indikator').classList.replace('bg-yellow-500', 'bg-slate-400');
             document.getElementById('status-indikator').classList.remove('animate-pulse');
             document.getElementById('judul-kampanye').innerText = "Selamat Datang";
-            document.getElementById('deskripsi-kampanye').innerText = "Silakan akses halaman ini melalui tautan kampanye yang dibagikan.";
+            document.getElementById('deskripsi-kampanye').innerText = "Silakan akses halaman ini melalui tautan kampanye yang dibagikan panitia.";
             document.getElementById('loading-preview').innerHTML = `<i data-lucide="link" class="w-10 h-10 mb-2 opacity-50"></i><span class="text-xs font-bold uppercase tracking-widest text-center px-4">Parameter ID Kosong</span>`;
             lucide.createIcons();
-            showAlert('info', 'ID Tidak Ditemukan', 'Gunakan URL yang benar dengan format "?id=nama-kampanye".');
+            showAlert('info', 'ID Tidak Ditemukan', 'Gunakan URL yang benar dengan menambahkan akhiran parameter "?id=nama-kampanye".');
         }
 
         // ==========================================
@@ -372,7 +398,7 @@
                 img.scale(skala);
                 canvas.centerObject(img);
                 
-                // Menghapus objek foto sebelumnya tanpa menghapus bingkai
+                // Menghapus objek foto sebelumnya tanpa menghapus bingkai overlay
                 canvas.getObjects().forEach(function(obj) { 
                     canvas.remove(obj); 
                 });
@@ -388,7 +414,11 @@
         document.getElementById('btn-download').addEventListener('click', function() {
             canvas.discardActiveObject(); 
             canvas.renderAll();
+            
+            // Konversi canvas menjadi gambar PNG murni
             const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
+            
+            // Memanggil fitur unduh di browser
             const link = document.createElement('a');
             link.download = `Kampanye-${idKampanye || 'Kreatif'}.png`;
             link.href = dataURL;
