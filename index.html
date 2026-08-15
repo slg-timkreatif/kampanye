@@ -91,7 +91,7 @@
             <!-- KOLOM KANAN: Ruang Kerja -->
             <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col pointer-events-none opacity-50 transition-all duration-500" id="area-kerja">
                 
-                <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="grid grid-cols-2 gap-3 mb-5">
                     <label for="upload-foto" class="w-full bg-slate-900 dark:bg-blue-600 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 cursor-pointer">
                         <i data-lucide="image-plus" class="w-4 h-4 md:w-5 md:h-5"></i><span>Pilih Foto</span>
                     </label>
@@ -102,23 +102,10 @@
                     </button>
                 </div>
 
-                <!-- Input Tambah Teks Nama -->
-                <div class="flex items-center gap-2 mb-5">
-                    <div class="relative flex-1">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-lucide="type" class="w-4 h-4 text-slate-400"></i>
-                        </div>
-                        <input type="text" id="input-nama-peserta" placeholder="Ketik nama Anda di sini..." class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
-                    <button id="btn-tambah-teks" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl shadow-sm font-bold text-sm transition-all active:scale-95 whitespace-nowrap">
-                        Tambah
-                    </button>
-                </div>
-
                 <div class="w-full aspect-square border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-50 dark:bg-slate-900 relative flex justify-center items-center mb-5 group">
                     <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 opacity-50 group-hover:opacity-10 transition-opacity pointer-events-none z-0">
                         <i data-lucide="move" class="w-8 h-8 mb-2"></i>
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Cubit Untuk Menyesuaikan Objek</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Cubit Untuk Menyesuaikan Foto</span>
                     </div>
                     <div class="w-full h-full relative z-10">
                         <canvas id="twibbon-canvas"></canvas>
@@ -385,70 +372,15 @@
                 img.scale(skala);
                 canvas.centerObject(img);
                 
-                // Hanya hapus objek foto lama (biarkan teks jika ada)
+                // Menghapus objek foto sebelumnya tanpa menghapus bingkai
                 canvas.getObjects().forEach(function(obj) { 
-                    if (obj.customId === 'foto-user') {
-                        canvas.remove(obj); 
-                    }
+                    canvas.remove(obj); 
                 });
                 
-                img.set({ customId: 'foto-user' });
-                
-                // Pastikan foto selalu ada di layer paling bawah (di bawah teks dan bingkai)
                 canvas.add(img);
-                img.sendToBack(); 
                 canvas.setActiveObject(img);
             });
         }
-
-        // ==========================================
-        // LOGIKA INJEKSI TEKS DINAMIS
-        // ==========================================
-        document.getElementById('btn-tambah-teks').addEventListener('click', function() {
-            const inputTeks = document.getElementById('input-nama-peserta');
-            const teksValue = inputTeks.value.trim();
-            
-            if (teksValue === '') {
-                showAlert('info', 'Teks Kosong', 'Silakan ketik nama atau teks terlebih dahulu.');
-                return;
-            }
-
-            // Membuat objek teks Fabric.js yang premium (dengan shadow)
-            const teksBaru = new fabric.Text(teksValue, {
-                fontFamily: 'Plus Jakarta Sans',
-                fontSize: 60,
-                fill: '#ffffff', // Warna teks putih
-                fontWeight: 'bold',
-                textAlign: 'center',
-                shadow: new fabric.Shadow({
-                    color: 'rgba(0,0,0,0.6)', // Bayangan gelap agar teks terbaca di background apapun
-                    blur: 10,
-                    offsetX: 3,
-                    offsetY: 3
-                }),
-                customId: 'teks-user'
-            });
-
-            // Menempatkan teks di tengah tapi agak ke bawah sedikit
-            canvas.centerObject(teksBaru);
-            teksBaru.set({ top: canvas.height - (canvas.height * 0.25) });
-            
-            canvas.add(teksBaru);
-            
-            // Teks harus ada di atas foto, jadi kita bring to front (meski tetap di bawah overlay bingkai)
-            teksBaru.bringToFront();
-            canvas.setActiveObject(teksBaru);
-            
-            // Kosongkan input setelah ditambah
-            inputTeks.value = '';
-        });
-
-        // Tambah teks dengan menekan tombol Enter pada keyboard
-        document.getElementById('input-nama-peserta').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('btn-tambah-teks').click();
-            }
-        });
 
         // ==========================================
         // LOGIKA UNDUH KARYA
