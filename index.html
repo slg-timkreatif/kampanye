@@ -8,7 +8,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/slg-timkreatif/app/refs/heads/main/1768315347206.png">
     
-    <!-- Script Tema Gelap/Terang Adaptif -->
+    <!-- Script Tema Gelap/Terang -->
     <script>
         try {
             const saved = localStorage.getItem('theme');
@@ -40,18 +40,16 @@
     
     <!-- Fabric.js untuk Manipulasi Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    
+    <!-- Imgly Background Removal (AI Client-Side) -->
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/browser/umd/index.min.js"></script>
 
     <style>
         body { -webkit-tap-highlight-color: transparent; }
-        
-        /* Background Pattern Modern */
         .bg-wave { background-color: #f8fafc; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cpath d='M0,20 Q25,0 50,20 T100,20' fill='none' stroke='%23cbd5e1' stroke-width='1' stroke-opacity='0.4'/%3E%3C/svg%3E"); background-size: 100px 40px; }
         .dark .bg-wave { background-color: #0f172a; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cpath d='M0,20 Q25,0 50,20 T100,20' fill='none' stroke='%23334155' stroke-width='1' stroke-opacity='0.4'/%3E%3C/svg%3E"); }
         
-        /* Memastikan Canvas responsif di dalam kontainernya */
         .canvas-container, .canvas-container canvas { width: 100% !important; height: 100% !important; }
-        
-        /* Mencegah scroll saat modal terbuka */
         .modal-open { overflow: hidden; }
     </style>
 </head>
@@ -89,10 +87,10 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: Ruang Kerja (Awalnya diburamkan sampai data siap) -->
+            <!-- KOLOM KANAN: Ruang Kerja -->
             <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col pointer-events-none opacity-50 transition-all duration-500" id="area-kerja">
                 
-                <!-- Opsi Sumber Foto: Upload atau Selfie -->
+                <!-- Opsi Sumber Foto -->
                 <div class="grid grid-cols-2 gap-3 mb-5">
                     <label for="upload-foto" class="w-full bg-slate-900 dark:bg-blue-600 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 cursor-pointer">
                         <i data-lucide="image-plus" class="w-4 h-4 md:w-5 md:h-5"></i><span>Pilih Foto</span>
@@ -115,15 +113,20 @@
                     </div>
                 </div>
 
-                <!-- Tombol Unduh Akhir -->
-                <button id="btn-download" class="w-full bg-blue-600 text-white font-bold py-3.5 md:py-4 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 mt-auto">
-                    <i data-lucide="download" class="w-5 h-5"></i><span>Unduh Hasil Karya</span>
-                </button>
+                <!-- Aksi Tambahan: Hapus BG & Unduh -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-auto">
+                    <button id="btn-hapus-bg" class="w-full bg-purple-600 dark:bg-purple-500 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
+                        <i data-lucide="sparkles" class="w-4 h-4 md:w-5 md:h-5"></i><span>Hapus Latar (AI)</span>
+                    </button>
+                    <button id="btn-download" class="w-full bg-blue-600 dark:bg-blue-500 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4 md:w-5 md:h-5"></i><span>Unduh Karya</span>
+                    </button>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal WebRTC Kamera (Muncul saat tombol Selfie ditekan) -->
+    <!-- Modal WebRTC Kamera -->
     <div id="kamera-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4 transition-opacity">
         <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-[2rem] w-full max-w-sm flex flex-col items-center shadow-2xl relative border border-slate-200 dark:border-slate-700">
             <button id="close-kamera" class="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-full hover:bg-slate-200 transition">
@@ -132,7 +135,6 @@
             <h3 class="font-extrabold text-slate-800 dark:text-white mb-4 text-lg mt-2">Ambil Selfie</h3>
             
             <div class="w-full aspect-square bg-black rounded-2xl overflow-hidden mb-4 relative border-2 border-slate-200 dark:border-slate-700">
-                <!-- Transform scale-x-[-1] membuat efek layaknya cermin -->
                 <video id="kamera-stream" class="w-full h-full object-cover transform scale-x-[-1]" autoplay playsinline></video>
             </div>
             
@@ -156,41 +158,44 @@
 
     <!-- LOGIKA JAVASCRIPT -->
     <script>
-        // Render ikon Lucide ke dalam HTML
         lucide.createIcons();
-        
-        // Fungsi penggantian tema Manual
         function toggleTheme() {
             const html = document.documentElement;
-            if (html.classList.contains('dark')) { 
-                html.classList.remove('dark'); 
-                localStorage.setItem('theme', 'light'); 
-            } else { 
-                html.classList.add('dark'); 
-                localStorage.setItem('theme', 'dark'); 
-            }
+            if (html.classList.contains('dark')) { html.classList.remove('dark'); localStorage.setItem('theme', 'light'); } 
+            else { html.classList.add('dark'); localStorage.setItem('theme', 'dark'); }
         }
 
         // ==========================================
         // KONFIGURASI API & INISIALISASI CANVAS
         // ==========================================
-        // URL Web App GAS Final Anda
         const urlWebAppGAS = "https://script.google.com/macros/s/AKfycbyZ0pYMppaNyrD9TTmw7iOUx685WiJwMGlE8nivtzQLphXCM3Jg87Z5ZTSSbSS0Ed2R/exec";
-        
         const urlParams = new URLSearchParams(window.location.search);
         const idKampanye = urlParams.get('id');
 
-        // Resolusi tinggi agar hasil download jernih dan tidak pecah
+        // Resolusi tinggi & memastikan titik kontrol ada di atas bingkai
         const canvas = new fabric.Canvas('twibbon-canvas', { 
             width: 1080, 
             height: 1080, 
-            preserveObjectStacking: true 
+            preserveObjectStacking: true,
+            controlsAboveOverlay: true // Penting agar bisa di-zoom
+        });
+
+        // Mempercantik titik kontrol Canvas untuk pengguna HP
+        fabric.Object.prototype.set({
+            transparentCorners: false,
+            cornerColor: '#2563eb',
+            cornerStrokeColor: '#ffffff',
+            borderColor: '#2563eb',
+            cornerSize: 40, // Diperbesar agar mudah disentuh jari
+            padding: 10,
+            cornerStyle: 'circle',
+            borderDashArray: [7, 7]
         });
         
         let fileBingkaiURL = "";
 
         // ==========================================
-        // FUNGSI MENARIK DATA (FETCH) DARI SPREADSHEET
+        // FETCH DATA DARI GOOGLE SHEETS
         // ==========================================
         if (idKampanye) {
             fetch(`${urlWebAppGAS}?id=${idKampanye}`)
@@ -200,14 +205,11 @@
                     indikator.classList.remove('animate-pulse', 'bg-yellow-500');
                     
                     if (data.status === 'success') {
-                        // Data ditemukan, tampilkan UI
                         indikator.classList.add('bg-blue-600');
                         document.getElementById('judul-kampanye').innerText = data.nama;
                         document.getElementById('deskripsi-kampanye').innerText = data.deskripsi;
                         
                         fileBingkaiURL = data.url_bingkai;
-                        
-                        // Menangani Preview Gambar
                         const imgPreview = document.getElementById('preview-img');
                         imgPreview.src = fileBingkaiURL;
                         imgPreview.onload = () => {
@@ -215,11 +217,8 @@
                             imgPreview.style.display = "block";
                         };
 
-                        // Membuka kunci Area Kerja (hilangkan efek blur)
-                        const areaKerja = document.getElementById('area-kerja');
-                        areaKerja.classList.remove('pointer-events-none', 'opacity-50');
+                        document.getElementById('area-kerja').classList.remove('pointer-events-none', 'opacity-50');
 
-                        // Masukkan bingkai dari URL CDN ke dalam Canvas sebagai lapisan Overlay
                         fabric.Image.fromURL(fileBingkaiURL, function(img) {
                             canvas.setOverlayImage(img, canvas.renderAll.bind(canvas), {
                                 scaleX: canvas.width / img.width,
@@ -227,25 +226,20 @@
                                 crossOrigin: 'anonymous'
                             });
                         }, { crossOrigin: 'anonymous' });
-
                     } else {
-                        // Data tidak valid atau non-aktif
                         indikator.classList.add('bg-red-500');
                         document.getElementById('judul-kampanye').innerText = "Gagal Memuat";
                         document.getElementById('deskripsi-kampanye').innerText = data.message;
                         document.getElementById('loading-preview').innerHTML = `<i data-lucide="alert-circle" class="w-10 h-10 mb-2 opacity-50 text-red-500"></i><span class="text-xs font-bold uppercase tracking-widest text-red-500">Error</span>`;
                         lucide.createIcons();
                     }
-                })
-                .catch(error => {
-                    // Penanganan Error Jaringan
+                }).catch(error => {
                     document.getElementById('status-indikator').classList.replace('bg-yellow-500', 'bg-red-500');
                     document.getElementById('status-indikator').classList.remove('animate-pulse');
                     document.getElementById('judul-kampanye').innerText = "Koneksi Terputus";
                     document.getElementById('deskripsi-kampanye').innerText = "Pastikan Anda terhubung ke internet.";
                 });
         } else {
-            // Jika link dibuka tanpa parameter ?id=
             document.getElementById('status-indikator').classList.replace('bg-yellow-500', 'bg-slate-400');
             document.getElementById('status-indikator').classList.remove('animate-pulse');
             document.getElementById('judul-kampanye').innerText = "Selamat Datang";
@@ -255,48 +249,36 @@
         }
 
         // ==========================================
-        // LOGIKA UPLOAD FOTO (GALERI)
+        // LOGIKA UPLOAD FOTO & SELFIE
         // ==========================================
         document.getElementById('upload-foto').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
             const reader = new FileReader();
-            reader.onload = function(event) { 
-                renderKeCanvas(event.target.result); 
-            };
+            reader.onload = function(event) { renderKeCanvas(event.target.result); };
             reader.readAsDataURL(file);
-            e.target.value = ""; // Membersihkan input setelah di-load
+            e.target.value = ""; 
         });
 
-        // ==========================================
-        // LOGIKA KAMERA (SELFIE WEBRTC)
-        // ==========================================
         let streamKamera = null;
         const modalKamera = document.getElementById('kamera-modal');
         const videoElemen = document.getElementById('kamera-stream');
         
         document.getElementById('btn-selfie').addEventListener('click', async () => {
             modalKamera.classList.remove('hidden');
-            modalKamera.classList.add('flex'); // Pastikan flexbox aktif
+            modalKamera.classList.add('flex');
             document.body.classList.add('modal-open');
-            
             try {
-                // Mencoba memanggil kamera depan
-                streamKamera = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'user', width: { ideal: 1080 }, height: { ideal: 1080 } } 
-                });
+                streamKamera = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1080 }, height: { ideal: 1080 } } });
                 videoElemen.srcObject = streamKamera;
             } catch (err) {
-                alert("Gagal mengakses kamera. Pastikan koneksi aman (HTTPS) dan izin kamera telah diberikan.");
+                alert("Gagal mengakses kamera. Pastikan koneksi aman (HTTPS) dan izin kamera diberikan.");
                 matikanKamera();
             }
         });
 
         const matikanKamera = () => {
-            if (streamKamera) {
-                streamKamera.getTracks().forEach(track => track.stop());
-            }
+            if (streamKamera) streamKamera.getTracks().forEach(track => track.stop());
             modalKamera.classList.add('hidden');
             modalKamera.classList.remove('flex');
             document.body.classList.remove('modal-open');
@@ -309,51 +291,88 @@
             tempCanvas.width = videoElemen.videoWidth;
             tempCanvas.height = videoElemen.videoHeight;
             const ctx = tempCanvas.getContext('2d');
-            
-            // Membalikkan gambar (Mirror) agar foto tidak terbalik secara horizontal
             ctx.translate(tempCanvas.width, 0);
             ctx.scale(-1, 1);
-            
-            // Menyalin frame dari video ke dalam canvas
             ctx.drawImage(videoElemen, 0, 0, tempCanvas.width, tempCanvas.height);
-            
             renderKeCanvas(tempCanvas.toDataURL('image/png'));
             matikanKamera();
         });
 
-        // ==========================================
-        // FUNGSI EKSEKUSI (RENDER KE CANVAS UTAMA)
-        // ==========================================
         function renderKeCanvas(dataUrl) {
             fabric.Image.fromURL(dataUrl, function(img) {
-                // Mengecilkan skala foto awal agar tidak memenuhi seluruh layar
                 const skala = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
                 img.scale(skala);
-                
                 canvas.centerObject(img);
                 
-                // PERBAIKAN: Menghapus objek foto sebelumnya tanpa menghapus bingkai (overlay)
-                canvas.getObjects().forEach(function(obj) {
-                    canvas.remove(obj);
-                });
+                // Hapus objek foto lama tanpa menyentuh bingkai
+                canvas.getObjects().forEach(function(obj) { canvas.remove(obj); });
+                
+                // Tambahkan identitas custom pada foto
+                img.set({ customId: 'foto-user' });
                 
                 canvas.add(img);
-                canvas.setActiveObject(img); // Langsung mengaktifkan binding rotasi/geser
+                canvas.setActiveObject(img);
             });
         }
 
         // ==========================================
-        // FUNGSI DOWNLOAD (EKSPOR)
+        // LOGIKA HAPUS BACKGROUND (AI CLIENT-SIDE)
+        // ==========================================
+        document.getElementById('btn-hapus-bg').addEventListener('click', async function() {
+            // Cek apakah ada foto yang sedang dipilih/aktif di dalam canvas
+            const activeObject = canvas.getActiveObject();
+            if (!activeObject || activeObject.customId !== 'foto-user') {
+                alert('Tolong ketuk/pilih foto Anda di dalam bingkai terlebih dahulu sebelum menghapus latar belakang!');
+                return;
+            }
+
+            // Ubah tombol menjadi indikator loading
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Memproses AI...</span>`;
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                // Ambil data Base64 dari foto murni yang aktif
+                const originalBase64 = activeObject.getSrc();
+
+                // Konfigurasi performa Imgly
+                const config = {
+                    publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/assets/",
+                    model: 'small', // Menggunakan model kecil agar tetap GESIT
+                    output: { format: 'image/png' }
+                };
+
+                // Proses penghapusan latar belakang
+                const blob = await imglyRemoveBackground(originalBase64, config);
+                const urlBaru = URL.createObjectURL(blob);
+
+                // Ganti sumber foto pada objek yang sama agar posisi & zoom tidak berubah
+                activeObject.setSrc(urlBaru, function() {
+                    canvas.renderAll();
+                    // Kembalikan tombol seperti semula
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    lucide.createIcons();
+                });
+
+            } catch (error) {
+                console.error("AI Error:", error);
+                alert("Terjadi kesalahan sistem saat AI menghapus latar belakang.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        });
+
+        // ==========================================
+        // LOGIKA UNDUH KARYA
         // ==========================================
         document.getElementById('btn-download').addEventListener('click', function() {
-            // Menonaktifkan garis kotak seleksi (bounding box) agar tidak ikut terunduh
             canvas.discardActiveObject(); 
             canvas.renderAll();
-            
-            // Konversi canvas menjadi gambar PNG murni
             const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
-            
-            // Memanggil fitur unduh di browser
             const link = document.createElement('a');
             link.download = `Kampanye-${idKampanye || 'Kreatif'}.png`;
             link.href = dataURL;
