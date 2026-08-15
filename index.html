@@ -38,9 +38,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Fabric.js & Imgly -->
+    <!-- Fabric.js untuk Manipulasi Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/browser/umd/index.min.js"></script>
 
     <style>
         body { -webkit-tap-highlight-color: transparent; }
@@ -92,7 +91,7 @@
             <!-- KOLOM KANAN: Ruang Kerja -->
             <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col pointer-events-none opacity-50 transition-all duration-500" id="area-kerja">
                 
-                <div class="grid grid-cols-2 gap-3 mb-5">
+                <div class="grid grid-cols-2 gap-3 mb-4">
                     <label for="upload-foto" class="w-full bg-slate-900 dark:bg-blue-600 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 cursor-pointer">
                         <i data-lucide="image-plus" class="w-4 h-4 md:w-5 md:h-5"></i><span>Pilih Foto</span>
                     </label>
@@ -103,22 +102,32 @@
                     </button>
                 </div>
 
+                <!-- Input Tambah Teks Nama -->
+                <div class="flex items-center gap-2 mb-5">
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="type" class="w-4 h-4 text-slate-400"></i>
+                        </div>
+                        <input type="text" id="input-nama-peserta" placeholder="Ketik nama Anda di sini..." class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                    <button id="btn-tambah-teks" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl shadow-sm font-bold text-sm transition-all active:scale-95 whitespace-nowrap">
+                        Tambah
+                    </button>
+                </div>
+
                 <div class="w-full aspect-square border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-50 dark:bg-slate-900 relative flex justify-center items-center mb-5 group">
                     <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 opacity-50 group-hover:opacity-10 transition-opacity pointer-events-none z-0">
                         <i data-lucide="move" class="w-8 h-8 mb-2"></i>
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Cubit Untuk Menyesuaikan Foto</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Geser & Cubit Untuk Menyesuaikan Objek</span>
                     </div>
                     <div class="w-full h-full relative z-10">
                         <canvas id="twibbon-canvas"></canvas>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-auto">
-                    <button id="btn-hapus-bg" class="w-full bg-purple-600 dark:bg-purple-500 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
-                        <i data-lucide="sparkles" class="w-4 h-4 md:w-5 md:h-5"></i><span>Hapus Latar (AI)</span>
-                    </button>
-                    <button id="btn-download" class="w-full bg-blue-600 dark:bg-blue-500 text-white text-[13px] md:text-sm font-bold py-3.5 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
-                        <i data-lucide="download" class="w-4 h-4 md:w-5 md:h-5"></i><span>Unduh Karya</span>
+                <div class="mt-auto">
+                    <button id="btn-download" class="w-full bg-blue-600 dark:bg-blue-500 text-white text-[13px] md:text-sm font-bold py-4 rounded-xl shadow-sm hover:-translate-y-1 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2">
+                        <i data-lucide="download" class="w-5 h-5"></i><span>Unduh Karya</span>
                     </button>
                 </div>
             </div>
@@ -135,7 +144,7 @@
             <h3 id="dialog-title" class="text-xl font-extrabold text-slate-800 dark:text-white mb-2">Info</h3>
             <p id="dialog-msg" class="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">...</p>
             <div id="dialog-actions" class="w-full">
-                <!-- Tombol aksi akan disisipkan via JS -->
+                <!-- Tombol aksi disisipkan via JS -->
             </div>
         </div>
     </div>
@@ -190,7 +199,6 @@
             el.classList.remove('hidden'); 
             el.classList.add('flex');
             
-            // Force repaint agar transisi CSS berjalan mulus
             void el.offsetWidth;
             
             const overlay = el.querySelector('.modal-overlay'); 
@@ -220,7 +228,6 @@
             }, 300);
         }
 
-        // Alert Kustom (Pengganti alert() bawaan)
         function showAlert(type, title, msg) { 
             const bgColors = {
                 error: 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800',
@@ -378,58 +385,68 @@
                 img.scale(skala);
                 canvas.centerObject(img);
                 
-                canvas.getObjects().forEach(function(obj) { canvas.remove(obj); });
+                // Hanya hapus objek foto lama (biarkan teks jika ada)
+                canvas.getObjects().forEach(function(obj) { 
+                    if (obj.customId === 'foto-user') {
+                        canvas.remove(obj); 
+                    }
+                });
                 
                 img.set({ customId: 'foto-user' });
+                
+                // Pastikan foto selalu ada di layer paling bawah (di bawah teks dan bingkai)
                 canvas.add(img);
+                img.sendToBack(); 
                 canvas.setActiveObject(img);
             });
         }
 
         // ==========================================
-        // LOGIKA HAPUS BACKGROUND (AI CLIENT-SIDE)
+        // LOGIKA INJEKSI TEKS DINAMIS
         // ==========================================
-        document.getElementById('btn-hapus-bg').addEventListener('click', async function() {
-            const activeObject = canvas.getActiveObject();
-            if (!activeObject || activeObject.customId !== 'foto-user') {
-                showAlert('info', 'Pilih Foto', 'Tolong ketuk (pilih) foto Anda di dalam bingkai terlebih dahulu.');
+        document.getElementById('btn-tambah-teks').addEventListener('click', function() {
+            const inputTeks = document.getElementById('input-nama-peserta');
+            const teksValue = inputTeks.value.trim();
+            
+            if (teksValue === '') {
+                showAlert('info', 'Teks Kosong', 'Silakan ketik nama atau teks terlebih dahulu.');
                 return;
             }
 
-            const btn = this;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Memproses AI...</span>`;
-            btn.disabled = true;
-            lucide.createIcons();
+            // Membuat objek teks Fabric.js yang premium (dengan shadow)
+            const teksBaru = new fabric.Text(teksValue, {
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 60,
+                fill: '#ffffff', // Warna teks putih
+                fontWeight: 'bold',
+                textAlign: 'center',
+                shadow: new fabric.Shadow({
+                    color: 'rgba(0,0,0,0.6)', // Bayangan gelap agar teks terbaca di background apapun
+                    blur: 10,
+                    offsetX: 3,
+                    offsetY: 3
+                }),
+                customId: 'teks-user'
+            });
 
-            try {
-                const originalBase64 = activeObject.getSrc();
+            // Menempatkan teks di tengah tapi agak ke bawah sedikit
+            canvas.centerObject(teksBaru);
+            teksBaru.set({ top: canvas.height - (canvas.height * 0.25) });
+            
+            canvas.add(teksBaru);
+            
+            // Teks harus ada di atas foto, jadi kita bring to front (meski tetap di bawah overlay bingkai)
+            teksBaru.bringToFront();
+            canvas.setActiveObject(teksBaru);
+            
+            // Kosongkan input setelah ditambah
+            inputTeks.value = '';
+        });
 
-                const config = {
-                    publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/assets/", // Perbaikan path
-                    model: 'small', 
-                    output: { format: 'image/png' },
-                    progress: (key, current, total) => {
-                        // Menangani status progress jika diperlukan di masa depan
-                    }
-                };
-
-                const blob = await imglyRemoveBackground(originalBase64, config);
-                const urlBaru = URL.createObjectURL(blob);
-
-                activeObject.setSrc(urlBaru, function() {
-                    canvas.renderAll();
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    lucide.createIcons();
-                });
-
-            } catch (error) {
-                console.error("AI Error:", error);
-                showAlert('error', 'Gagal Memproses', 'AI gagal menghapus latar belakang. Pastikan memori RAM Anda cukup atau coba foto lain.');
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                lucide.createIcons();
+        // Tambah teks dengan menekan tombol Enter pada keyboard
+        document.getElementById('input-nama-peserta').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('btn-tambah-teks').click();
             }
         });
 
