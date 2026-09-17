@@ -280,44 +280,57 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
   </div>
 </header>
 
-<main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 md:py-8">
+<main class="max-w-6xl mx-auto px-4 sm:px-5 py-5 md:py-8">
 
-  <section class="text-center mb-6 md:mb-8">
+  <!-- Hero ringkas untuk mobile-first -->
+  <section class="text-center mb-5 md:mb-6">
     <div class="gb-pill mb-3" style="background:var(--acc-soft); color:var(--acc-text);">
       <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> KREATIF KAMPANYE
     </div>
-    <h1 class="text-[26px] md:text-3xl font-extrabold tracking-tight leading-tight" style="color:var(--fg);">
+    <h1 class="text-[24px] md:text-3xl font-extrabold tracking-tight leading-tight" style="color:var(--fg);">
       Satu Bingkai, Beragam Cerita.
     </h1>
-    <p class="text-[13px] md:text-sm mt-2 max-w-md mx-auto leading-relaxed" style="color:var(--fg-muted);">
-      Unggah foto, tambah nama, pilih filter, unduh atau langsung bagikan.
-    </p>
   </section>
 
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-5 items-start">
 
-    <!-- KIRI -->
+    <!-- ============ KOLOM KIRI: INFO RINGKAS ============ -->
     <div class="lg:col-span-2 space-y-4">
-      <div class="gb-card p-5">
-        <div class="flex items-center gap-2 mb-2">
-          <span id="status-dot" class="w-2 h-2 rounded-full" style="background:var(--fg-subtle);"></span>
-          <span class="gb-label" id="status-text">MEMUAT AGENDA</span>
-        </div>
-        <h2 id="judul-kampanye" class="text-base md:text-lg font-extrabold leading-snug mb-1.5" style="color:var(--fg);">Memuat…</h2>
-        <p id="deskripsi-kampanye" class="text-[12px] leading-relaxed mb-4" style="color:var(--fg-muted);">Menyiapkan agenda…</p>
 
-        <div class="gb-label mb-2">Pratinjau Bingkai</div>
-        <div class="rounded-xl p-2 flex justify-center min-h-[140px]" style="background:var(--bg); border:1px solid var(--border);">
-          <img id="preview-img" src="" alt="" class="w-full max-w-[200px] h-auto object-cover rounded-lg"
-               style="display:none; border:1px solid var(--border);">
-          <div id="loading-preview" class="py-8 flex flex-col items-center justify-center text-center px-4" style="color:var(--fg-subtle);">
-            <i data-lucide="image" class="w-8 h-8 mb-2 opacity-60"></i>
-            <span class="text-[10px] font-bold uppercase tracking-widest">Menunggu Data</span>
+      <!-- Kartu Info Agenda — RINGKAS dengan THUMBNAIL MINI -->
+      <div class="gb-card p-4 md:p-5">
+        <div class="flex items-center gap-3 mb-3">
+          <!-- Thumbnail mini bingkai -->
+          <div class="shrink-0 w-14 h-14 rounded-xl overflow-hidden relative"
+               style="border:1px solid var(--border); background:var(--bg);">
+            <img id="preview-thumb" src="" alt=""
+                 class="w-full h-full object-cover" style="display:none;">
+            <div id="loading-thumb"
+                 class="absolute inset-0 flex items-center justify-center"
+                 style="color:var(--fg-subtle);">
+              <i data-lucide="image" class="w-5 h-5 opacity-60"></i>
+            </div>
+          </div>
+
+          <!-- Info teks -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span id="status-dot" class="w-2 h-2 rounded-full" style="background:var(--fg-subtle);"></span>
+              <span class="gb-label" id="status-text">MEMUAT</span>
+            </div>
+            <h2 id="judul-kampanye"
+                class="text-[15px] font-extrabold leading-snug"
+                style="color:var(--fg);">Memuat…</h2>
           </div>
         </div>
+
+        <p id="deskripsi-kampanye"
+           class="text-[12px] leading-relaxed"
+           style="color:var(--fg-muted);">Menyiapkan agenda…</p>
       </div>
 
-      <div class="gb-card p-5" id="kartu-riwayat-lokal" style="display:none;">
+      <!-- Riwayat Karya -->
+      <div class="gb-card p-4 md:p-5" id="kartu-riwayat-lokal" style="display:none;">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2">
             <i data-lucide="images" class="w-4 h-4" style="color:var(--acc);"></i>
@@ -328,44 +341,50 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
           </button>
         </div>
         <div class="riwayat-grid" id="riwayat-grid"></div>
-        <p class="text-[10px] mt-2 leading-relaxed" style="color:var(--fg-subtle);">
-          Tersimpan di HP Anda saja. Klik untuk lihat &amp; unduh ulang.
-        </p>
       </div>
 
-      <div class="gb-card p-5 hidden lg:block">
+      <!-- Cara Pakai (desktop only) -->
+      <div class="gb-card p-4 md:p-5 hidden lg:block">
         <div class="gb-label mb-3">Cara Pakai</div>
         <ol class="space-y-3">
           <li class="flex gap-3">
             <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">1</span>
             <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
-              <b style="color:var(--fg);">Pilih foto</b> dari galeri atau selfie langsung.
+              <b style="color:var(--fg);">Pilih foto</b> dari galeri atau selfie.
             </p>
           </li>
           <li class="flex gap-3">
             <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">2</span>
             <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
-              <b style="color:var(--fg);">Pilih template teks</b> nama/jabatan, atau tulis manual.
+              <b style="color:var(--fg);">Atur posisi</b> dengan cubit 2 jari atau slider.
             </p>
           </li>
           <li class="flex gap-3">
             <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">3</span>
             <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
-              <b style="color:var(--fg);">Unduh atau bagikan</b> langsung ke WA/IG.
+              <b style="color:var(--fg);">Tambah teks / filter</b> (opsional).
+            </p>
+          </li>
+          <li class="flex gap-3">
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
+                  style="background:var(--acc-soft); color:var(--acc-text);">4</span>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              <b style="color:var(--fg);">Unduh</b> → share ke WA/IG dari galeri.
             </p>
           </li>
         </ol>
       </div>
     </div>
 
-    <!-- KANAN -->
+    <!-- ============ KOLOM KANAN: RUANG KREASI ============ -->
     <div class="lg:col-span-3">
-      <div id="area-kerja" class="gb-card p-5 opacity-60 pointer-events-none transition-all duration-500">
+      <div id="area-kerja" class="gb-card p-4 md:p-5 opacity-60 pointer-events-none transition-all duration-500">
 
-        <div class="flex items-center gap-1 mb-4 p-1 rounded-xl" style="background:var(--bg);">
+        <!-- Tab -->
+        <div class="flex items-center gap-1 mb-3 p-1 rounded-xl" style="background:var(--bg);">
           <button class="seg-tab flex-1 justify-center" data-tab="foto" data-active="true" onclick="switchTab('foto')">
             <i data-lucide="image" class="w-3.5 h-3.5"></i> Foto
           </button>
@@ -377,6 +396,7 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
           </button>
         </div>
 
+        <!-- Canvas -->
         <div id="canvas-wrapper"
              class="w-full rounded-2xl overflow-hidden relative flex justify-center items-center mb-4"
              style="background:var(--bg); border:2px dashed var(--border); min-height:240px;">
@@ -543,20 +563,22 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
           <div class="filter-grid" id="filter-grid"></div>
         </div>
 
-        <!-- Aksi -->
-        <div class="grid grid-cols-2 gap-2 mt-4">
-          <button id="btn-download" class="gb-btn gb-btn-primary col-span-2">
+        <!-- Aksi — hanya Unduh + Mulai Ulang -->
+        <div class="space-y-2 mt-4">
+          <button id="btn-download" class="gb-btn gb-btn-primary w-full">
             <i data-lucide="download" class="w-4 h-4"></i><span>Unduh Karya</span>
           </button>
-          <button id="btn-share" class="gb-btn gb-btn-outline" onclick="shareKarya()">
-            <i data-lucide="share-2" class="w-4 h-4"></i><span>Bagikan</span>
-          </button>
-          <button id="btn-reset-draft" class="gb-btn gb-btn-ghost" onclick="resetSemua()">
+          <button id="btn-reset-draft" class="gb-btn gb-btn-ghost w-full" onclick="resetSemua()">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i><span>Mulai Ulang</span>
           </button>
         </div>
 
-        <p id="draft-info" class="text-[10px] text-center mt-3 leading-relaxed" style="color:var(--fg-subtle); display:none;"></p>
+        <p class="text-[10px] text-center mt-3 leading-relaxed" style="color:var(--fg-subtle);">
+          💡 Setelah unduh, karya tersimpan di galeri HP — tinggal share ke WA/IG dari sana.
+        </p>
+
+        <p id="draft-info" class="text-[10px] text-center mt-2 leading-relaxed"
+           style="color:var(--fg-subtle); display:none;"></p>
       </div>
     </div>
   </div>
@@ -622,7 +644,7 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
     </div>
     <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
       <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
-        Guru Berbagi Selogiri · v3.3<br>Tim Kreatif GTK Kecamatan Selogiri
+        Guru Berbagi Selogiri · v3.4<br>Tim Kreatif GTK Kecamatan Selogiri
       </p>
     </div>
   </div>
@@ -843,11 +865,6 @@ updateFabricColors();
 
 /* ============================================
    📚 REORDER LAYERS
-   Urutan (belakang → depan):
-     1. Foto
-     2. Bingkai overlay
-     3. Teks stiker
-     4. Watermark
    ============================================ */
 function reorderLayers(){
   if(fotoObj)      canvas.sendToBack(fotoObj);
@@ -861,45 +878,6 @@ let fotoObj = null, overlayImg = null, overlayOriginalURL = '', watermarkImg = n
 let namaAgendaAktif = '', agendaId = '', filterAktif = 'original';
 let draftTimer = null, objekTeks = [], teksAktif = null;
 let daftarBatch = [];
-
-/* ============================================
-   ⚡ BLOB CACHE — Pre-generate blob share
-   ============================================ */
-let shareBlobCache = null;
-let shareBlobDirty = true;
-let shareBlobTimer = null;
-
-function invalidateShareCache(){
-  shareBlobDirty = true;
-  shareBlobCache = null;
-  clearTimeout(shareBlobTimer);
-  shareBlobTimer = setTimeout(preGenShareBlob, 1200);
-}
-
-function preGenShareBlob(){
-  if(!fotoObj || !shareBlobDirty) return;
-  generateShareBlob().then(b => {
-    shareBlobCache = b;
-    shareBlobDirty = false;
-  }).catch(()=>{});
-}
-
-function generateShareBlob(){
-  return new Promise((resolve, reject) => {
-    const active = canvas.getActiveObject();
-    canvas.discardActiveObject();
-    canvas.renderAll();
-
-    requestAnimationFrame(() => {
-      canvas.toBlob(blob => {
-        if(active) canvas.setActiveObject(active);
-        canvas.requestRenderAll();
-        if(blob && blob.size > 0) resolve(blob);
-        else reject(new Error('Blob kosong'));
-      }, 'image/jpeg', 0.92);
-    });
-  });
-}
 
 /* Zoom & Rotate */
 function zoomStep(pct){
@@ -988,7 +966,7 @@ function muatAgenda(){
     return;
   }
   if(id){
-    setStatus('loading', 'MEMUAT AGENDA');
+    setStatus('loading', 'MEMUAT');
     fetch(`${CDN_JSON}/${id}.json`)
       .then(r => { if(!r.ok) throw new Error(); return r.json(); })
       .then(data => {
@@ -1006,7 +984,7 @@ function muatAgenda(){
         trackEvent('buka-agenda', id);
       })
       .catch(() => {
-        setStatus('error', 'AGENDA TIDAK DITEMUKAN');
+        setStatus('error', 'GAGAL');
         document.getElementById('judul-kampanye').innerText = 'Agenda Tidak Ditemukan';
         document.getElementById('deskripsi-kampanye').innerText = 'Periksa kembali link yang dibagikan panitia.';
         showAlert('error', 'Agenda Tidak Ditemukan', 'Link mungkin salah atau sudah kadaluwarsa.');
@@ -1017,10 +995,6 @@ function muatAgenda(){
   document.getElementById('judul-kampanye').innerText = 'Selamat Datang 👋';
   document.getElementById('deskripsi-kampanye').innerText =
     'Akses halaman ini melalui tautan agenda yang dibagikan panitia untuk mulai berkarya.';
-  document.getElementById('loading-preview').innerHTML =
-    `<i data-lucide="link" class="w-8 h-8 mb-2 opacity-60"></i>
-     <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Parameter URL Kosong</span>`;
-  lucide.createIcons();
 }
 
 function renderAgenda(data){
@@ -1029,17 +1003,18 @@ function renderAgenda(data){
   document.getElementById('deskripsi-kampanye').innerText = data.deskripsi || '';
   if(data.waktu){
     const elW = document.createElement('p');
-    elW.className = 'text-[11px] font-bold uppercase tracking-widest mt-1';
+    elW.className = 'text-[11px] font-bold uppercase tracking-widest mt-1.5';
     elW.style.color = 'var(--acc-text)';
     elW.textContent = '📅 ' + data.waktu;
     document.getElementById('deskripsi-kampanye').after(elW);
   }
 
-  const img = document.getElementById('preview-img');
-  img.src = data.gambar;
-  img.onload = () => {
-    document.getElementById('loading-preview').style.display = 'none';
-    img.style.display = 'block';
+  // Thumbnail mini (bukan preview besar)
+  const thumb = document.getElementById('preview-thumb');
+  thumb.src = data.gambar;
+  thumb.onload = () => {
+    document.getElementById('loading-thumb').style.display = 'none';
+    thumb.style.display = 'block';
   };
 
   document.getElementById('area-kerja').classList.remove('pointer-events-none','opacity-60');
@@ -1101,7 +1076,8 @@ function pilihBatch(idx, el){
   el.setAttribute('data-active','true');
   const url = daftarBatch[idx].url;
   overlayOriginalURL = url;
-  document.getElementById('preview-img').src = url;
+  // Update thumbnail juga
+  document.getElementById('preview-thumb').src = url;
 
   fabric.Image.fromURL(url, function(fImg){
     if(overlayImg) canvas.remove(overlayImg);
@@ -1432,7 +1408,6 @@ function switchTab(name){
    💾 DRAFT
    ============================================ */
 function simpanDraftDebounced(){
-  invalidateShareCache();
   if(!agendaId) return;
   clearTimeout(draftTimer);
   draftTimer = setTimeout(simpanDraft, 700);
@@ -1461,7 +1436,7 @@ async function simpanDraft(){
     await dbSet('drafts', agendaId, data);
     const info = document.getElementById('draft-info');
     info.style.display = 'block';
-    info.textContent = '💾 Draft tersimpan otomatis — ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit', minute:'2-digit'});
+    info.textContent = '💾 Draft tersimpan — ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit', minute:'2-digit'});
   } catch(e){}
 }
 async function muatDraft(){
@@ -1503,7 +1478,6 @@ async function muatDraft(){
 
     filterAktif = draft.filterAktif || 'original';
     terapkanFilter(filterAktif);
-
     reorderLayers();
 
     document.getElementById('canvas-wrapper').classList.add('has-photo');
@@ -1513,8 +1487,6 @@ async function muatDraft(){
     document.getElementById('draft-info').style.display = 'block';
     document.getElementById('draft-info').textContent =
       '💾 Draft dipulihkan — ' + new Date(draft.ts).toLocaleString('id-ID',{ dateStyle:'medium', timeStyle:'short' });
-
-    invalidateShareCache();
   } catch(e){}
 }
 
@@ -1597,7 +1569,7 @@ document.getElementById('btn-download').addEventListener('click', async function
     btn.classList.add('is-success');
     btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Berhasil diunduh!</span>';
     lucide.createIcons();
-    toast('Karya berhasil diunduh. Cek galeri HP Anda ✨', 'success', 4000);
+    toast('Karya tersimpan di galeri HP ✨ Tinggal share dari galeri.', 'success', 4500);
     trackEvent('unduh', namaAgendaAktif);
 
     setTimeout(()=>{
@@ -1615,81 +1587,6 @@ document.getElementById('btn-download').addEventListener('click', async function
 });
 
 /* ============================================
-   📤 BAGIKAN — dengan Blob Cache (instan)
-   ============================================ */
-async function shareKarya(){
-  if(!fotoObj){ toast('Pilih foto dulu.', 'error'); return; }
-
-  const btn = document.getElementById('btn-share');
-  const orig = btn.innerHTML;
-  const safeNama = (namaAgendaAktif || 'Kreatif').replace(/[^a-z0-9]/gi,'-').toLowerCase();
-
-  // ⚡ CACHE HIT — langsung share tanpa loading
-  if(!shareBlobDirty && shareBlobCache){
-    const file = new File([shareBlobCache], `Kampanye-${safeNama}.jpg`, { type:'image/jpeg' });
-    if(navigator.canShare && navigator.canShare({ files:[file] })){
-      try {
-        await navigator.share({
-          files: [file],
-          title: namaAgendaAktif || 'Kreatif Kampanye',
-          text: `Karya saya untuk ${namaAgendaAktif || 'kampanye'} — Guru Berbagi Selogiri`
-        });
-        trackEvent('share-native', namaAgendaAktif);
-      } catch(err){
-        if(!(err && err.name === 'AbortError')) toast('Bagikan gagal. Coba unduh saja.', 'error');
-      }
-    } else {
-      unduhFallback(shareBlobCache, safeNama);
-    }
-    return;
-  }
-
-  // 🐢 CACHE MISS — generate sekarang dengan progress feedback
-  btn.disabled = true;
-  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan…</span>';
-  lucide.createIcons();
-  const tl = toast('Menyiapkan gambar…', 'loading', 0);
-
-  try {
-    const blob = await generateShareBlob();
-    shareBlobCache = blob;
-    shareBlobDirty = false;
-    closeToast(tl);
-
-    const file = new File([blob], `Kampanye-${safeNama}.jpg`, { type:'image/jpeg' });
-    if(navigator.canShare && navigator.canShare({ files:[file] })){
-      btn.innerHTML = '<i data-lucide="share-2" class="w-4 h-4"></i><span>Membuka…</span>';
-      lucide.createIcons();
-      await navigator.share({
-        files: [file],
-        title: namaAgendaAktif || 'Kreatif Kampanye',
-        text: `Karya saya untuk ${namaAgendaAktif || 'kampanye'} — Guru Berbagi Selogiri`
-      });
-      trackEvent('share-native', namaAgendaAktif);
-    } else {
-      unduhFallback(blob, safeNama);
-    }
-  } catch(err){
-    closeToast(tl);
-    if(!(err && err.name === 'AbortError')) toast('Bagikan gagal. Coba unduh saja.', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = orig;
-    lucide.createIcons();
-  }
-}
-
-function unduhFallback(blob, safeNama){
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Kampanye-${safeNama}.jpg`;
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  toast('Browser belum dukung share langsung — karya diunduh.', 'info', 4000);
-}
-
-/* ============================================
    🔄 RESET
    ============================================ */
 async function resetSemua(){
@@ -1705,7 +1602,6 @@ async function resetSemua(){
   const ph = document.getElementById('canvas-placeholder'); if(ph) ph.style.opacity = '1';
   document.getElementById('zoom-slider').value = 80;
   document.getElementById('draft-info').style.display = 'none';
-  invalidateShareCache();
   canvas.discardActiveObject(); canvas.requestRenderAll();
   updateTeksEditorUI();
   toast('Siap mulai dari awal.', 'success');
