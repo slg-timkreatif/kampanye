@@ -97,7 +97,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .acc-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.08); }
 .acc-dot:hover{ transform:scale(1.08); }
 
-/* Segmented Tab */
 .seg-tab{
   display:inline-flex; align-items:center; gap:6px;
   padding:8px 14px; border-radius:10px;
@@ -108,7 +107,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .seg-tab[data-active="true"]{ background:var(--acc); color:#fff; box-shadow:0 2px 8px var(--acc-ring); }
 .seg-tab:hover:not([data-active="true"]){ background:var(--bg); color:var(--fg); }
 
-/* Canvas toolbar */
 .canvas-toolbar{
   position:absolute; bottom:12px; left:50%; transform:translate(-50%,12px);
   display:flex; align-items:center; gap:4px;
@@ -151,7 +149,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .canvas-hint i{ width:13px; height:13px; }
 .canvas-hint.show{ opacity:1; transform:translate(-50%,0); }
 
-/* Grid rule of thirds */
 .grid-overlay{ position:absolute; inset:0; pointer-events:none; z-index:12; display:none; }
 .grid-overlay.show{ display:block; }
 .grid-overlay::before{
@@ -162,7 +159,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
   filter:drop-shadow(0 0 1px rgba(0,0,0,.5));
 }
 
-/* Filter grid */
 .filter-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
 .filter-card{
   position:relative; border-radius:10px; overflow:hidden;
@@ -176,7 +172,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .filter-card span{ display:block; font-size:9px; font-weight:800; text-align:center; padding:3px 2px; color:var(--fg-muted); }
 .filter-card[data-active="true"] span{ color:var(--acc-text); }
 
-/* Batch strip */
 .batch-strip{
   display:flex; gap:8px; overflow-x:auto; padding:4px 2px 8px;
   scrollbar-width:thin; scroll-snap-type:x mandatory;
@@ -193,7 +188,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .batch-item img{ width:100%; height:100%; object-fit:cover; }
 .batch-item[data-active="true"]{ border-color:var(--acc); box-shadow:0 0 0 3px var(--acc-ring); transform:scale(1.05); }
 
-/* Riwayat grid */
 .riwayat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
 .riwayat-thumb{
   position:relative; aspect-ratio:1; border-radius:10px; overflow:hidden;
@@ -203,7 +197,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .riwayat-thumb:hover{ transform:scale(1.04); border-color:var(--acc); }
 .riwayat-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-/* Text preset chips */
 .chip{
   display:inline-flex; align-items:center; gap:4px;
   padding:6px 10px; border-radius:999px;
@@ -215,7 +208,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 .chip[data-active="true"]{ background:var(--acc); color:#fff; border-color:var(--acc); }
 .chip i{ width:12px; height:12px; }
 
-/* Text preset template cards */
 .tpl-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
 .tpl-card{
   display:flex; align-items:center; gap:10px;
@@ -240,7 +232,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
 }
 .color-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.1); }
 
-/* Toast */
 #toast-container{
   position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
   z-index:10000; display:flex; flex-direction:column; gap:8px;
@@ -445,7 +436,6 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
         <!-- Panel TEKS -->
         <div id="panel-teks" class="tab-panel" style="display:none;">
 
-          <!-- ====== TEMPLATE PRESET ====== -->
           <div class="gb-label mb-2">Template Cepat</div>
           <div class="tpl-grid mb-4">
             <button class="tpl-card" onclick="pakaiTemplate('nama')">
@@ -632,7 +622,7 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
     </div>
     <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
       <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
-        Guru Berbagi Selogiri · v3.1<br>Tim Kreatif GTK Kecamatan Selogiri
+        Guru Berbagi Selogiri · v3.2<br>Tim Kreatif GTK Kecamatan Selogiri
       </p>
     </div>
   </div>
@@ -667,6 +657,12 @@ function trackEvent(event, detail){
       const path = event + (detail ? '-' + String(detail).replace(/\s+/g,'-').toLowerCase().slice(0,60) : '');
       window.goatcounter.count({ path, title: event, event: true });
     }
+  } catch(e){}
+  try {
+    const key = 'gbs_dashboard_log';
+    const log = JSON.parse(localStorage.getItem(key) || '[]');
+    log.unshift({ event, detail, ts: Date.now() });
+    localStorage.setItem(key, JSON.stringify(log.slice(0, 200)));
   } catch(e){}
 }
 
@@ -845,6 +841,22 @@ function updateFabricColors(){
 }
 updateFabricColors();
 
+/* ============================================
+   📚 REORDER LAYERS — Foto di belakang, bingkai di atas
+   Urutan (belakang → depan):
+     1. Foto
+     2. Bingkai overlay
+     3. Teks stiker
+     4. Watermark
+   ============================================ */
+function reorderLayers(){
+  if(fotoObj)      canvas.sendToBack(fotoObj);       // foto PALING BELAKANG
+  if(overlayImg)   canvas.bringToFront(overlayImg);  // bingkai di atas foto
+  objekTeks.forEach(t => canvas.bringToFront(t));    // teks di atas bingkai
+  if(watermarkImg) canvas.bringToFront(watermarkImg);// watermark paling atas
+  canvas.requestRenderAll();
+}
+
 let fotoObj = null, overlayImg = null, overlayOriginalURL = '', watermarkImg = null;
 let namaAgendaAktif = '', agendaId = '', filterAktif = 'original';
 let draftTimer = null, objekTeks = [], teksAktif = null;
@@ -1007,7 +1019,7 @@ function renderAgenda(data){
     });
     overlayImg = fImg;
     canvas.add(fImg);
-    canvas.sendToBack(fImg);
+    reorderLayers();                                    // ✅ bingkai di atas foto
 
     if(data.watermark) tambahWatermark();
   }, { crossOrigin:'anonymous' });
@@ -1029,8 +1041,7 @@ function tambahWatermark(){
     });
     watermarkImg = wm;
     canvas.add(wm);
-    wm.bringToFront();
-    canvas.requestRenderAll();
+    reorderLayers();                                    // ✅ watermark paling atas
   }, { crossOrigin:'anonymous' });
 }
 
@@ -1065,9 +1076,7 @@ function pilihBatch(idx, el){
     });
     overlayImg = fImg;
     canvas.add(fImg);
-    canvas.sendToBack(fImg);
-    if(fotoObj) canvas.bringToFront(fotoObj);
-    canvas.requestRenderAll();
+    reorderLayers();                                    // ✅ bingkai di atas foto
     toast('Bingkai diganti.', 'info', 1800);
     trackEvent('ganti-batch', String(idx+1));
   }, { crossOrigin:'anonymous' });
@@ -1131,9 +1140,7 @@ function renderFotoKeCanvas(dataUrl){
     fotoObj = img;
 
     terapkanFilter(filterAktif);
-    if(overlayImg) canvas.sendToBack(overlayImg);
-    objekTeks.forEach(t => t.bringToFront());
-    if(watermarkImg) watermarkImg.bringToFront();
+    reorderLayers();                                    // ✅ foto di belakang, bingkai di atas
 
     canvas.setActiveObject(img);
     img.setCoords();
@@ -1215,7 +1222,6 @@ function buatIText(cfg){
   return t;
 }
 
-/* Template definitions */
 const TEMPLATE_TEKS = {
   'nama': {
     label: 'Nama Saja',
@@ -1269,20 +1275,16 @@ function pakaiTemplate(id){
   const tpl = TEMPLATE_TEKS[id];
   if(!tpl) return;
 
-  // Hapus teks yang sudah ada agar tidak menumpuk (opsional — hanya template ini)
-  // Kalau mau preserve, comment baris berikut:
   objekTeks.forEach(t => canvas.remove(t));
   objekTeks = [];
   teksAktif = null;
 
   tpl.items.forEach((cfg, i) => {
     const t = buatIText(cfg);
-    if(i === 0) teksAktif = t;      // fokus ke baris pertama
+    if(i === 0) teksAktif = t;
   });
 
-  if(overlayImg) canvas.sendToBack(overlayImg);
-  objekTeks.forEach(t => t.bringToFront());
-  if(watermarkImg) watermarkImg.bringToFront();
+  reorderLayers();                                      // ✅ jaga urutan
 
   if(teksAktif){
     canvas.setActiveObject(teksAktif);
@@ -1300,9 +1302,7 @@ function tambahTeks(){
     text:'Tulis di sini', fontSize:56, fill:'#ffffff', stroke:'#000000', strokeWidth:3,
     fontFamily:'Inter', fontWeight:'800', topPct:0.82, leftPct:0.5
   });
-  if(overlayImg) canvas.sendToBack(overlayImg);
-  t.bringToFront();
-  if(watermarkImg) watermarkImg.bringToFront();
+  reorderLayers();                                      // ✅ jaga urutan
   canvas.setActiveObject(t);
   teksAktif = t;
   canvas.requestRenderAll();
@@ -1464,10 +1464,7 @@ async function muatDraft(){
     filterAktif = draft.filterAktif || 'original';
     terapkanFilter(filterAktif);
 
-    if(overlayImg) canvas.sendToBack(overlayImg);
-    objekTeks.forEach(t => t.bringToFront());
-    if(watermarkImg) watermarkImg.bringToFront();
-    canvas.renderAll();
+    reorderLayers();                                    // ✅ jaga urutan
 
     document.getElementById('canvas-wrapper').classList.add('has-photo');
     const ph = document.getElementById('canvas-placeholder');
