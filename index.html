@@ -2,32 +2,23 @@
 <html lang="id" data-acc="teal" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0D9488">
 <title>Kreatif Kampanye — Guru Berbagi Selogiri</title>
 
 <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png">
 
-<!-- Preferensi tema & aksen (anti-flicker) -->
+<!-- Preferensi aksen (anti-flicker) -->
 <script>
 try {
   const acc = localStorage.getItem('acc') || 'teal';
   document.documentElement.setAttribute('data-acc', acc);
-  const saved = localStorage.getItem('theme');
-  const hour = new Date().getHours();
-  const isNight = hour >= 18 || hour < 6;
-  let isDark = saved === 'dark' ? true
-             : saved === 'light' ? false
-             : (isNight || window.matchMedia('(prefers-color-scheme: dark)').matches);
-  if (isDark) document.documentElement.classList.add('dark');
 } catch(e){}
 </script>
 
-<!-- Tailwind + Inter + Lucide -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
-  darkMode: 'class',
   theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] } } }
 }
 </script>
@@ -55,83 +46,48 @@ html[data-acc="violet"]{ --acc:#7c3aed; --acc2:#a855f7; --acc-soft:#ede9fe; --ac
 html[data-acc="amber"] { --acc:#d97706; --acc2:#f59e0b; --acc-soft:#fef3c7; --acc-text:#d97706; --acc-ring:rgba(217,119,6,.35);}
 html[data-acc="rose"]  { --acc:#e11d48; --acc2:#f43f5e; --acc-soft:#ffe4e6; --acc-text:#e11d48; --acc-ring:rgba(225,29,72,.35);}
 
-html.dark{
-  --bg:#100F15;
-  --card:#1A1922;
-  --border:#2A2833;
-  --fg:#F4F3F7;
-  --fg-muted:#A5A2B0;
-  --fg-subtle:#6E6B7A;
-  --acc-soft:rgba(20,184,166,.16);
-  --shadow-1:0 1px 3px rgba(0,0,0,.35);
-  --shadow-2:0 4px 12px rgba(0,0,0,.45);
-}
-html.dark[data-acc="biru"]  { --acc-soft:rgba(37,99,235,.18);}
-html.dark[data-acc="violet"]{ --acc-soft:rgba(124,58,237,.20);}
-html.dark[data-acc="amber"] { --acc-soft:rgba(217,119,6,.20);}
-html.dark[data-acc="rose"]  { --acc-soft:rgba(225,29,72,.20);}
-
 *{ -webkit-tap-highlight-color:transparent; }
 body{
-  background:var(--bg);
-  color:var(--fg);
+  background:var(--bg); color:var(--fg);
   font-family:'Inter', system-ui, sans-serif;
   min-height:100vh;
-  transition:background .3s ease, color .3s ease;
 }
 
-.gb-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  box-shadow:var(--shadow-1);
-}
-.gb-label{
-  font-size:10px; font-weight:800; letter-spacing:.16em;
-  text-transform:uppercase; color:var(--fg-subtle);
-}
+.gb-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--r-2xl); box-shadow:var(--shadow-1); }
+.gb-label{ font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--fg-subtle); }
 .gb-btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
   font-weight:700; font-size:14px; border-radius:var(--r-md);
   padding:14px 20px; cursor:pointer; transition:all .2s ease;
   border:1px solid transparent;
 }
-.gb-btn-primary{
-  background:var(--acc); color:#fff;
-  box-shadow:0 4px 12px var(--acc-ring);
-}
+.gb-btn-primary{ background:var(--acc); color:#fff; box-shadow:0 4px 12px var(--acc-ring); }
 .gb-btn-primary:hover{ background:var(--acc2); transform:translateY(-1px); }
 .gb-btn-primary:active{ transform:scale(.97); }
-
-.gb-btn-soft{ background:var(--acc-soft); color:var(--acc-text); }
-.gb-btn-soft:hover{ filter:brightness(.96); }
-.gb-btn-soft:active{ transform:scale(.97); }
-
-.gb-btn-outline{
-  background:transparent; color:var(--acc-text);
-  border-color:var(--acc);
-}
+.gb-btn-outline{ background:transparent; color:var(--acc-text); border-color:var(--acc); }
 .gb-btn-outline:hover{ background:var(--acc-soft); }
 .gb-btn-outline:active{ transform:scale(.97); }
-
-.gb-btn-ghost{
-  background:transparent; color:var(--fg-muted);
-  border-color:var(--border);
-}
+.gb-btn-ghost{ background:transparent; color:var(--fg-muted); border-color:var(--border); }
 .gb-btn-ghost:hover{ background:var(--bg); color:var(--fg); }
-
 .gb-pill{
   display:inline-flex; align-items:center; gap:6px;
   padding:6px 12px; border-radius:999px;
   font-size:11px; font-weight:700; letter-spacing:.04em;
 }
-
 .canvas-container, .canvas-container canvas{ width:100% !important; height:100% !important; }
+
+/* Touch gestures — WAJIB untuk pinch zoom */
+.canvas-container,
+.canvas-container canvas,
+#canvas-wrapper{
+  touch-action:none !important;
+  -ms-touch-action:none !important;
+}
+#canvas-wrapper{ overscroll-behavior:contain; }
 
 .modal-open{ overflow:hidden; }
 .modal-overlay{ transition:opacity .25s ease-out; }
 .modal-content{ transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .28s cubic-bezier(.16,1,.3,1); }
-
 .acc-dot{
   width:36px; height:36px; border-radius:999px; cursor:pointer;
   border:3px solid transparent; transition:all .18s ease;
@@ -139,6 +95,105 @@ body{
 }
 .acc-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.08); }
 .acc-dot:hover{ transform:scale(1.08); }
+
+/* ============================================
+   🎨 FLOATING GLASS TOOLBAR (Zoom + Rotate)
+   ============================================ */
+.canvas-toolbar{
+  position:absolute;
+  bottom:12px; left:50%;
+  transform:translate(-50%, 12px);
+  display:flex; align-items:center; gap:4px;
+  padding:6px 8px;
+  border-radius:999px;
+  background:rgba(20,18,26,.72);
+  backdrop-filter:blur(14px) saturate(160%);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 8px 28px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.15);
+  opacity:0; pointer-events:none;
+  transition:opacity .3s ease, transform .3s cubic-bezier(.16,1,.3,1);
+  z-index:20;
+  max-width:calc(100% - 24px);
+}
+#canvas-wrapper.has-photo .canvas-toolbar{
+  opacity:1; pointer-events:auto;
+  transform:translate(-50%, 0);
+}
+
+.toolbar-btn{
+  width:36px; height:36px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:999px;
+  background:transparent;
+  color:rgba(255,255,255,.9);
+  border:none; cursor:pointer;
+  transition:background .15s ease, transform .12s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.toolbar-btn:hover{ background:rgba(255,255,255,.14); }
+.toolbar-btn:active{ transform:scale(.9); background:rgba(255,255,255,.22); }
+.toolbar-btn i{ width:16px; height:16px; }
+
+.toolbar-divider{
+  width:1px; height:20px;
+  background:rgba(255,255,255,.18);
+  flex-shrink:0; margin:0 2px;
+}
+
+.zoom-slider-wrap{
+  display:flex; align-items:center; gap:8px;
+  padding:0 6px;
+  min-width:110px;
+  flex-shrink:0;
+}
+#zoom-slider{
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:4px; border-radius:999px;
+  background:rgba(255,255,255,.24);
+  outline:none; cursor:pointer;
+}
+#zoom-slider::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:16px; height:16px; border-radius:50%;
+  background:#fff;
+  border:2px solid var(--acc);
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+  cursor:pointer;
+  transition:transform .12s ease;
+}
+#zoom-slider::-webkit-slider-thumb:active{ transform:scale(1.2); }
+#zoom-slider::-moz-range-thumb{
+  width:16px; height:16px; border-radius:50%;
+  background:#fff; border:2px solid var(--acc);
+  cursor:pointer;
+}
+#zoom-slider::-moz-range-track{
+  height:4px; border-radius:999px;
+  background:rgba(255,255,255,.24);
+}
+
+/* Hint bubble */
+.canvas-hint{
+  position:absolute; top:12px; left:50%;
+  transform:translate(-50%, -8px);
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(20,18,26,.78);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  color:#fff;
+  font-size:11px; font-weight:700;
+  display:flex; align-items:center; gap:6px;
+  white-space:nowrap;
+  opacity:0; pointer-events:none;
+  transition:opacity .4s ease, transform .4s ease;
+  z-index:15;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.canvas-hint i{ width:13px; height:13px; }
+.canvas-hint.show{ opacity:1; transform:translate(-50%, 0); }
 </style>
 </head>
 
@@ -225,7 +280,7 @@ body{
                   style="background:var(--acc-soft); color:var(--acc-text);">2</span>
             <div>
               <p class="text-[13px] font-bold" style="color:var(--fg);">Atur Posisi</p>
-              <p class="text-[12px] leading-snug mt-0.5" style="color:var(--fg-muted);">Geser, cubit, dan putar foto hingga pas di bingkai.</p>
+              <p class="text-[12px] leading-snug mt-0.5" style="color:var(--fg-muted);">Cubit 2 jari atau pakai slider zoom di bawah kanvas.</p>
             </div>
           </li>
           <li class="flex gap-3">
@@ -246,7 +301,7 @@ body{
         <div class="flex items-center justify-between mb-4">
           <div class="gb-label">Ruang Kreasi</div>
           <div class="flex items-center gap-1.5 text-[10px] font-bold" style="color:var(--fg-subtle);">
-            <i data-lucide="move" class="w-3.5 h-3.5"></i> GESER · CUBIT · PUTAR
+            <i data-lucide="hand" class="w-3.5 h-3.5"></i> GESER · CUBIT · PUTAR
           </div>
         </div>
 
@@ -263,18 +318,60 @@ body{
           </button>
         </div>
 
+        <!-- ===== WRAPPER CANVAS + FLOATING TOOLBAR ===== -->
         <div id="canvas-wrapper"
              class="w-full rounded-2xl overflow-hidden relative flex justify-center items-center mb-4"
              style="background:var(--bg); border:2px dashed var(--border); min-height:240px;">
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-0 px-6"
+
+          <!-- Placeholder -->
+          <div id="canvas-placeholder"
+               class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-0 px-6"
                style="color:var(--fg-subtle);">
             <i data-lucide="image-up" class="w-8 h-8 mb-2 opacity-60"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
               Foto Anda akan tampil di sini
             </span>
           </div>
+
+          <!-- Canvas -->
           <div class="w-full h-full relative z-10">
             <canvas id="twibbon-canvas"></canvas>
+          </div>
+
+          <!-- Hint bubble -->
+          <div id="canvas-hint" class="canvas-hint">
+            <i data-lucide="move" class="w-3.5 h-3.5"></i>
+            <span>Cubit 2 jari atau pakai slider di bawah</span>
+          </div>
+
+          <!-- 🎨 FLOATING TOOLBAR -->
+          <div class="canvas-toolbar" role="toolbar" aria-label="Kontrol foto">
+            <button class="toolbar-btn" onclick="zoomStep(-10)" aria-label="Perkecil">
+              <i data-lucide="zoom-out"></i>
+            </button>
+
+            <div class="zoom-slider-wrap">
+              <input type="range" id="zoom-slider" min="30" max="300" value="80"
+                     aria-label="Zoom foto">
+            </div>
+
+            <button class="toolbar-btn" onclick="zoomStep(10)" aria-label="Perbesar">
+              <i data-lucide="zoom-in"></i>
+            </button>
+
+            <div class="toolbar-divider"></div>
+
+            <button class="toolbar-btn" onclick="rotateStep(-90)" aria-label="Putar kiri">
+              <i data-lucide="rotate-ccw"></i>
+            </button>
+
+            <button class="toolbar-btn" onclick="rotateStep(90)" aria-label="Putar kanan">
+              <i data-lucide="rotate-cw"></i>
+            </button>
+
+            <button class="toolbar-btn" onclick="resetObjek()" aria-label="Reset posisi">
+              <i data-lucide="refresh-cw"></i>
+            </button>
           </div>
         </div>
 
@@ -284,7 +381,7 @@ body{
         </button>
 
         <p class="lg:hidden text-[11px] text-center mt-3 leading-relaxed" style="color:var(--fg-muted);">
-          💡 Geser, cubit, dan putar foto hingga posisinya pas di dalam bingkai.
+          💡 Cubit 2 jari pada foto atau gunakan slider di bawah kanvas untuk mengatur ukuran.
         </p>
       </div>
     </div>
@@ -356,12 +453,11 @@ body{
   <div class="absolute inset-0 modal-overlay opacity-0"
        style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
        onclick="closeModal('settings-modal')"></div>
-
   <div class="gb-card w-full max-w-sm relative z-10 p-6 transform scale-95 opacity-0 modal-content">
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-2">
-        <i data-lucide="settings-2" class="w-4 h-4" style="color:var(--acc);"></i>
-        <h3 class="font-extrabold text-base" style="color:var(--fg);">Pengaturan Tampilan</h3>
+        <i data-lucide="palette" class="w-4 h-4" style="color:var(--acc);"></i>
+        <h3 class="font-extrabold text-base" style="color:var(--fg);">Warna Aksen</h3>
       </div>
       <button onclick="closeModal('settings-modal')" aria-label="Tutup"
               class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
@@ -369,27 +465,22 @@ body{
       </button>
     </div>
 
-    <div class="mb-5">
-      <div class="gb-label mb-2">Mode Tema</div>
-      <div class="grid grid-cols-2 gap-2">
-        <button onclick="setTheme('light')" id="theme-light" class="gb-btn gb-btn-ghost">
-          <i data-lucide="sun" class="w-4 h-4"></i> Terang
-        </button>
-        <button onclick="setTheme('dark')" id="theme-dark" class="gb-btn gb-btn-ghost">
-          <i data-lucide="moon" class="w-4 h-4"></i> Gelap
-        </button>
-      </div>
+    <p class="text-[12px] mb-4 leading-relaxed" style="color:var(--fg-muted);">
+      Pilih warna yang paling nyaman untuk Anda. Pengaturan tersimpan otomatis.
+    </p>
+
+    <div class="flex items-center gap-3 flex-wrap justify-center py-2">
+      <button class="acc-dot" data-acc="teal"   style="background:#0D9488;" aria-label="Teal"></button>
+      <button class="acc-dot" data-acc="biru"   style="background:#2563eb;" aria-label="Biru"></button>
+      <button class="acc-dot" data-acc="violet" style="background:#7c3aed;" aria-label="Violet"></button>
+      <button class="acc-dot" data-acc="amber"  style="background:#d97706;" aria-label="Amber"></button>
+      <button class="acc-dot" data-acc="rose"   style="background:#e11d48;" aria-label="Rose"></button>
     </div>
 
-    <div>
-      <div class="gb-label mb-2">Warna Aksen</div>
-      <div class="flex items-center gap-3 flex-wrap" id="acc-picker">
-        <button class="acc-dot" data-acc="teal"   style="background:#0D9488;" aria-label="Teal"></button>
-        <button class="acc-dot" data-acc="biru"   style="background:#2563eb;" aria-label="Biru"></button>
-        <button class="acc-dot" data-acc="violet" style="background:#7c3aed;" aria-label="Violet"></button>
-        <button class="acc-dot" data-acc="amber"  style="background:#d97706;" aria-label="Amber"></button>
-        <button class="acc-dot" data-acc="rose"   style="background:#e11d48;" aria-label="Rose"></button>
-      </div>
+    <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
+      <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
+        Guru Berbagi Selogiri · v2.0<br>Tim Kreatif GTK Kecamatan Selogiri
+      </p>
     </div>
   </div>
 </div>
@@ -398,23 +489,7 @@ body{
 <script>
 lucide.createIcons();
 
-/* ——————————— PENGATURAN TEMA & AKSEN ——————————— */
-function setTheme(mode){
-  const html = document.documentElement;
-  if(mode === 'dark'){ html.classList.add('dark'); localStorage.setItem('theme','dark'); }
-  else{ html.classList.remove('dark'); localStorage.setItem('theme','light'); }
-  syncThemeButtons();
-}
-function syncThemeButtons(){
-  const isDark = document.documentElement.classList.contains('dark');
-  const l = document.getElementById('theme-light');
-  const d = document.getElementById('theme-dark');
-  if(!l || !d) return;
-  [[l, !isDark], [d, isDark]].forEach(([btn, active])=>{
-    btn.classList.toggle('gb-btn-soft', active);
-    btn.classList.toggle('gb-btn-ghost', !active);
-  });
-}
+/* ——————————— PENGATURAN AKSEN ——————————— */
 function setAccent(acc){
   document.documentElement.setAttribute('data-acc', acc);
   localStorage.setItem('acc', acc);
@@ -431,18 +506,14 @@ function setAccent(acc){
 document.querySelectorAll('.acc-dot').forEach(d=>{
   d.addEventListener('click', ()=> setAccent(d.dataset.acc));
 });
-function openSettings(){
-  syncThemeButtons();
-  openModal('settings-modal');
-}
+function openSettings(){ openModal('settings-modal'); }
 
 /* ——————————— MODAL HELPERS ——————————— */
 function openModal(id){
   const el = document.getElementById(id);
   if(!el) return;
   document.body.classList.add('modal-open');
-  el.classList.remove('hidden');
-  el.classList.add('flex');
+  el.classList.remove('hidden'); el.classList.add('flex');
   void el.offsetWidth;
   const ov = el.querySelector('.modal-overlay');
   const ct = el.querySelector('.modal-content');
@@ -466,11 +537,9 @@ function showAlert(type, title, msg){
     info:    { icon:'info',           bg:'var(--acc-soft)',      fg:'var(--acc-text)' }
   };
   const cfg = map[type] || map.info;
-  const bg = document.getElementById('dialog-icon-bg');
-  const ic = document.getElementById('dialog-icon');
-  bg.style.background = cfg.bg;
-  bg.style.color = cfg.fg;
-  ic.setAttribute('data-lucide', cfg.icon);
+  document.getElementById('dialog-icon-bg').style.background = cfg.bg;
+  document.getElementById('dialog-icon-bg').style.color = cfg.fg;
+  document.getElementById('dialog-icon').setAttribute('data-lucide', cfg.icon);
   document.getElementById('dialog-title').textContent = title;
   document.getElementById('dialog-msg').textContent = msg;
   document.getElementById('dialog-actions').innerHTML =
@@ -481,35 +550,103 @@ function showAlert(type, title, msg){
 
 /* ——————————— CANVAS FABRIC ——————————— */
 const canvas = new fabric.Canvas('twibbon-canvas', {
-  width: 1080, height: 1080,
+  width: 1080,
+  height: 1080,
   preserveObjectStacking: true,
-  controlsAboveOverlay: true
+  controlsAboveOverlay: true,
+  selection: false,
+  allowTouchScrolling: false,
+  stopContextMenu: true,
+  fireRightClick: false
+});
+
+fabric.Object.prototype.set({
+  transparentCorners: false,
+  cornerColor: '#0D9488',
+  cornerStrokeColor: '#ffffff',
+  borderColor: '#0D9488',
+  cornerSize: 48,
+  touchCornerSize: 48,
+  padding: 12,
+  cornerStyle: 'circle',
+  borderDashArray: [7, 7],
+  hasControls: true,
+  hasBorders: true,
+  lockRotation: false,
+  lockScalingX: false,
+  lockScalingY: false,
+  lockUniScaling: false,
+  lockScalingFlip: false,
+  perPixelTargetFind: true,
+  objectCaching: false
 });
 
 function updateFabricColors(){
   const cs = getComputedStyle(document.documentElement);
   const acc = cs.getPropertyValue('--acc').trim() || '#0D9488';
-  fabric.Object.prototype.set({
-    transparentCorners: false,
-    cornerColor: acc,
-    cornerStrokeColor: '#ffffff',
-    borderColor: acc,
-    cornerSize: 40,
-    padding: 10,
-    cornerStyle: 'circle',
-    borderDashArray: [7, 7]
-  });
+  fabric.Object.prototype.set({ cornerColor: acc, borderColor: acc });
   if(canvas) canvas.requestRenderAll();
 }
 updateFabricColors();
 
+/* ——————————— KONTROL ZOOM & ROTATE ——————————— */
+function zoomStep(pct){
+  const obj = canvas.getActiveObject();
+  if(!obj) return;
+  const slider = document.getElementById('zoom-slider');
+  const current = parseInt(slider.value) || 80;
+  const next = Math.max(30, Math.min(300, current + pct));
+  slider.value = next;
+  applyZoom(next);
+}
+
+function applyZoom(pct){
+  const obj = canvas.getActiveObject();
+  if(!obj || !obj._baseScale) return;
+  const newScale = obj._baseScale * (pct / 100);
+  obj.set({ scaleX: newScale, scaleY: newScale });
+  obj.setCoords();
+  canvas.requestRenderAll();
+}
+
+document.getElementById('zoom-slider').addEventListener('input', e => {
+  applyZoom(parseInt(e.target.value));
+});
+
+function rotateStep(deg){
+  const obj = canvas.getActiveObject();
+  if(!obj) return;
+  obj.rotate((obj.angle || 0) + deg);
+  obj.setCoords();
+  canvas.requestRenderAll();
+}
+
+function resetObjek(){
+  const obj = canvas.getActiveObject();
+  if(!obj || !obj._baseScale) return;
+  obj.set({ scaleX: obj._baseScale, scaleY: obj._baseScale, angle: 0 });
+  canvas.centerObject(obj);
+  obj.setCoords();
+  canvas.requestRenderAll();
+  document.getElementById('zoom-slider').value = 100;
+}
+
+// Sinkron slider ketika user pinch/scale via controls
+function syncSliderFromObject(){
+  const obj = canvas.getActiveObject();
+  if(!obj || !obj._baseScale) return;
+  const currentPct = Math.round((obj.scaleX / obj._baseScale) * 100);
+  const slider = document.getElementById('zoom-slider');
+  const val = Math.max(30, Math.min(300, currentPct));
+  if(parseInt(slider.value) !== val) slider.value = val;
+}
+canvas.on('object:scaling', syncSliderFromObject);
+canvas.on('object:modified', syncSliderFromObject);
+
 /* ============================================================
    📥 BACA DATA AGENDA DARI URL — TANPA BACKEND
-   Format link:
-     ?n=NAMA&d=DESKRIPSI&i=URL_GAMBAR
-   Parameter opsional:
-     &w=WAKTU  (contoh: 17 Agustus 2026)
-     &a=ID     (fallback ke JSON statis di CDN)
+   Format: ?n=NAMA&d=DESKRIPSI&i=URL_GAMBAR
+   Opsional: &w=WAKTU   &a=ID (fallback ke JSON CDN)
    ============================================================ */
 const CDN_JSON = 'https://cdn.jsdelivr.net/gh/slg-timkreatif/kampanye@main/data';
 
@@ -526,28 +663,22 @@ function setStatus(state, label){
 
 function muatAgenda(){
   const p = new URLSearchParams(location.search);
-
   const nama      = p.get('n') || p.get('nama');
   const deskripsi = p.get('d') || p.get('deskripsi');
   const gambar    = p.get('i') || p.get('img') || p.get('gambar');
   const waktu     = p.get('w') || p.get('waktu');
   const id        = p.get('a') || p.get('id');
 
-  // === MODE 1: Data langsung di URL (INSTAN) ===
   if(nama && gambar){
     setStatus('ok', 'SIAP DIGUNAKAN');
     renderAgenda({ nama, deskripsi, gambar, waktu });
     return;
   }
 
-  // === MODE 2: Fallback ke JSON statis (opsional, untuk ke depan) ===
   if(id){
     setStatus('loading', 'MEMUAT AGENDA');
     fetch(`${CDN_JSON}/${id}.json`)
-      .then(r => {
-        if(!r.ok) throw new Error('Agenda tidak ditemukan');
-        return r.json();
-      })
+      .then(r => { if(!r.ok) throw new Error(); return r.json(); })
       .then(data => {
         setStatus('ok', 'SIAP DIGUNAKAN');
         renderAgenda({
@@ -560,8 +691,7 @@ function muatAgenda(){
       .catch(() => {
         setStatus('error', 'AGENDA TIDAK DITEMUKAN');
         document.getElementById('judul-kampanye').innerText = 'Agenda Tidak Ditemukan';
-        document.getElementById('deskripsi-kampanye').innerText =
-          'Periksa kembali link yang dibagikan panitia.';
+        document.getElementById('deskripsi-kampanye').innerText = 'Periksa kembali link yang dibagikan panitia.';
         document.getElementById('loading-preview').innerHTML =
           `<i data-lucide="alert-circle" class="w-9 h-9 mb-2 opacity-60" style="color:#ef4444;"></i>
            <span class="text-[10px] font-bold uppercase tracking-widest" style="color:#ef4444;">Error</span>`;
@@ -571,7 +701,6 @@ function muatAgenda(){
     return;
   }
 
-  // === MODE 3: Tidak ada parameter ===
   setStatus('idle', 'MENUNGGU AKSES');
   document.getElementById('judul-kampanye').innerText = 'Selamat Datang 👋';
   document.getElementById('deskripsi-kampanye').innerText =
@@ -621,8 +750,6 @@ function renderAgenda(data){
     });
   }, { crossOrigin: 'anonymous' });
 }
-
-// 🚀 Jalankan
 muatAgenda();
 
 /* ——————————— UPLOAD & SELFIE ——————————— */
@@ -671,13 +798,31 @@ document.getElementById('btn-capture').addEventListener('click', () => {
 
 function renderKeCanvas(dataUrl){
   fabric.Image.fromURL(dataUrl, function(img){
-    const skala = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
-    img.scale(skala);
+    const baseScale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
+    img._baseScale = baseScale;
+    img.scale(baseScale);
     canvas.centerObject(img);
+
     canvas.getObjects().forEach(o => canvas.remove(o));
     canvas.add(img);
     canvas.setActiveObject(img);
-  });
+    img.setCoords();
+    canvas.requestRenderAll();
+
+    // Aktifkan toolbar + sembunyikan placeholder
+    const wrap = document.getElementById('canvas-wrapper');
+    wrap.classList.add('has-photo');
+    const ph = document.getElementById('canvas-placeholder');
+    if(ph) ph.style.opacity = '0';
+
+    // Set slider ke 80% (karena kita fit di 0.8)
+    document.getElementById('zoom-slider').value = 80;
+
+    // Tampilkan hint sebentar
+    const hint = document.getElementById('canvas-hint');
+    hint.classList.add('show');
+    setTimeout(()=> hint.classList.remove('show'), 4000);
+  }, { crossOrigin: 'anonymous' });
 }
 
 /* ——————————— UNDUH ——————————— */
@@ -692,11 +837,10 @@ document.getElementById('btn-download').addEventListener('click', function(){
   link.click();
 });
 
-/* ——————————— INIT STATE ——————————— */
+/* ——————————— INIT ——————————— */
 (function init(){
   const acc = document.documentElement.getAttribute('data-acc') || 'teal';
   setAccent(acc);
-  syncThemeButtons();
 })();
 </script>
 </body>
