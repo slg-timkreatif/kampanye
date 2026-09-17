@@ -622,7 +622,7 @@ body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-
     </div>
     <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
       <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
-        Guru Berbagi Selogiri · v3.2<br>Tim Kreatif GTK Kecamatan Selogiri
+        Guru Berbagi Selogiri · v3.3<br>Tim Kreatif GTK Kecamatan Selogiri
       </p>
     </div>
   </div>
@@ -842,7 +842,7 @@ function updateFabricColors(){
 updateFabricColors();
 
 /* ============================================
-   📚 REORDER LAYERS — Foto di belakang, bingkai di atas
+   📚 REORDER LAYERS
    Urutan (belakang → depan):
      1. Foto
      2. Bingkai overlay
@@ -850,10 +850,10 @@ updateFabricColors();
      4. Watermark
    ============================================ */
 function reorderLayers(){
-  if(fotoObj)      canvas.sendToBack(fotoObj);       // foto PALING BELAKANG
-  if(overlayImg)   canvas.bringToFront(overlayImg);  // bingkai di atas foto
-  objekTeks.forEach(t => canvas.bringToFront(t));    // teks di atas bingkai
-  if(watermarkImg) canvas.bringToFront(watermarkImg);// watermark paling atas
+  if(fotoObj)      canvas.sendToBack(fotoObj);
+  if(overlayImg)   canvas.bringToFront(overlayImg);
+  objekTeks.forEach(t => canvas.bringToFront(t));
+  if(watermarkImg) canvas.bringToFront(watermarkImg);
   canvas.requestRenderAll();
 }
 
@@ -861,6 +861,45 @@ let fotoObj = null, overlayImg = null, overlayOriginalURL = '', watermarkImg = n
 let namaAgendaAktif = '', agendaId = '', filterAktif = 'original';
 let draftTimer = null, objekTeks = [], teksAktif = null;
 let daftarBatch = [];
+
+/* ============================================
+   ⚡ BLOB CACHE — Pre-generate blob share
+   ============================================ */
+let shareBlobCache = null;
+let shareBlobDirty = true;
+let shareBlobTimer = null;
+
+function invalidateShareCache(){
+  shareBlobDirty = true;
+  shareBlobCache = null;
+  clearTimeout(shareBlobTimer);
+  shareBlobTimer = setTimeout(preGenShareBlob, 1200);
+}
+
+function preGenShareBlob(){
+  if(!fotoObj || !shareBlobDirty) return;
+  generateShareBlob().then(b => {
+    shareBlobCache = b;
+    shareBlobDirty = false;
+  }).catch(()=>{});
+}
+
+function generateShareBlob(){
+  return new Promise((resolve, reject) => {
+    const active = canvas.getActiveObject();
+    canvas.discardActiveObject();
+    canvas.renderAll();
+
+    requestAnimationFrame(() => {
+      canvas.toBlob(blob => {
+        if(active) canvas.setActiveObject(active);
+        canvas.requestRenderAll();
+        if(blob && blob.size > 0) resolve(blob);
+        else reject(new Error('Blob kosong'));
+      }, 'image/jpeg', 0.92);
+    });
+  });
+}
 
 /* Zoom & Rotate */
 function zoomStep(pct){
@@ -1019,7 +1058,7 @@ function renderAgenda(data){
     });
     overlayImg = fImg;
     canvas.add(fImg);
-    reorderLayers();                                    // ✅ bingkai di atas foto
+    reorderLayers();
 
     if(data.watermark) tambahWatermark();
   }, { crossOrigin:'anonymous' });
@@ -1041,7 +1080,7 @@ function tambahWatermark(){
     });
     watermarkImg = wm;
     canvas.add(wm);
-    reorderLayers();                                    // ✅ watermark paling atas
+    reorderLayers();
   }, { crossOrigin:'anonymous' });
 }
 
@@ -1076,7 +1115,7 @@ function pilihBatch(idx, el){
     });
     overlayImg = fImg;
     canvas.add(fImg);
-    reorderLayers();                                    // ✅ bingkai di atas foto
+    reorderLayers();
     toast('Bingkai diganti.', 'info', 1800);
     trackEvent('ganti-batch', String(idx+1));
   }, { crossOrigin:'anonymous' });
@@ -1140,7 +1179,7 @@ function renderFotoKeCanvas(dataUrl){
     fotoObj = img;
 
     terapkanFilter(filterAktif);
-    reorderLayers();                                    // ✅ foto di belakang, bingkai di atas
+    reorderLayers();
 
     canvas.setActiveObject(img);
     img.setCoords();
@@ -1196,7 +1235,7 @@ function terapkanFilter(id){
 }
 
 /* ============================================
-   🔤 TEKS — MANUAL & TEMPLATE
+   🔤 TEKS
    ============================================ */
 function buatIText(cfg){
   const t = new fabric.IText(cfg.text, {
@@ -1284,7 +1323,7 @@ function pakaiTemplate(id){
     if(i === 0) teksAktif = t;
   });
 
-  reorderLayers();                                      // ✅ jaga urutan
+  reorderLayers();
 
   if(teksAktif){
     canvas.setActiveObject(teksAktif);
@@ -1302,7 +1341,7 @@ function tambahTeks(){
     text:'Tulis di sini', fontSize:56, fill:'#ffffff', stroke:'#000000', strokeWidth:3,
     fontFamily:'Inter', fontWeight:'800', topPct:0.82, leftPct:0.5
   });
-  reorderLayers();                                      // ✅ jaga urutan
+  reorderLayers();
   canvas.setActiveObject(t);
   teksAktif = t;
   canvas.requestRenderAll();
@@ -1393,6 +1432,7 @@ function switchTab(name){
    💾 DRAFT
    ============================================ */
 function simpanDraftDebounced(){
+  invalidateShareCache();
   if(!agendaId) return;
   clearTimeout(draftTimer);
   draftTimer = setTimeout(simpanDraft, 700);
@@ -1464,7 +1504,7 @@ async function muatDraft(){
     filterAktif = draft.filterAktif || 'original';
     terapkanFilter(filterAktif);
 
-    reorderLayers();                                    // ✅ jaga urutan
+    reorderLayers();
 
     document.getElementById('canvas-wrapper').classList.add('has-photo');
     const ph = document.getElementById('canvas-placeholder');
@@ -1473,6 +1513,8 @@ async function muatDraft(){
     document.getElementById('draft-info').style.display = 'block';
     document.getElementById('draft-info').textContent =
       '💾 Draft dipulihkan — ' + new Date(draft.ts).toLocaleString('id-ID',{ dateStyle:'medium', timeStyle:'short' });
+
+    invalidateShareCache();
   } catch(e){}
 }
 
@@ -1522,7 +1564,7 @@ async function bersihkanRiwayatLokal(){
 }
 
 /* ============================================
-   ⏳ UNDUH + SHARE
+   ⏳ UNDUH
    ============================================ */
 document.getElementById('btn-download').addEventListener('click', async function(){
   const btn = this;
@@ -1572,39 +1614,79 @@ document.getElementById('btn-download').addEventListener('click', async function
   }
 });
 
+/* ============================================
+   📤 BAGIKAN — dengan Blob Cache (instan)
+   ============================================ */
 async function shareKarya(){
   if(!fotoObj){ toast('Pilih foto dulu.', 'error'); return; }
-  canvas.discardActiveObject(); canvas.renderAll();
+
   const btn = document.getElementById('btn-share');
   const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan…</span>';
-  lucide.createIcons();
+  const safeNama = (namaAgendaAktif || 'Kreatif').replace(/[^a-z0-9]/gi,'-').toLowerCase();
 
-  canvas.toBlob(async blob => {
-    try {
-      const safeNama = (namaAgendaAktif || 'Kreatif').replace(/[^a-z0-9]/gi,'-').toLowerCase();
-      const file = new File([blob], `Kampanye-${safeNama}.png`, { type:'image/png' });
-      if(navigator.canShare && navigator.canShare({ files:[file] })){
+  // ⚡ CACHE HIT — langsung share tanpa loading
+  if(!shareBlobDirty && shareBlobCache){
+    const file = new File([shareBlobCache], `Kampanye-${safeNama}.jpg`, { type:'image/jpeg' });
+    if(navigator.canShare && navigator.canShare({ files:[file] })){
+      try {
         await navigator.share({
           files: [file],
           title: namaAgendaAktif || 'Kreatif Kampanye',
           text: `Karya saya untuk ${namaAgendaAktif || 'kampanye'} — Guru Berbagi Selogiri`
         });
         trackEvent('share-native', namaAgendaAktif);
-      } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = `Kampanye-${safeNama}.png`; a.click();
-        setTimeout(()=>URL.revokeObjectURL(url), 1000);
-        toast('Browser belum dukung share langsung — karya diunduh.', 'info', 4000);
+      } catch(err){
+        if(!(err && err.name === 'AbortError')) toast('Bagikan gagal. Coba unduh saja.', 'error');
       }
-    } catch(err){
-      if(!(err && err.name === 'AbortError')) toast('Bagikan gagal. Coba unduh saja.', 'error');
-    } finally {
-      btn.disabled = false; btn.innerHTML = orig; lucide.createIcons();
+    } else {
+      unduhFallback(shareBlobCache, safeNama);
     }
-  }, 'image/png');
+    return;
+  }
+
+  // 🐢 CACHE MISS — generate sekarang dengan progress feedback
+  btn.disabled = true;
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan…</span>';
+  lucide.createIcons();
+  const tl = toast('Menyiapkan gambar…', 'loading', 0);
+
+  try {
+    const blob = await generateShareBlob();
+    shareBlobCache = blob;
+    shareBlobDirty = false;
+    closeToast(tl);
+
+    const file = new File([blob], `Kampanye-${safeNama}.jpg`, { type:'image/jpeg' });
+    if(navigator.canShare && navigator.canShare({ files:[file] })){
+      btn.innerHTML = '<i data-lucide="share-2" class="w-4 h-4"></i><span>Membuka…</span>';
+      lucide.createIcons();
+      await navigator.share({
+        files: [file],
+        title: namaAgendaAktif || 'Kreatif Kampanye',
+        text: `Karya saya untuk ${namaAgendaAktif || 'kampanye'} — Guru Berbagi Selogiri`
+      });
+      trackEvent('share-native', namaAgendaAktif);
+    } else {
+      unduhFallback(blob, safeNama);
+    }
+  } catch(err){
+    closeToast(tl);
+    if(!(err && err.name === 'AbortError')) toast('Bagikan gagal. Coba unduh saja.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = orig;
+    lucide.createIcons();
+  }
+}
+
+function unduhFallback(blob, safeNama){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Kampanye-${safeNama}.jpg`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  toast('Browser belum dukung share langsung — karya diunduh.', 'info', 4000);
 }
 
 /* ============================================
@@ -1623,6 +1705,7 @@ async function resetSemua(){
   const ph = document.getElementById('canvas-placeholder'); if(ph) ph.style.opacity = '1';
   document.getElementById('zoom-slider').value = 80;
   document.getElementById('draft-info').style.display = 'none';
+  invalidateShareCache();
   canvas.discardActiveObject(); canvas.requestRenderAll();
   updateTeksEditorUI();
   toast('Siap mulai dari awal.', 'success');
