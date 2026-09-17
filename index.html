@@ -4,12 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0D9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kreatif GBS">
 <title>Kreatif Kampanye — Guru Berbagi Selogiri</title>
 
 <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png">
+<link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png">
+<link rel="manifest" href="manifest.json">
 
-<!-- ============ ANALYTICS — GoatCounter ============ -->
-<!-- Daftar gratis di goatcounter.com, ganti subdomain di bawah -->
 <script data-goatcounter="https://gbs.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
@@ -22,11 +25,9 @@ try {
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-tailwind.config = {
-  theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] } } }
-}
+tailwind.config = { theme:{ extend:{ fontFamily:{ sans:['Inter','system-ui','sans-serif'] } } } }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 
@@ -34,14 +35,9 @@ tailwind.config = {
 :root{
   --acc:#0D9488; --acc2:#14B8A6; --acc-soft:#DDF5F2;
   --acc-text:#0B7C72; --acc-ring:rgba(13,148,136,.35);
-  --bg:#F6F5F9;
-  --card:#FFFFFF;
-  --border:#E8E6EE;
-  --fg:#14121A;
-  --fg-muted:#6B6879;
-  --fg-subtle:#9C99A6;
+  --bg:#F6F5F9; --card:#FFFFFF; --border:#E8E6EE;
+  --fg:#14121A; --fg-muted:#6B6879; --fg-subtle:#9C99A6;
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-2xl:24px;
-  --p-sm:12px; --p-md:16px; --p-lg:20px; --p-xl:24px;
   --shadow-1:0 1px 3px rgba(20,18,26,.05);
   --shadow-2:0 4px 12px rgba(20,18,26,.08);
 }
@@ -51,12 +47,7 @@ html[data-acc="amber"] { --acc:#d97706; --acc2:#f59e0b; --acc-soft:#fef3c7; --ac
 html[data-acc="rose"]  { --acc:#e11d48; --acc2:#f43f5e; --acc-soft:#ffe4e6; --acc-text:#e11d48; --acc-ring:rgba(225,29,72,.35);}
 
 *{ -webkit-tap-highlight-color:transparent; }
-body{
-  background:var(--bg); color:var(--fg);
-  font-family:'Inter', system-ui, sans-serif;
-  min-height:100vh;
-}
-
+body{ background:var(--bg); color:var(--fg); font-family:'Inter',system-ui,sans-serif; min-height:100vh; }
 .gb-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--r-2xl); box-shadow:var(--shadow-1); }
 .gb-label{ font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--fg-subtle); }
 .gb-btn{
@@ -65,67 +56,73 @@ body{
   padding:14px 20px; cursor:pointer; transition:all .2s ease;
   border:1px solid transparent; position:relative; overflow:hidden;
 }
-.gb-btn:disabled{ cursor:not-allowed; }
+.gb-btn:disabled{ cursor:not-allowed; opacity:.55; }
 .gb-btn-primary{ background:var(--acc); color:#fff; box-shadow:0 4px 12px var(--acc-ring); }
 .gb-btn-primary:hover:not(:disabled){ background:var(--acc2); transform:translateY(-1px); }
 .gb-btn-primary:active:not(:disabled){ transform:scale(.97); }
-.gb-btn-primary:disabled{ opacity:.75; }
-
-/* State unduh sukses */
 .gb-btn-primary.is-success{ background:#10b981; box-shadow:0 4px 12px rgba(16,185,129,.35); }
-.gb-btn-primary.is-success:hover{ background:#10b981; transform:none; }
-
-/* Shimmer effect saat loading */
 .gb-btn-primary.is-loading::after{
   content:''; position:absolute; inset:0;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
   animation:shimmer 1.4s infinite;
 }
 @keyframes shimmer{ 0%{transform:translateX(-100%);} 100%{transform:translateX(100%);} }
-
 .gb-btn-outline{ background:transparent; color:var(--acc-text); border-color:var(--acc); }
-.gb-btn-outline:hover{ background:var(--acc-soft); }
-.gb-btn-outline:active{ transform:scale(.97); }
+.gb-btn-outline:hover:not(:disabled){ background:var(--acc-soft); }
+.gb-btn-outline:active:not(:disabled){ transform:scale(.97); }
 .gb-btn-ghost{ background:transparent; color:var(--fg-muted); border-color:var(--border); }
-.gb-btn-ghost:hover{ background:var(--bg); color:var(--fg); }
+.gb-btn-ghost:hover:not(:disabled){ background:var(--bg); color:var(--fg); }
+.gb-btn-sm{ padding:8px 12px; font-size:12px; border-radius:10px; }
 .gb-pill{
   display:inline-flex; align-items:center; gap:6px;
   padding:6px 12px; border-radius:999px;
   font-size:11px; font-weight:700; letter-spacing:.04em;
 }
+.gb-input{
+  width:100%; padding:10px 12px; font-size:13px; font-weight:600;
+  background:var(--bg); color:var(--fg);
+  border:1px solid var(--border); border-radius:var(--r-md);
+  transition:border-color .2s ease, box-shadow .2s ease; font-family:inherit;
+}
+.gb-input:focus{ outline:none; border-color:var(--acc); box-shadow:0 0 0 3px var(--acc-ring); }
 .canvas-container, .canvas-container canvas{ width:100% !important; height:100% !important; }
-
 .canvas-container, .canvas-container canvas, #canvas-wrapper{
   touch-action:none !important; -ms-touch-action:none !important;
 }
 #canvas-wrapper{ overscroll-behavior:contain; }
-
 .modal-open{ overflow:hidden; }
 .modal-overlay{ transition:opacity .25s ease-out; }
 .modal-content{ transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .28s cubic-bezier(.16,1,.3,1); }
-.acc-dot{
-  width:36px; height:36px; border-radius:999px; cursor:pointer;
-  border:3px solid transparent; transition:all .18s ease; box-shadow:var(--shadow-1);
-}
+.acc-dot{ width:36px; height:36px; border-radius:999px; cursor:pointer; border:3px solid transparent; transition:all .18s ease; box-shadow:var(--shadow-1); }
 .acc-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.08); }
 .acc-dot:hover{ transform:scale(1.08); }
 
-/* ===== Canvas Toolbar ===== */
+/* Segmented Tab */
+.seg-tab{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 14px; border-radius:10px;
+  font-size:12px; font-weight:700; cursor:pointer;
+  color:var(--fg-muted); background:transparent; border:none;
+  transition:all .18s ease;
+}
+.seg-tab[data-active="true"]{ background:var(--acc); color:#fff; box-shadow:0 2px 8px var(--acc-ring); }
+.seg-tab:hover:not([data-active="true"]){ background:var(--bg); color:var(--fg); }
+
+/* Canvas toolbar */
 .canvas-toolbar{
-  position:absolute; bottom:12px; left:50%;
-  transform:translate(-50%, 12px);
+  position:absolute; bottom:12px; left:50%; transform:translate(-50%,12px);
   display:flex; align-items:center; gap:4px;
   padding:6px 8px; border-radius:999px;
   background:rgba(20,18,26,.72);
   backdrop-filter:blur(14px) saturate(160%);
   -webkit-backdrop-filter:blur(14px) saturate(160%);
   border:1px solid rgba(255,255,255,.14);
-  box-shadow:0 8px 28px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.15);
+  box-shadow:0 8px 28px rgba(0,0,0,.28);
   opacity:0; pointer-events:none;
   transition:opacity .3s ease, transform .3s cubic-bezier(.16,1,.3,1);
   z-index:20; max-width:calc(100% - 24px);
 }
-#canvas-wrapper.has-photo .canvas-toolbar{ opacity:1; pointer-events:auto; transform:translate(-50%, 0); }
+#canvas-wrapper.has-photo .canvas-toolbar{ opacity:1; pointer-events:auto; transform:translate(-50%,0); }
 .toolbar-btn{
   width:36px; height:36px; flex-shrink:0;
   display:flex; align-items:center; justify-content:center;
@@ -133,29 +130,15 @@ body{
   border:none; cursor:pointer; transition:background .15s ease, transform .12s ease;
 }
 .toolbar-btn:hover{ background:rgba(255,255,255,.14); }
-.toolbar-btn:active{ transform:scale(.9); background:rgba(255,255,255,.22); }
+.toolbar-btn:active{ transform:scale(.9); }
 .toolbar-btn i{ width:16px; height:16px; }
 .toolbar-divider{ width:1px; height:20px; background:rgba(255,255,255,.18); flex-shrink:0; margin:0 2px; }
 .zoom-slider-wrap{ display:flex; align-items:center; gap:8px; padding:0 6px; min-width:110px; flex-shrink:0; }
-#zoom-slider{
-  -webkit-appearance:none; appearance:none;
-  width:100%; height:4px; border-radius:999px;
-  background:rgba(255,255,255,.24); outline:none; cursor:pointer;
-}
-#zoom-slider::-webkit-slider-thumb{
-  -webkit-appearance:none; appearance:none;
-  width:16px; height:16px; border-radius:50%; background:#fff;
-  border:2px solid var(--acc); box-shadow:0 2px 8px rgba(0,0,0,.35);
-  cursor:pointer; transition:transform .12s ease;
-}
-#zoom-slider::-webkit-slider-thumb:active{ transform:scale(1.2); }
-#zoom-slider::-moz-range-thumb{
-  width:16px; height:16px; border-radius:50%; background:#fff;
-  border:2px solid var(--acc); cursor:pointer;
-}
+#zoom-slider{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:999px; background:rgba(255,255,255,.24); outline:none; cursor:pointer; }
+#zoom-slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid var(--acc); box-shadow:0 2px 8px rgba(0,0,0,.35); cursor:pointer; }
+#zoom-slider::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid var(--acc); cursor:pointer; }
 .canvas-hint{
-  position:absolute; top:12px; left:50%;
-  transform:translate(-50%, -8px);
+  position:absolute; top:12px; left:50%; transform:translate(-50%,-8px);
   padding:7px 14px; border-radius:999px;
   background:rgba(20,18,26,.78);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
@@ -164,26 +147,112 @@ body{
   opacity:0; pointer-events:none;
   transition:opacity .4s ease, transform .4s ease;
   z-index:15; border:1px solid rgba(255,255,255,.14);
-  box-shadow:0 4px 16px rgba(0,0,0,.2);
 }
 .canvas-hint i{ width:13px; height:13px; }
-.canvas-hint.show{ opacity:1; transform:translate(-50%, 0); }
+.canvas-hint.show{ opacity:1; transform:translate(-50%,0); }
 
-/* ============================================
-   🍞 TOAST SYSTEM
-   ============================================ */
+/* Grid rule of thirds */
+.grid-overlay{ position:absolute; inset:0; pointer-events:none; z-index:12; display:none; }
+.grid-overlay.show{ display:block; }
+.grid-overlay::before{
+  content:''; position:absolute; inset:0;
+  background:
+    linear-gradient(to right, transparent 33.333%, rgba(255,255,255,.55) 33.333%, rgba(255,255,255,.55) calc(33.333% + 1px), transparent calc(33.333% + 1px), transparent 66.666%, rgba(255,255,255,.55) 66.666%, rgba(255,255,255,.55) calc(66.666% + 1px), transparent calc(66.666% + 1px)),
+    linear-gradient(to bottom, transparent 33.333%, rgba(255,255,255,.55) 33.333%, rgba(255,255,255,.55) calc(33.333% + 1px), transparent calc(33.333% + 1px), transparent 66.666%, rgba(255,255,255,.55) 66.666%, rgba(255,255,255,.55) calc(66.666% + 1px), transparent calc(66.666% + 1px));
+  filter:drop-shadow(0 0 1px rgba(0,0,0,.5));
+}
+
+/* Filter grid */
+.filter-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.filter-card{
+  position:relative; border-radius:10px; overflow:hidden;
+  border:2px solid var(--border); cursor:pointer; padding:0;
+  background:var(--bg); aspect-ratio:1/1.15;
+  transition:all .18s ease;
+}
+.filter-card:hover{ transform:translateY(-2px); border-color:var(--acc); }
+.filter-card[data-active="true"]{ border-color:var(--acc); box-shadow:0 0 0 3px var(--acc-ring); }
+.filter-card img{ width:100%; height:70%; object-fit:cover; display:block; }
+.filter-card span{ display:block; font-size:9px; font-weight:800; text-align:center; padding:3px 2px; color:var(--fg-muted); }
+.filter-card[data-active="true"] span{ color:var(--acc-text); }
+
+/* Batch strip */
+.batch-strip{
+  display:flex; gap:8px; overflow-x:auto; padding:4px 2px 8px;
+  scrollbar-width:thin; scroll-snap-type:x mandatory;
+}
+.batch-strip::-webkit-scrollbar{ height:4px; }
+.batch-strip::-webkit-scrollbar-thumb{ background:var(--border); border-radius:2px; }
+.batch-item{
+  flex-shrink:0; width:64px; height:64px;
+  border-radius:10px; overflow:hidden;
+  border:2px solid var(--border); cursor:pointer;
+  background:var(--bg); padding:0; scroll-snap-align:start;
+  transition:all .18s ease;
+}
+.batch-item img{ width:100%; height:100%; object-fit:cover; }
+.batch-item[data-active="true"]{ border-color:var(--acc); box-shadow:0 0 0 3px var(--acc-ring); transform:scale(1.05); }
+
+/* Riwayat grid */
+.riwayat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.riwayat-thumb{
+  position:relative; aspect-ratio:1; border-radius:10px; overflow:hidden;
+  border:1px solid var(--border); cursor:pointer; padding:0; background:var(--bg);
+  transition:all .18s ease;
+}
+.riwayat-thumb:hover{ transform:scale(1.04); border-color:var(--acc); }
+.riwayat-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Text preset chips */
+.chip{
+  display:inline-flex; align-items:center; gap:4px;
+  padding:6px 10px; border-radius:999px;
+  background:var(--bg); border:1px solid var(--border);
+  font-size:11px; font-weight:700; color:var(--fg-muted);
+  cursor:pointer; transition:all .15s ease;
+}
+.chip:hover{ border-color:var(--acc); color:var(--acc-text); }
+.chip[data-active="true"]{ background:var(--acc); color:#fff; border-color:var(--acc); }
+.chip i{ width:12px; height:12px; }
+
+/* Text preset template cards */
+.tpl-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.tpl-card{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:12px;
+  background:var(--bg); border:1px solid var(--border);
+  cursor:pointer; transition:all .18s ease; text-align:left;
+}
+.tpl-card:hover{ border-color:var(--acc); background:var(--acc-soft); transform:translateY(-1px); }
+.tpl-card:active{ transform:scale(.98); }
+.tpl-card .tpl-icon{
+  width:34px; height:34px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:8px; background:var(--acc-soft); color:var(--acc-text);
+}
+.tpl-card .tpl-body{ flex:1; min-width:0; }
+.tpl-card .tpl-name{ font-size:12px; font-weight:800; color:var(--fg); line-height:1.2; }
+.tpl-card .tpl-desc{ font-size:10px; color:var(--fg-muted); margin-top:2px; line-height:1.3; }
+
+.color-dot{
+  width:26px; height:26px; border-radius:999px; cursor:pointer;
+  border:2px solid var(--border); transition:all .15s ease;
+}
+.color-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.1); }
+
+/* Toast */
 #toast-container{
   position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
   z-index:10000; display:flex; flex-direction:column; gap:8px;
   pointer-events:none; width:calc(100% - 32px); max-width:400px;
-  padding-bottom:env(safe-area-inset-bottom, 0);
+  padding-bottom:env(safe-area-inset-bottom,0);
 }
 .toast{
   display:flex; align-items:center; gap:10px;
   padding:12px 16px; border-radius:14px;
   background:rgba(20,18,26,.94); color:#fff;
   font-size:13px; font-weight:600; line-height:1.4;
-  box-shadow:0 10px 30px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.15);
+  box-shadow:0 10px 30px rgba(0,0,0,.28);
   pointer-events:auto; border:1px solid rgba(255,255,255,.08);
   animation:toastIn .32s cubic-bezier(.16,1,.3,1);
   backdrop-filter:blur(10px);
@@ -191,7 +260,6 @@ body{
 .toast i{ width:16px; height:16px; flex-shrink:0; }
 .toast-success{ background:rgba(16,185,129,.96); }
 .toast-error{ background:rgba(239,68,68,.96); }
-.toast-loading{ background:rgba(20,18,26,.94); }
 .toast-out{ animation:toastOut .28s ease forwards; }
 @keyframes toastIn{ from{opacity:0; transform:translateY(24px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
 @keyframes toastOut{ to{opacity:0; transform:translateY(20px) scale(.96);} }
@@ -200,115 +268,121 @@ body{
 
 <body class="antialiased">
 
-<!-- ============ HEADER ============ -->
-<header class="border-b" style="border-color:var(--border); background:var(--card);">
+<header class="border-b sticky top-0 z-40" style="border-color:var(--border); background:rgba(255,255,255,.85); backdrop-filter:blur(12px);">
   <div class="max-w-6xl mx-auto px-4 sm:px-5 py-3 flex items-center justify-between gap-3">
     <a href="#" class="flex items-center gap-3 min-w-0">
-      <img src="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png"
-           alt="Guru Berbagi Selogiri"
-           class="w-9 h-9 rounded-xl object-contain shrink-0"
-           style="background:var(--acc-soft); padding:3px;">
+      <img src="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png" alt="GBS"
+           class="w-9 h-9 rounded-xl object-contain shrink-0" style="background:var(--acc-soft); padding:3px;">
       <div class="min-w-0">
         <p class="font-extrabold text-[13px] leading-tight truncate" style="color:var(--fg);">Guru Berbagi Selogiri</p>
         <p class="text-[10px] font-semibold tracking-wide truncate" style="color:var(--fg-subtle);">Portal berbagi &amp; berkarya GTK Selogiri</p>
       </div>
     </a>
-    <button onclick="openSettings()" aria-label="Pengaturan tampilan"
-            class="gb-btn gb-btn-ghost !p-2.5 !rounded-xl">
-      <i data-lucide="palette" class="w-4 h-4"></i>
-    </button>
+    <div class="flex items-center gap-1.5">
+      <button id="btn-install" onclick="installPWA()" style="display:none;" class="gb-btn gb-btn-soft gb-btn-sm">
+        <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Install</span>
+      </button>
+      <button onclick="openSettings()" class="gb-btn gb-btn-ghost !p-2.5 !rounded-xl">
+        <i data-lucide="palette" class="w-4 h-4"></i>
+      </button>
+    </div>
   </div>
 </header>
 
-<main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 md:py-10">
-  <section class="text-center mb-7 md:mb-10">
-    <div class="gb-pill mb-4" style="background:var(--acc-soft); color:var(--acc-text);">
+<main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 md:py-8">
+
+  <section class="text-center mb-6 md:mb-8">
+    <div class="gb-pill mb-3" style="background:var(--acc-soft); color:var(--acc-text);">
       <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> KREATIF KAMPANYE
     </div>
-    <h1 class="text-[28px] md:text-4xl font-extrabold tracking-tight leading-tight" style="color:var(--fg);">
-      Satu Bingkai,<br class="sm:hidden"> Beragam Cerita.
+    <h1 class="text-[26px] md:text-3xl font-extrabold tracking-tight leading-tight" style="color:var(--fg);">
+      Satu Bingkai, Beragam Cerita.
     </h1>
-    <p class="text-sm md:text-base mt-3 max-w-md mx-auto leading-relaxed" style="color:var(--fg-muted);">
-      Unggah foto terbaik Anda, sesuaikan posisinya, lalu bagikan semangat kampanye ini bersama rekan guru.
+    <p class="text-[13px] md:text-sm mt-2 max-w-md mx-auto leading-relaxed" style="color:var(--fg-muted);">
+      Unggah foto, tambah nama, pilih filter, unduh atau langsung bagikan.
     </p>
   </section>
 
-  <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 md:gap-6 items-start">
-    <div class="lg:col-span-2 space-y-5">
-      <div class="gb-card p-5 md:p-6">
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-5 items-start">
+
+    <!-- KIRI -->
+    <div class="lg:col-span-2 space-y-4">
+      <div class="gb-card p-5">
         <div class="flex items-center gap-2 mb-2">
           <span id="status-dot" class="w-2 h-2 rounded-full" style="background:var(--fg-subtle);"></span>
           <span class="gb-label" id="status-text">MEMUAT AGENDA</span>
         </div>
-        <h2 id="judul-kampanye" class="text-lg md:text-xl font-extrabold leading-snug mb-2"
-            style="color:var(--fg);">Memuat…</h2>
-        <p id="deskripsi-kampanye" class="text-[13px] leading-relaxed mb-5"
-           style="color:var(--fg-muted);">Menyiapkan agenda…</p>
+        <h2 id="judul-kampanye" class="text-base md:text-lg font-extrabold leading-snug mb-1.5" style="color:var(--fg);">Memuat…</h2>
+        <p id="deskripsi-kampanye" class="text-[12px] leading-relaxed mb-4" style="color:var(--fg-muted);">Menyiapkan agenda…</p>
 
-        <div class="gb-label mb-3">Pratinjau Bingkai</div>
-        <div class="rounded-2xl p-2 flex justify-center min-h-[180px]"
-             style="background:var(--bg); border:1px solid var(--border);">
-          <img id="preview-img" src="" alt="Pratinjau bingkai"
-               class="w-full max-w-[240px] h-auto object-cover rounded-xl"
+        <div class="gb-label mb-2">Pratinjau Bingkai</div>
+        <div class="rounded-xl p-2 flex justify-center min-h-[140px]" style="background:var(--bg); border:1px solid var(--border);">
+          <img id="preview-img" src="" alt="" class="w-full max-w-[200px] h-auto object-cover rounded-lg"
                style="display:none; border:1px solid var(--border);">
-          <div id="loading-preview" class="py-10 flex flex-col items-center justify-center text-center px-4"
-               style="color:var(--fg-subtle);">
-            <i data-lucide="image" class="w-9 h-9 mb-2 opacity-60"></i>
+          <div id="loading-preview" class="py-8 flex flex-col items-center justify-center text-center px-4" style="color:var(--fg-subtle);">
+            <i data-lucide="image" class="w-8 h-8 mb-2 opacity-60"></i>
             <span class="text-[10px] font-bold uppercase tracking-widest">Menunggu Data</span>
           </div>
         </div>
       </div>
 
-      <div class="gb-card p-5 md:p-6 hidden lg:block">
-        <div class="gb-label mb-4">Cara Pakai</div>
-        <ol class="space-y-4">
+      <div class="gb-card p-5" id="kartu-riwayat-lokal" style="display:none;">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="images" class="w-4 h-4" style="color:var(--acc);"></i>
+            <h3 class="font-extrabold text-sm" style="color:var(--fg);">Karya Anda</h3>
+          </div>
+          <button onclick="bersihkanRiwayatLokal()" class="gb-btn gb-btn-ghost gb-btn-sm !p-1.5">
+            <i data-lucide="trash-2" class="w-3 h-3"></i>
+          </button>
+        </div>
+        <div class="riwayat-grid" id="riwayat-grid"></div>
+        <p class="text-[10px] mt-2 leading-relaxed" style="color:var(--fg-subtle);">
+          Tersimpan di HP Anda saja. Klik untuk lihat &amp; unduh ulang.
+        </p>
+      </div>
+
+      <div class="gb-card p-5 hidden lg:block">
+        <div class="gb-label mb-3">Cara Pakai</div>
+        <ol class="space-y-3">
           <li class="flex gap-3">
-            <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold"
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">1</span>
-            <div>
-              <p class="text-[13px] font-bold" style="color:var(--fg);">Pilih Sumber Foto</p>
-              <p class="text-[12px] leading-snug mt-0.5" style="color:var(--fg-muted);">Unggah dari galeri atau ambil selfie langsung.</p>
-            </div>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              <b style="color:var(--fg);">Pilih foto</b> dari galeri atau selfie langsung.
+            </p>
           </li>
           <li class="flex gap-3">
-            <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold"
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">2</span>
-            <div>
-              <p class="text-[13px] font-bold" style="color:var(--fg);">Atur Posisi</p>
-              <p class="text-[12px] leading-snug mt-0.5" style="color:var(--fg-muted);">Cubit 2 jari atau pakai slider zoom di bawah kanvas.</p>
-            </div>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              <b style="color:var(--fg);">Pilih template teks</b> nama/jabatan, atau tulis manual.
+            </p>
           </li>
           <li class="flex gap-3">
-            <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold"
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">3</span>
-            <div>
-              <p class="text-[13px] font-bold" style="color:var(--fg);">Unduh &amp; Bagikan</p>
-              <p class="text-[12px] leading-snug mt-0.5" style="color:var(--fg-muted);">Simpan karya Anda, lalu sebar ke media sosial.</p>
-            </div>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              <b style="color:var(--fg);">Unduh atau bagikan</b> langsung ke WA/IG.
+            </p>
           </li>
         </ol>
       </div>
     </div>
 
+    <!-- KANAN -->
     <div class="lg:col-span-3">
-      <div id="area-kerja" class="gb-card p-5 md:p-6 opacity-60 pointer-events-none transition-all duration-500">
-        <div class="flex items-center justify-between mb-4">
-          <div class="gb-label">Ruang Kreasi</div>
-          <div class="flex items-center gap-1.5 text-[10px] font-bold" style="color:var(--fg-subtle);">
-            <i data-lucide="hand" class="w-3.5 h-3.5"></i> GESER · CUBIT · PUTAR
-          </div>
-        </div>
+      <div id="area-kerja" class="gb-card p-5 opacity-60 pointer-events-none transition-all duration-500">
 
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <label for="upload-foto" class="gb-btn gb-btn-primary cursor-pointer">
-            <i data-lucide="image-plus" class="w-4 h-4"></i>
-            <span>Pilih Foto</span>
-          </label>
-          <input type="file" id="upload-foto" accept="image/png,image/jpeg,image/jpg" class="hidden">
-
-          <button id="btn-selfie" class="gb-btn gb-btn-outline">
-            <i data-lucide="camera" class="w-4 h-4"></i>
-            <span>Selfie</span>
+        <div class="flex items-center gap-1 mb-4 p-1 rounded-xl" style="background:var(--bg);">
+          <button class="seg-tab flex-1 justify-center" data-tab="foto" data-active="true" onclick="switchTab('foto')">
+            <i data-lucide="image" class="w-3.5 h-3.5"></i> Foto
+          </button>
+          <button class="seg-tab flex-1 justify-center" data-tab="teks" onclick="switchTab('teks')">
+            <i data-lucide="type" class="w-3.5 h-3.5"></i> Teks
+          </button>
+          <button class="seg-tab flex-1 justify-center" data-tab="filter" onclick="switchTab('filter')">
+            <i data-lucide="palette" class="w-3.5 h-3.5"></i> Filter
           </button>
         </div>
 
@@ -329,71 +403,192 @@ body{
             <canvas id="twibbon-canvas"></canvas>
           </div>
 
+          <div id="grid-overlay" class="grid-overlay"></div>
+
           <div id="canvas-hint" class="canvas-hint">
             <i data-lucide="move" class="w-3.5 h-3.5"></i>
             <span>Cubit 2 jari atau pakai slider di bawah</span>
           </div>
 
-          <div class="canvas-toolbar" role="toolbar" aria-label="Kontrol foto">
-            <button class="toolbar-btn" onclick="zoomStep(-10)" aria-label="Perkecil">
-              <i data-lucide="zoom-out"></i>
-            </button>
+          <div class="canvas-toolbar" role="toolbar">
+            <button class="toolbar-btn" onclick="zoomStep(-10)" aria-label="Perkecil"><i data-lucide="zoom-out"></i></button>
             <div class="zoom-slider-wrap">
-              <input type="range" id="zoom-slider" min="30" max="300" value="80" aria-label="Zoom foto">
+              <input type="range" id="zoom-slider" min="30" max="300" value="80" aria-label="Zoom">
             </div>
-            <button class="toolbar-btn" onclick="zoomStep(10)" aria-label="Perbesar">
-              <i data-lucide="zoom-in"></i>
-            </button>
+            <button class="toolbar-btn" onclick="zoomStep(10)" aria-label="Perbesar"><i data-lucide="zoom-in"></i></button>
             <div class="toolbar-divider"></div>
-            <button class="toolbar-btn" onclick="rotateStep(-90)" aria-label="Putar kiri">
-              <i data-lucide="rotate-ccw"></i>
-            </button>
-            <button class="toolbar-btn" onclick="rotateStep(90)" aria-label="Putar kanan">
-              <i data-lucide="rotate-cw"></i>
-            </button>
-            <button class="toolbar-btn" onclick="resetObjek()" aria-label="Reset posisi">
-              <i data-lucide="refresh-cw"></i>
-            </button>
+            <button class="toolbar-btn" onclick="rotateStep(-90)" aria-label="Putar kiri"><i data-lucide="rotate-ccw"></i></button>
+            <button class="toolbar-btn" onclick="rotateStep(90)" aria-label="Putar kanan"><i data-lucide="rotate-cw"></i></button>
+            <button class="toolbar-btn" onclick="toggleGrid()" aria-label="Grid" id="btn-grid"><i data-lucide="grid-3x3"></i></button>
+            <button class="toolbar-btn" onclick="resetObjek()" aria-label="Reset"><i data-lucide="refresh-cw"></i></button>
           </div>
         </div>
 
-        <button id="btn-download" class="gb-btn gb-btn-primary w-full">
-          <i data-lucide="download" class="w-4 h-4"></i>
-          <span>Unduh Karya</span>
-        </button>
+        <!-- Panel FOTO -->
+        <div id="panel-foto" class="tab-panel">
+          <div class="grid grid-cols-2 gap-2.5 mb-3">
+            <label for="upload-foto" class="gb-btn gb-btn-primary cursor-pointer">
+              <i data-lucide="image-plus" class="w-4 h-4"></i><span>Pilih Foto</span>
+            </label>
+            <input type="file" id="upload-foto" accept="image/*" class="hidden">
+            <button id="btn-selfie" class="gb-btn gb-btn-outline">
+              <i data-lucide="camera" class="w-4 h-4"></i><span>Selfie</span>
+            </button>
+          </div>
 
-        <p class="lg:hidden text-[11px] text-center mt-3 leading-relaxed" style="color:var(--fg-muted);">
-          💡 Cubit 2 jari pada foto atau gunakan slider di bawah kanvas untuk mengatur ukuran.
-        </p>
+          <div id="batch-wrap" style="display:none;" class="mt-2">
+            <div class="gb-label mb-2">Pilih Bingkai</div>
+            <div class="batch-strip" id="batch-strip"></div>
+          </div>
+        </div>
+
+        <!-- Panel TEKS -->
+        <div id="panel-teks" class="tab-panel" style="display:none;">
+
+          <!-- ====== TEMPLATE PRESET ====== -->
+          <div class="gb-label mb-2">Template Cepat</div>
+          <div class="tpl-grid mb-4">
+            <button class="tpl-card" onclick="pakaiTemplate('nama')">
+              <div class="tpl-icon"><i data-lucide="user" class="w-4 h-4"></i></div>
+              <div class="tpl-body">
+                <p class="tpl-name">Nama Saja</p>
+                <p class="tpl-desc">Teks besar bawah</p>
+              </div>
+            </button>
+            <button class="tpl-card" onclick="pakaiTemplate('nama-jabatan')">
+              <div class="tpl-icon"><i data-lucide="id-card" class="w-4 h-4"></i></div>
+              <div class="tpl-body">
+                <p class="tpl-name">Nama + Jabatan</p>
+                <p class="tpl-desc">2 baris, bawah</p>
+              </div>
+            </button>
+            <button class="tpl-card" onclick="pakaiTemplate('kelas')">
+              <div class="tpl-icon"><i data-lucide="graduation-cap" class="w-4 h-4"></i></div>
+              <div class="tpl-body">
+                <p class="tpl-name">Kelas / Mapel</p>
+                <p class="tpl-desc">Kecil di atas</p>
+              </div>
+            </button>
+            <button class="tpl-card" onclick="pakaiTemplate('quote')">
+              <div class="tpl-icon"><i data-lucide="quote" class="w-4 h-4"></i></div>
+              <div class="tpl-body">
+                <p class="tpl-name">Quote</p>
+                <p class="tpl-desc">Elegan, tengah</p>
+              </div>
+            </button>
+            <button class="tpl-card" onclick="pakaiTemplate('narasumber')">
+              <div class="tpl-icon"><i data-lucide="mic" class="w-4 h-4"></i></div>
+              <div class="tpl-body">
+                <p class="tpl-name">Narasumber</p>
+                <p class="tpl-desc">Badge bawah kiri</p>
+              </div>
+            </button>
+            <button class="tpl-card" onclick="pakaiTemplate('kosong')">
+              <div class="tpl-icon"><i data-lucide="type" class="w-4 h-4"></i></div>
+              <div class="tpl-body">
+                <p class="tpl-name">Teks Kosong</p>
+                <p class="tpl-desc">Mulai dari nol</p>
+              </div>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3 mb-4">
+            <div class="h-px flex-1" style="background:var(--border);"></div>
+            <span class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--fg-subtle);">atau</span>
+            <div class="h-px flex-1" style="background:var(--border);"></div>
+          </div>
+
+          <button onclick="tambahTeks()" class="gb-btn gb-btn-outline w-full mb-3">
+            <i data-lucide="plus" class="w-4 h-4"></i><span>Tambah Teks Manual</span>
+          </button>
+
+          <div id="teks-editor" style="display:none;">
+            <div class="gb-label mb-2">Isi Teks</div>
+            <input id="teks-input" class="gb-input mb-3" type="text" maxlength="60"
+                   placeholder="Contoh: Ahmad Fauzi, S.Pd" oninput="updateTeksAktif()">
+
+            <div class="gb-label mb-2">Ukuran</div>
+            <input id="teks-ukuran" type="range" min="24" max="180" value="56"
+                   class="w-full mb-3" style="accent-color:var(--acc);" oninput="updateTeksAktif()">
+
+            <div class="gb-label mb-2">Gaya</div>
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <button class="chip" data-font="Inter" onclick="setFont('Inter', this)">Modern</button>
+              <button class="chip" data-font="Playfair Display" onclick="setFont('Playfair Display', this)">Elegan</button>
+              <button class="chip" data-font="Bebas Neue" onclick="setFont('Bebas Neue', this)">Tegas</button>
+            </div>
+
+            <div class="gb-label mb-2">Warna</div>
+            <div class="flex flex-wrap gap-2 mb-3">
+              <button class="color-dot" data-color="#ffffff" style="background:#fff;" onclick="setWarna('#ffffff',this)"></button>
+              <button class="color-dot" data-color="#14121A" style="background:#14121A;" onclick="setWarna('#14121A',this)"></button>
+              <button class="color-dot" data-color="#FBBF24" style="background:#FBBF24;" onclick="setWarna('#FBBF24',this)"></button>
+              <button class="color-dot" data-color="#EF4444" style="background:#EF4444;" onclick="setWarna('#EF4444',this)"></button>
+              <button class="color-dot" data-color="#10B981" style="background:#10B981;" onclick="setWarna('#10B981',this)"></button>
+              <button class="color-dot" data-color="#2563EB" style="background:#2563EB;" onclick="setWarna('#2563EB',this)"></button>
+            </div>
+
+            <div class="gb-label mb-2">Posisi Cepat</div>
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <button class="chip" onclick="posisiTeks('atas')">Atas</button>
+              <button class="chip" onclick="posisiTeks('tengah')">Tengah</button>
+              <button class="chip" onclick="posisiTeks('bawah')">Bawah</button>
+            </div>
+
+            <button onclick="hapusTeksAktif()" class="gb-btn gb-btn-ghost w-full">
+              <i data-lucide="trash-2" class="w-4 h-4"></i><span>Hapus Teks Ini</span>
+            </button>
+          </div>
+
+          <div id="teks-empty" class="py-6 text-center" style="color:var(--fg-subtle);">
+            <i data-lucide="type" class="w-7 h-7 mx-auto mb-1.5 opacity-60"></i>
+            <p class="text-[11px] font-bold uppercase tracking-widest">Belum ada teks</p>
+            <p class="text-[10px] mt-1">Pilih template di atas atau tambah manual.</p>
+          </div>
+        </div>
+
+        <!-- Panel FILTER -->
+        <div id="panel-filter" class="tab-panel" style="display:none;">
+          <div class="gb-label mb-3">Pilih Suasana</div>
+          <div class="filter-grid" id="filter-grid"></div>
+        </div>
+
+        <!-- Aksi -->
+        <div class="grid grid-cols-2 gap-2 mt-4">
+          <button id="btn-download" class="gb-btn gb-btn-primary col-span-2">
+            <i data-lucide="download" class="w-4 h-4"></i><span>Unduh Karya</span>
+          </button>
+          <button id="btn-share" class="gb-btn gb-btn-outline" onclick="shareKarya()">
+            <i data-lucide="share-2" class="w-4 h-4"></i><span>Bagikan</span>
+          </button>
+          <button id="btn-reset-draft" class="gb-btn gb-btn-ghost" onclick="resetSemua()">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i><span>Mulai Ulang</span>
+          </button>
+        </div>
+
+        <p id="draft-info" class="text-[10px] text-center mt-3 leading-relaxed" style="color:var(--fg-subtle); display:none;"></p>
       </div>
     </div>
   </div>
 </main>
 
-<footer class="mt-10 py-8 border-t" style="border-color:var(--border);">
+<footer class="mt-8 py-6 border-t" style="border-color:var(--border);">
   <div class="max-w-6xl mx-auto px-4 sm:px-5 text-center">
     <div class="flex items-center justify-center gap-2 mb-2">
       <div class="h-px w-8" style="background:var(--border);"></div>
-      <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:var(--fg-subtle);">
-        Tim Kreatif Selogiri
-      </p>
+      <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:var(--fg-subtle);">Tim Kreatif Selogiri</p>
       <div class="h-px w-8" style="background:var(--border);"></div>
     </div>
     <p class="text-[11px]" style="color:var(--fg-muted);">&copy; 2026 GTK Kecamatan Selogiri</p>
   </div>
 </footer>
 
-<!-- Toast container -->
 <div id="toast-container"></div>
 
-<!-- ============ MODAL DIALOG ============ -->
 <div id="dialog-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
-  <div class="absolute inset-0 modal-overlay opacity-0"
-       style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
-       onclick="closeModal('dialog-modal')"></div>
+  <div class="absolute inset-0 modal-overlay opacity-0" style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);" onclick="closeModal('dialog-modal')"></div>
   <div class="gb-card w-full max-w-xs relative z-10 p-7 text-center transform scale-95 opacity-0 modal-content">
-    <div id="dialog-icon-bg" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-         style="background:var(--acc-soft); color:var(--acc-text);">
+    <div id="dialog-icon-bg" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:var(--acc-soft); color:var(--acc-text);">
       <i id="dialog-icon" data-lucide="info" class="w-8 h-8"></i>
     </div>
     <h3 id="dialog-title" class="text-lg font-extrabold mb-2" style="color:var(--fg);">Info</h3>
@@ -402,46 +597,32 @@ body{
   </div>
 </div>
 
-<!-- ============ MODAL KAMERA ============ -->
 <div id="kamera-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-4">
-  <div class="absolute inset-0 modal-overlay opacity-0"
-       style="background:rgba(20,18,26,.85); backdrop-filter:blur(6px);"
-       onclick="matikanKamera()"></div>
+  <div class="absolute inset-0 modal-overlay opacity-0" style="background:rgba(20,18,26,.85); backdrop-filter:blur(6px);" onclick="matikanKamera()"></div>
   <div class="gb-card p-4 md:p-5 w-full max-w-sm flex flex-col items-center relative z-10 transform scale-95 opacity-0 modal-content">
     <div class="w-full flex items-center justify-between mb-3">
       <h3 class="font-extrabold text-base" style="color:var(--fg);">Ambil Selfie</h3>
-      <button onclick="matikanKamera()" class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </button>
+      <button onclick="matikanKamera()" class="gb-btn gb-btn-ghost !p-2 !rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
-    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-4 relative"
-         style="background:#000; border:1px solid var(--border);">
+    <div class="w-full aspect-square rounded-2xl overflow-hidden mb-4 relative" style="background:#000;">
       <video id="kamera-stream" class="w-full h-full object-cover" style="transform:scaleX(-1);" autoplay playsinline></video>
     </div>
     <button id="btn-capture" class="gb-btn gb-btn-primary w-full">
-      <i data-lucide="aperture" class="w-4 h-4"></i><span>Jepret Sekarang</span>
+      <i data-lucide="aperture" class="w-4 h-4"></i><span>Jepret</span>
     </button>
   </div>
 </div>
 
-<!-- ============ MODAL PENGATURAN ============ -->
 <div id="settings-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
-  <div class="absolute inset-0 modal-overlay opacity-0"
-       style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
-       onclick="closeModal('settings-modal')"></div>
+  <div class="absolute inset-0 modal-overlay opacity-0" style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);" onclick="closeModal('settings-modal')"></div>
   <div class="gb-card w-full max-w-sm relative z-10 p-6 transform scale-95 opacity-0 modal-content">
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-2">
         <i data-lucide="palette" class="w-4 h-4" style="color:var(--acc);"></i>
         <h3 class="font-extrabold text-base" style="color:var(--fg);">Warna Aksen</h3>
       </div>
-      <button onclick="closeModal('settings-modal')" class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </button>
+      <button onclick="closeModal('settings-modal')" class="gb-btn gb-btn-ghost !p-2 !rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
-    <p class="text-[12px] mb-4 leading-relaxed" style="color:var(--fg-muted);">
-      Pilih warna yang paling nyaman untuk Anda. Tersimpan otomatis.
-    </p>
     <div class="flex items-center gap-3 flex-wrap justify-center py-2">
       <button class="acc-dot" data-acc="teal"   style="background:#0D9488;"></button>
       <button class="acc-dot" data-acc="biru"   style="background:#2563eb;"></button>
@@ -451,8 +632,25 @@ body{
     </div>
     <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
       <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
-        Guru Berbagi Selogiri · v2.1<br>Tim Kreatif GTK Kecamatan Selogiri
+        Guru Berbagi Selogiri · v3.1<br>Tim Kreatif GTK Kecamatan Selogiri
       </p>
+    </div>
+  </div>
+</div>
+
+<div id="riwayat-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 modal-overlay opacity-0" style="background:rgba(20,18,26,.7); backdrop-filter:blur(4px);" onclick="closeModal('riwayat-modal')"></div>
+  <div class="gb-card w-full max-w-sm relative z-10 p-5 transform scale-95 opacity-0 modal-content">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="font-extrabold text-base" style="color:var(--fg);">Karya Tersimpan</h3>
+      <button onclick="closeModal('riwayat-modal')" class="gb-btn gb-btn-ghost !p-2 !rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <img id="riwayat-preview-img" class="w-full rounded-xl mb-4" style="border:1px solid var(--border);">
+    <div class="grid grid-cols-2 gap-2">
+      <a id="riwayat-dl" class="gb-btn gb-btn-primary" download>
+        <i data-lucide="download" class="w-4 h-4"></i><span>Unduh</span>
+      </a>
+      <button onclick="closeModal('riwayat-modal')" class="gb-btn gb-btn-ghost">Tutup</button>
     </div>
   </div>
 </div>
@@ -461,44 +659,32 @@ body{
 lucide.createIcons();
 
 /* ============================================
-   📊 ANALYTICS HELPER
+   📊 ANALYTICS
    ============================================ */
 function trackEvent(event, detail){
   try {
     if(window.goatcounter && window.goatcounter.count){
       const path = event + (detail ? '-' + String(detail).replace(/\s+/g,'-').toLowerCase().slice(0,60) : '');
-      window.goatcounter.count({
-        path,
-        title: event + (detail ? ': ' + detail : ''),
-        event: true
-      });
+      window.goatcounter.count({ path, title: event, event: true });
     }
-  } catch(e){ /* analytics opsional, jangan sampai crash */ }
+  } catch(e){}
 }
 
 /* ============================================
-   🍞 TOAST SYSTEM
+   🍞 TOAST
    ============================================ */
 function toast(msg, type='info', durasi=3500){
   const container = document.getElementById('toast-container');
   if(!container) return null;
   const el = document.createElement('div');
   el.className = 'toast toast-' + type;
-  const icons = {
-    success: 'check-circle-2',
-    error: 'alert-triangle',
-    info: 'info',
-    loading: 'loader-2'
-  };
+  const icons = { success:'check-circle-2', error:'alert-triangle', info:'info', loading:'loader-2' };
   const spin = type === 'loading' ? 'animate-spin' : '';
   el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="${spin}"></i><span>${msg}</span>`;
   container.appendChild(el);
   lucide.createIcons();
   if(type !== 'loading' && durasi > 0){
-    setTimeout(() => {
-      el.classList.add('toast-out');
-      setTimeout(() => el.remove(), 280);
-    }, durasi);
+    setTimeout(() => { el.classList.add('toast-out'); setTimeout(() => el.remove(), 280); }, durasi);
   }
   return el;
 }
@@ -509,7 +695,73 @@ function closeToast(el){
 }
 
 /* ============================================
-   ⚙️ PENGATURAN AKSEN
+   💾 INDEXEDDB
+   ============================================ */
+const DB_NAME = 'gbs-kreatif-v3', DB_VER = 1;
+let dbPromise = null;
+
+function openDB(){
+  if(dbPromise) return dbPromise;
+  dbPromise = new Promise((res,rej)=>{
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = ()=>{
+      const db = r.result;
+      if(!db.objectStoreNames.contains('drafts'))  db.createObjectStore('drafts');
+      if(!db.objectStoreNames.contains('riwayat')) db.createObjectStore('riwayat', { keyPath:'id', autoIncrement:true });
+    };
+    r.onsuccess = ()=> res(r.result);
+    r.onerror = ()=> rej(r.error);
+  });
+  return dbPromise;
+}
+async function dbGet(store, key){
+  const db = await openDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(store,'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = ()=> res(req.result);
+    req.onerror = ()=> rej(req.error);
+  });
+}
+async function dbSet(store, key, val){
+  const db = await openDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(store,'readwrite');
+    const req = tx.objectStore(store).put(val, key);
+    req.onsuccess = ()=> res();
+    req.onerror = ()=> rej(req.error);
+  });
+}
+async function dbDel(store, key){
+  const db = await openDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(store,'readwrite');
+    const req = tx.objectStore(store).delete(key);
+    req.onsuccess = ()=> res();
+    req.onerror = ()=> rej(req.error);
+  });
+}
+async function dbAll(store){
+  const db = await openDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(store,'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = ()=> res(req.result || []);
+    req.onerror = ()=> rej(req.error);
+  });
+}
+async function dbClear(store){
+  const db = await openDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(store,'readwrite');
+    const req = tx.objectStore(store).clear();
+    req.onsuccess = ()=> res();
+    req.onerror = ()=> rej(req.error);
+  });
+}
+
+/* ============================================
+   ⚙️ ACCENT & MODAL
    ============================================ */
 function setAccent(acc){
   document.documentElement.setAttribute('data-acc', acc);
@@ -518,20 +770,10 @@ function setAccent(acc){
     d.setAttribute('data-active', d.dataset.acc === acc ? 'true' : 'false');
   });
   updateFabricColors();
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if(meta){
-    const c = getComputedStyle(document.documentElement).getPropertyValue('--acc').trim();
-    meta.setAttribute('content', c);
-  }
 }
-document.querySelectorAll('.acc-dot').forEach(d=>{
-  d.addEventListener('click', ()=> setAccent(d.dataset.acc));
-});
+document.querySelectorAll('.acc-dot').forEach(d=> d.addEventListener('click', ()=> setAccent(d.dataset.acc)));
 function openSettings(){ openModal('settings-modal'); }
 
-/* ============================================
-   🪟 MODAL HELPERS
-   ============================================ */
 function openModal(id){
   const el = document.getElementById(id);
   if(!el) return;
@@ -572,7 +814,7 @@ function showAlert(type, title, msg){
 }
 
 /* ============================================
-   🎨 CANVAS FABRIC
+   🎨 CANVAS
    ============================================ */
 const canvas = new fabric.Canvas('twibbon-canvas', {
   width: 1080, height: 1080,
@@ -587,11 +829,12 @@ const canvas = new fabric.Canvas('twibbon-canvas', {
 fabric.Object.prototype.set({
   transparentCorners: false,
   cornerColor: '#0D9488', cornerStrokeColor: '#ffffff', borderColor: '#0D9488',
-  cornerSize: 48, touchCornerSize: 48, padding: 12,
+  cornerSize: 44, touchCornerSize: 44, padding: 10,
   cornerStyle: 'circle', borderDashArray: [7, 7],
-  hasControls: true, hasBorders: true, lockRotation: false,
-  lockScalingX: false, lockScalingY: false, lockUniScaling: false,
-  lockScalingFlip: false, perPixelTargetFind: true, objectCaching: false
+  hasControls: true, hasBorders: true,
+  lockRotation: false, lockScalingX: false, lockScalingY: false,
+  lockUniScaling: false, lockScalingFlip: false,
+  perPixelTargetFind: false, objectCaching: false
 });
 
 function updateFabricColors(){
@@ -602,68 +845,72 @@ function updateFabricColors(){
 }
 updateFabricColors();
 
-/* === Kontrol zoom & rotate === */
+let fotoObj = null, overlayImg = null, overlayOriginalURL = '', watermarkImg = null;
+let namaAgendaAktif = '', agendaId = '', filterAktif = 'original';
+let draftTimer = null, objekTeks = [], teksAktif = null;
+let daftarBatch = [];
+
+/* Zoom & Rotate */
 function zoomStep(pct){
-  const obj = canvas.getActiveObject();
-  if(!obj) return;
+  const obj = canvas.getActiveObject(); if(!obj) return;
   const slider = document.getElementById('zoom-slider');
   const current = parseInt(slider.value) || 80;
   const next = Math.max(30, Math.min(300, current + pct));
-  slider.value = next;
-  applyZoom(next);
+  slider.value = next; applyZoom(next);
 }
 function applyZoom(pct){
-  const obj = canvas.getActiveObject();
-  if(!obj || !obj._baseScale) return;
-  const newScale = obj._baseScale * (pct / 100);
-  obj.set({ scaleX: newScale, scaleY: newScale });
-  obj.setCoords();
-  canvas.requestRenderAll();
+  const obj = canvas.getActiveObject(); if(!obj || !obj._baseScale) return;
+  const s = obj._baseScale * (pct / 100);
+  obj.set({ scaleX: s, scaleY: s });
+  obj.setCoords(); canvas.requestRenderAll();
 }
-document.getElementById('zoom-slider').addEventListener('input', e => {
-  applyZoom(parseInt(e.target.value));
-});
+document.getElementById('zoom-slider').addEventListener('input', e => applyZoom(parseInt(e.target.value)));
 function rotateStep(deg){
-  const obj = canvas.getActiveObject();
-  if(!obj) return;
-  obj.rotate((obj.angle || 0) + deg);
-  obj.setCoords();
-  canvas.requestRenderAll();
+  const obj = canvas.getActiveObject(); if(!obj) return;
+  obj.rotate((obj.angle || 0) + deg); obj.setCoords(); canvas.requestRenderAll();
 }
 function resetObjek(){
-  const obj = canvas.getActiveObject();
-  if(!obj || !obj._baseScale) return;
+  const obj = canvas.getActiveObject(); if(!obj || !obj._baseScale) return;
   obj.set({ scaleX: obj._baseScale, scaleY: obj._baseScale, angle: 0 });
-  canvas.centerObject(obj);
-  obj.setCoords();
-  canvas.requestRenderAll();
+  canvas.centerObject(obj); obj.setCoords(); canvas.requestRenderAll();
   document.getElementById('zoom-slider').value = 100;
 }
 function syncSliderFromObject(){
-  const obj = canvas.getActiveObject();
-  if(!obj || !obj._baseScale) return;
-  const currentPct = Math.round((obj.scaleX / obj._baseScale) * 100);
+  const obj = canvas.getActiveObject(); if(!obj || !obj._baseScale) return;
+  const pct = Math.round((obj.scaleX / obj._baseScale) * 100);
   const slider = document.getElementById('zoom-slider');
-  const val = Math.max(30, Math.min(300, currentPct));
+  const val = Math.max(30, Math.min(300, pct));
   if(parseInt(slider.value) !== val) slider.value = val;
 }
 canvas.on('object:scaling', syncSliderFromObject);
 canvas.on('object:modified', syncSliderFromObject);
+canvas.on('object:modified', () => simpanDraftDebounced());
+canvas.on('object:added',    () => simpanDraftDebounced());
+canvas.on('object:removed',  () => simpanDraftDebounced());
+canvas.on('selection:created', handleSelection);
+canvas.on('selection:updated', handleSelection);
+canvas.on('selection:cleared', ()=> handleSelection({}));
+
+/* Grid */
+function toggleGrid(){
+  const g = document.getElementById('grid-overlay');
+  g.classList.toggle('show');
+  document.getElementById('btn-grid').style.background = g.classList.contains('show') ? 'rgba(255,255,255,.2)' : '';
+}
 
 /* ============================================
-   📥 BACA DATA AGENDA DARI URL
+   📥 BACA URL
    ============================================ */
 const CDN_JSON = 'https://cdn.jsdelivr.net/gh/slg-timkreatif/kampanye@main/data';
-let namaAgendaAktif = '';
 
 function setStatus(state, label){
   const dot = document.getElementById('status-dot');
   const txt = document.getElementById('status-text');
   dot.classList.remove('animate-pulse');
   if(state === 'loading'){ dot.style.background = '#f59e0b'; dot.classList.add('animate-pulse'); }
-  if(state === 'ok')     { dot.style.background = 'var(--acc)'; }
-  if(state === 'error')  { dot.style.background = '#ef4444'; }
-  if(state === 'idle')   { dot.style.background = 'var(--fg-subtle)'; }
+  if(state === 'ok'){ dot.style.background = 'var(--acc)'; }
+  if(state === 'error'){ dot.style.background = '#ef4444'; }
+  if(state === 'idle'){ dot.style.background = 'var(--fg-subtle)'; }
   txt.textContent = label;
 }
 
@@ -674,10 +921,18 @@ function muatAgenda(){
   const gambar    = p.get('i') || p.get('img') || p.get('gambar');
   const waktu     = p.get('w') || p.get('waktu');
   const id        = p.get('a') || p.get('id');
+  const wm        = p.get('wm');
+  const batchRaw  = p.get('batch');
+
+  if(batchRaw){
+    daftarBatch = batchRaw.split('|').map(x=>x.trim()).filter(Boolean).map(url => ({ url, label:'' }));
+    if(daftarBatch.length) renderBatchStrip();
+  }
 
   if(nama && gambar){
     setStatus('ok', 'SIAP DIGUNAKAN');
-    renderAgenda({ nama, deskripsi, gambar, waktu });
+    agendaId = id || nama.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60);
+    renderAgenda({ nama, deskripsi, gambar, waktu, watermark: wm === '1' || wm === 'true' });
     trackEvent('buka-agenda', nama);
     return;
   }
@@ -687,22 +942,22 @@ function muatAgenda(){
       .then(r => { if(!r.ok) throw new Error(); return r.json(); })
       .then(data => {
         setStatus('ok', 'SIAP DIGUNAKAN');
+        agendaId = id;
         renderAgenda({
-          nama: data.nama,
-          deskripsi: data.deskripsi,
+          nama: data.nama, deskripsi: data.deskripsi,
           gambar: data.gambar || data.bingkai,
-          waktu: data.waktu
+          waktu: data.waktu, watermark: data.watermark || false
         });
+        if(data.batch && Array.isArray(data.batch)){
+          daftarBatch = data.batch.map(url => ({ url, label:'' }));
+          renderBatchStrip();
+        }
         trackEvent('buka-agenda', id);
       })
       .catch(() => {
         setStatus('error', 'AGENDA TIDAK DITEMUKAN');
         document.getElementById('judul-kampanye').innerText = 'Agenda Tidak Ditemukan';
         document.getElementById('deskripsi-kampanye').innerText = 'Periksa kembali link yang dibagikan panitia.';
-        document.getElementById('loading-preview').innerHTML =
-          `<i data-lucide="alert-circle" class="w-9 h-9 mb-2 opacity-60" style="color:#ef4444;"></i>
-           <span class="text-[10px] font-bold uppercase tracking-widest" style="color:#ef4444;">Error</span>`;
-        lucide.createIcons();
         showAlert('error', 'Agenda Tidak Ditemukan', 'Link mungkin salah atau sudah kadaluwarsa.');
       });
     return;
@@ -712,11 +967,9 @@ function muatAgenda(){
   document.getElementById('deskripsi-kampanye').innerText =
     'Akses halaman ini melalui tautan agenda yang dibagikan panitia untuk mulai berkarya.';
   document.getElementById('loading-preview').innerHTML =
-    `<i data-lucide="link" class="w-9 h-9 mb-2 opacity-60"></i>
+    `<i data-lucide="link" class="w-8 h-8 mb-2 opacity-60"></i>
      <span class="text-[10px] font-bold uppercase tracking-widest text-center px-4">Parameter URL Kosong</span>`;
   lucide.createIcons();
-  showAlert('info', 'Link Tidak Valid',
-    'Akses link agenda dari panitia. Link berisi nama, deskripsi, dan gambar bingkai.');
 }
 
 function renderAgenda(data){
@@ -724,11 +977,11 @@ function renderAgenda(data){
   document.getElementById('judul-kampanye').innerText = data.nama;
   document.getElementById('deskripsi-kampanye').innerText = data.deskripsi || '';
   if(data.waktu){
-    const elWaktu = document.createElement('p');
-    elWaktu.className = 'text-[11px] font-bold uppercase tracking-widest mt-2';
-    elWaktu.style.color = 'var(--acc-text)';
-    elWaktu.textContent = '📅 ' + data.waktu;
-    document.getElementById('deskripsi-kampanye').after(elWaktu);
+    const elW = document.createElement('p');
+    elW.className = 'text-[11px] font-bold uppercase tracking-widest mt-1';
+    elW.style.color = 'var(--acc-text)';
+    elW.textContent = '📅 ' + data.waktu;
+    document.getElementById('deskripsi-kampanye').after(elW);
   }
 
   const img = document.getElementById('preview-img');
@@ -737,37 +990,98 @@ function renderAgenda(data){
     document.getElementById('loading-preview').style.display = 'none';
     img.style.display = 'block';
   };
-  img.onerror = () => {
-    document.getElementById('loading-preview').innerHTML =
-      `<i data-lucide="image-off" class="w-9 h-9 mb-2 opacity-60" style="color:#ef4444;"></i>
-       <span class="text-[10px] font-bold uppercase tracking-widest" style="color:#ef4444;">Gambar Gagal Dimuat</span>`;
-    lucide.createIcons();
-  };
 
   document.getElementById('area-kerja').classList.remove('pointer-events-none','opacity-60');
+  overlayOriginalURL = data.gambar;
 
   fabric.Image.fromURL(data.gambar, function(fImg){
     const w = 1080, h = w * (fImg.height / fImg.width);
     canvas.setWidth(w); canvas.setHeight(h);
     document.getElementById('canvas-wrapper').style.aspectRatio = fImg.width + ' / ' + fImg.height;
-    canvas.setOverlayImage(fImg, canvas.renderAll.bind(canvas), {
+
+    fImg.set({
+      selectable:false, evented:false, hoverCursor:'default',
+      originX:'left', originY:'top', left:0, top:0,
       scaleX: canvas.width / fImg.width,
-      scaleY: canvas.height / fImg.height,
-      crossOrigin: 'anonymous'
+      scaleY: canvas.height / fImg.height
     });
-  }, { crossOrigin: 'anonymous' });
+    overlayImg = fImg;
+    canvas.add(fImg);
+    canvas.sendToBack(fImg);
+
+    if(data.watermark) tambahWatermark();
+  }, { crossOrigin:'anonymous' });
+
+  muatDraft();
+  renderRiwayatLokal();
 }
-muatAgenda();
+
+function tambahWatermark(){
+  if(watermarkImg) return;
+  const wmURL = 'https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png';
+  fabric.Image.fromURL(wmURL, function(wm){
+    const targetW = canvas.width * 0.10;
+    wm.set({
+      selectable:false, evented:false, hoverCursor:'default',
+      opacity:0.85, originX:'left', originY:'bottom',
+      left: canvas.width * 0.03, top: canvas.height - canvas.height * 0.03,
+      scaleX: targetW / wm.width, scaleY: targetW / wm.width
+    });
+    watermarkImg = wm;
+    canvas.add(wm);
+    wm.bringToFront();
+    canvas.requestRenderAll();
+  }, { crossOrigin:'anonymous' });
+}
+
+/* Batch */
+function renderBatchStrip(){
+  const wrap = document.getElementById('batch-wrap');
+  const strip = document.getElementById('batch-strip');
+  if(!daftarBatch.length) return;
+  wrap.style.display = 'block';
+  strip.innerHTML = daftarBatch.map((item, i) => `
+    <button class="batch-item" data-active="${i===0}" onclick="pilihBatch(${i}, this)">
+      <img src="${item.url}" alt="" loading="lazy">
+    </button>
+  `).join('');
+}
+function pilihBatch(idx, el){
+  document.querySelectorAll('.batch-item').forEach(b => b.setAttribute('data-active','false'));
+  el.setAttribute('data-active','true');
+  const url = daftarBatch[idx].url;
+  overlayOriginalURL = url;
+  document.getElementById('preview-img').src = url;
+
+  fabric.Image.fromURL(url, function(fImg){
+    if(overlayImg) canvas.remove(overlayImg);
+    const w = 1080, h = w * (fImg.height / fImg.width);
+    canvas.setWidth(w); canvas.setHeight(h);
+    document.getElementById('canvas-wrapper').style.aspectRatio = fImg.width + ' / ' + fImg.height;
+    fImg.set({
+      selectable:false, evented:false,
+      originX:'left', originY:'top', left:0, top:0,
+      scaleX: canvas.width / fImg.width, scaleY: canvas.height / fImg.height
+    });
+    overlayImg = fImg;
+    canvas.add(fImg);
+    canvas.sendToBack(fImg);
+    if(fotoObj) canvas.bringToFront(fotoObj);
+    canvas.requestRenderAll();
+    toast('Bingkai diganti.', 'info', 1800);
+    trackEvent('ganti-batch', String(idx+1));
+  }, { crossOrigin:'anonymous' });
+}
 
 /* ============================================
-   📸 UPLOAD & SELFIE
+   📸 UPLOAD / SELFIE
    ============================================ */
 document.getElementById('upload-foto').addEventListener('change', function(e){
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    renderKeCanvas(ev.target.result);
+    renderFotoKeCanvas(ev.target.result);
     trackEvent('upload-foto', namaAgendaAktif);
   };
   reader.readAsDataURL(file);
@@ -775,48 +1089,52 @@ document.getElementById('upload-foto').addEventListener('change', function(e){
 });
 
 let streamKamera = null;
-const videoElemen = document.getElementById('kamera-stream');
-
+const videoEl = document.getElementById('kamera-stream');
 document.getElementById('btn-selfie').addEventListener('click', async () => {
   openModal('kamera-modal');
   try {
     streamKamera = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1080 }, height: { ideal: 1080 } }
+      video:{ facingMode:'user', width:{ ideal:1080 }, height:{ ideal:1080 } }
     });
-    videoElemen.srcObject = streamKamera;
-  } catch (err) {
+    videoEl.srcObject = streamKamera;
+  } catch(err){
     closeModal('kamera-modal');
-    showAlert('error','Akses Kamera Gagal',
-      'Pastikan koneksi aman (HTTPS) dan izin kamera telah diberikan.');
+    showAlert('error','Akses Kamera Gagal','Pastikan HTTPS dan izin kamera sudah diberikan.');
   }
 });
-
 function matikanKamera(){
   if(streamKamera) streamKamera.getTracks().forEach(t => t.stop());
   closeModal('kamera-modal');
 }
-
-document.getElementById('btn-capture').addEventListener('click', () => {
+document.getElementById('btn-capture').addEventListener('click', ()=>{
   const tmp = document.createElement('canvas');
-  tmp.width = videoElemen.videoWidth;
-  tmp.height = videoElemen.videoHeight;
+  tmp.width = videoEl.videoWidth;
+  tmp.height = videoEl.videoHeight;
   const ctx = tmp.getContext('2d');
   ctx.translate(tmp.width, 0);
   ctx.scale(-1, 1);
-  ctx.drawImage(videoElemen, 0, 0, tmp.width, tmp.height);
-  renderKeCanvas(tmp.toDataURL('image/png'));
+  ctx.drawImage(videoEl, 0, 0, tmp.width, tmp.height);
+  renderFotoKeCanvas(tmp.toDataURL('image/png'));
   matikanKamera();
   trackEvent('selfie', namaAgendaAktif);
 });
 
-function renderKeCanvas(dataUrl){
+function renderFotoKeCanvas(dataUrl){
   fabric.Image.fromURL(dataUrl, function(img){
-    const baseScale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
+    if(fotoObj) canvas.remove(fotoObj);
+    const baseScale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.85;
     img._baseScale = baseScale;
-    img.scale(baseScale);
-    canvas.centerObject(img);
-    canvas.getObjects().forEach(o => canvas.remove(o));
+    img._originalSrc = dataUrl;
+    img.set({ scaleX: baseScale, scaleY: baseScale });
     canvas.add(img);
+    canvas.centerObject(img);
+    fotoObj = img;
+
+    terapkanFilter(filterAktif);
+    if(overlayImg) canvas.sendToBack(overlayImg);
+    objekTeks.forEach(t => t.bringToFront());
+    if(watermarkImg) watermarkImg.bringToFront();
+
     canvas.setActiveObject(img);
     img.setCoords();
     canvas.requestRenderAll();
@@ -826,57 +1144,416 @@ function renderKeCanvas(dataUrl){
     const ph = document.getElementById('canvas-placeholder');
     if(ph) ph.style.opacity = '0';
 
-    document.getElementById('zoom-slider').value = 80;
+    document.getElementById('zoom-slider').value = 100;
 
     const hint = document.getElementById('canvas-hint');
     hint.classList.add('show');
     setTimeout(()=> hint.classList.remove('show'), 4000);
-  }, { crossOrigin: 'anonymous' });
+
+    simpanDraftDebounced();
+  }, { crossOrigin:'anonymous' });
 }
 
 /* ============================================
-   ⏳ UNDUH DENGAN LOADING STATE + TOAST
+   🎨 FILTER
+   ============================================ */
+const DAFTAR_FILTER = [
+  { id:'original', nama:'Asli',  filters:[] },
+  { id:'cerah',    nama:'Cerah', filters:[{type:'Brightness',opts:{brightness:0.12}},{type:'Contrast',opts:{contrast:0.10}}] },
+  { id:'ceria',    nama:'Ceria', filters:[{type:'Saturation',opts:{saturation:0.35}},{type:'Brightness',opts:{brightness:0.08}}] },
+  { id:'retro',    nama:'Retro', filters:[{type:'Sepia',opts:{}},{type:'Brightness',opts:{brightness:-0.05}},{type:'Contrast',opts:{contrast:0.08}}] },
+  { id:'mono',     nama:'Mono',  filters:[{type:'Grayscale',opts:{}},{type:'Contrast',opts:{contrast:0.10}}] }
+];
+function renderFilterGrid(){
+  const grid = document.getElementById('filter-grid'); if(!grid) return;
+  const thumb = fotoObj ? fotoObj._originalSrc : overlayOriginalURL;
+  grid.innerHTML = DAFTAR_FILTER.map(f => `
+    <button class="filter-card" data-filter="${f.id}" data-active="${f.id===filterAktif}" onclick="pilihFilter('${f.id}')">
+      <img src="${thumb}" alt="${f.nama}">
+      <span>${f.nama}</span>
+    </button>
+  `).join('');
+}
+function pilihFilter(id){
+  filterAktif = id;
+  document.querySelectorAll('.filter-card').forEach(c => c.setAttribute('data-active', String(c.dataset.filter === id)));
+  terapkanFilter(id);
+  simpanDraftDebounced();
+}
+function terapkanFilter(id){
+  if(!fotoObj) return;
+  const cfg = DAFTAR_FILTER.find(f => f.id === id) || DAFTAR_FILTER[0];
+  fotoObj.filters = cfg.filters.map(f => new fabric.Image.filters[f.type](f.opts));
+  fotoObj.applyFilters();
+  canvas.requestRenderAll();
+}
+
+/* ============================================
+   🔤 TEKS — MANUAL & TEMPLATE
+   ============================================ */
+function buatIText(cfg){
+  const t = new fabric.IText(cfg.text, {
+    fontSize: cfg.fontSize || 56,
+    fill: cfg.fill || '#ffffff',
+    fontFamily: cfg.fontFamily || 'Inter',
+    fontWeight: cfg.fontWeight || '800',
+    fontStyle: cfg.fontStyle || 'normal',
+    stroke: cfg.stroke || '#000000',
+    strokeWidth: cfg.strokeWidth ?? 3,
+    paintFirst: 'stroke',
+    textAlign: 'center',
+    originX: 'center', originY: 'center',
+    left: canvas.width * (cfg.leftPct ?? 0.5),
+    top:  canvas.height * (cfg.topPct  ?? 0.82),
+    backgroundColor: cfg.backgroundColor || '',
+    padding: 8,
+    cornerSize: 30, touchCornerSize: 30,
+    shadow: new fabric.Shadow({ color:'rgba(0,0,0,.4)', blur: 8, offsetX: 0, offsetY: 2 })
+  });
+  canvas.add(t);
+  objekTeks.push(t);
+  return t;
+}
+
+/* Template definitions */
+const TEMPLATE_TEKS = {
+  'nama': {
+    label: 'Nama Saja',
+    items: [
+      { text:'Nama Anda', fontSize:68, fill:'#ffffff', stroke:'#000000', strokeWidth:3,
+        fontFamily:'Inter', fontWeight:'800', topPct:0.84, leftPct:0.5 }
+    ]
+  },
+  'nama-jabatan': {
+    label: 'Nama + Jabatan',
+    items: [
+      { text:'Nama Anda', fontSize:58, fill:'#ffffff', stroke:'#000000', strokeWidth:3,
+        fontFamily:'Inter', fontWeight:'800', topPct:0.80, leftPct:0.5 },
+      { text:'Jabatan / Sekolah', fontSize:32, fill:'#FBBF24', stroke:'#000000', strokeWidth:2,
+        fontFamily:'Inter', fontWeight:'700', topPct:0.88, leftPct:0.5 }
+    ]
+  },
+  'kelas': {
+    label: 'Kelas / Mapel',
+    items: [
+      { text:'Kelas 6A — Matematika', fontSize:34, fill:'#ffffff', stroke:'#000000', strokeWidth:2,
+        fontFamily:'Inter', fontWeight:'700', topPct:0.14, leftPct:0.5 }
+    ]
+  },
+  'quote': {
+    label: 'Quote',
+    items: [
+      { text:'"Belajar hari ini,\nberkarya selamanya."', fontSize:44, fill:'#ffffff', stroke:'#000000', strokeWidth:2,
+        fontFamily:'Playfair Display', fontWeight:'700', fontStyle:'italic',
+        topPct:0.5, leftPct:0.5 }
+    ]
+  },
+  'narasumber': {
+    label: 'Narasumber',
+    items: [
+      { text:'Narasumber', fontSize:28, fill:'#14121A', stroke:'', strokeWidth:0,
+        fontFamily:'Inter', fontWeight:'800', backgroundColor:'#FBBF24',
+        topPct:0.86, leftPct:0.5 }
+    ]
+  },
+  'kosong': {
+    label: 'Teks Kosong',
+    items: [
+      { text:'Tulis di sini', fontSize:56, fill:'#ffffff', stroke:'#000000', strokeWidth:3,
+        fontFamily:'Inter', fontWeight:'800', topPct:0.82, leftPct:0.5 }
+    ]
+  }
+};
+
+function pakaiTemplate(id){
+  const tpl = TEMPLATE_TEKS[id];
+  if(!tpl) return;
+
+  // Hapus teks yang sudah ada agar tidak menumpuk (opsional — hanya template ini)
+  // Kalau mau preserve, comment baris berikut:
+  objekTeks.forEach(t => canvas.remove(t));
+  objekTeks = [];
+  teksAktif = null;
+
+  tpl.items.forEach((cfg, i) => {
+    const t = buatIText(cfg);
+    if(i === 0) teksAktif = t;      // fokus ke baris pertama
+  });
+
+  if(overlayImg) canvas.sendToBack(overlayImg);
+  objekTeks.forEach(t => t.bringToFront());
+  if(watermarkImg) watermarkImg.bringToFront();
+
+  if(teksAktif){
+    canvas.setActiveObject(teksAktif);
+    teksAktif.setCoords();
+  }
+  canvas.requestRenderAll();
+  updateTeksEditorUI();
+  simpanDraftDebounced();
+  toast(`Template "${tpl.label}" diterapkan. Ketuk teks untuk edit.`, 'success', 3000);
+  trackEvent('pakai-template-teks', tpl.label);
+}
+
+function tambahTeks(){
+  const t = buatIText({
+    text:'Tulis di sini', fontSize:56, fill:'#ffffff', stroke:'#000000', strokeWidth:3,
+    fontFamily:'Inter', fontWeight:'800', topPct:0.82, leftPct:0.5
+  });
+  if(overlayImg) canvas.sendToBack(overlayImg);
+  t.bringToFront();
+  if(watermarkImg) watermarkImg.bringToFront();
+  canvas.setActiveObject(t);
+  teksAktif = t;
+  canvas.requestRenderAll();
+  updateTeksEditorUI();
+  simpanDraftDebounced();
+  toast('Teks ditambahkan.', 'success', 2200);
+}
+
+function handleSelection(e){
+  const obj = e.selected && e.selected[0];
+  if(obj && obj.type === 'i-text'){
+    teksAktif = obj;
+    updateTeksEditorUI();
+    switchTab('teks');
+  }
+}
+
+function updateTeksEditorUI(){
+  const editor = document.getElementById('teks-editor');
+  const empty = document.getElementById('teks-empty');
+  if(teksAktif){
+    editor.style.display = 'block';
+    empty.style.display = 'none';
+    document.getElementById('teks-input').value = teksAktif.text || '';
+    document.getElementById('teks-ukuran').value = teksAktif.fontSize || 56;
+    document.querySelectorAll('.chip[data-font]').forEach(c => {
+      c.setAttribute('data-active', String(c.dataset.font === teksAktif.fontFamily));
+    });
+    document.querySelectorAll('.color-dot').forEach(c => {
+      c.setAttribute('data-active', String(c.dataset.color === teksAktif.fill));
+    });
+  } else {
+    editor.style.display = 'none';
+    empty.style.display = 'block';
+  }
+}
+function updateTeksAktif(){
+  if(!teksAktif) return;
+  const isi = document.getElementById('teks-input').value;
+  const ukuran = parseInt(document.getElementById('teks-ukuran').value) || 56;
+  teksAktif.set({ text: isi || ' ', fontSize: ukuran });
+  teksAktif.setCoords(); canvas.requestRenderAll();
+  simpanDraftDebounced();
+}
+function setFont(font, el){
+  if(!teksAktif) return;
+  document.querySelectorAll('.chip[data-font]').forEach(c => c.setAttribute('data-active','false'));
+  el.setAttribute('data-active','true');
+  teksAktif.set({ fontFamily: font });
+  canvas.requestRenderAll(); simpanDraftDebounced();
+}
+function setWarna(hex, el){
+  if(!teksAktif) return;
+  document.querySelectorAll('.color-dot').forEach(c => c.setAttribute('data-active','false'));
+  el.setAttribute('data-active','true');
+  const stroke = hex === '#14121A' ? '#ffffff' : '#000000';
+  teksAktif.set({ fill: hex, stroke });
+  canvas.requestRenderAll(); simpanDraftDebounced();
+}
+function posisiTeks(pos){
+  if(!teksAktif) return;
+  const yMap = { atas: canvas.height * 0.14, tengah: canvas.height * 0.5, bawah: canvas.height * 0.84 };
+  teksAktif.set({ left: canvas.width / 2, top: yMap[pos] || canvas.height * 0.82 });
+  teksAktif.setCoords(); canvas.requestRenderAll();
+  simpanDraftDebounced();
+}
+function hapusTeksAktif(){
+  if(!teksAktif) return;
+  objekTeks = objekTeks.filter(t => t !== teksAktif);
+  canvas.remove(teksAktif);
+  teksAktif = null;
+  updateTeksEditorUI();
+  simpanDraftDebounced();
+}
+
+/* Tab switch */
+function switchTab(name){
+  document.querySelectorAll('.seg-tab').forEach(t => t.setAttribute('data-active', String(t.dataset.tab === name)));
+  ['foto','teks','filter'].forEach(t => {
+    const panel = document.getElementById('panel-' + t);
+    if(panel) panel.style.display = (t === name) ? 'block' : 'none';
+  });
+  if(name === 'filter') renderFilterGrid();
+  if(name === 'teks') updateTeksEditorUI();
+}
+
+/* ============================================
+   💾 DRAFT
+   ============================================ */
+function simpanDraftDebounced(){
+  if(!agendaId) return;
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(simpanDraft, 700);
+}
+async function simpanDraft(){
+  if(!agendaId) return;
+  try {
+    const data = {
+      agendaId, overlayURL: overlayOriginalURL,
+      fotoSrc: fotoObj ? fotoObj._originalSrc : null,
+      filterAktif,
+      foto: fotoObj ? {
+        scaleX: fotoObj.scaleX, scaleY: fotoObj.scaleY,
+        angle: fotoObj.angle, left: fotoObj.left, top: fotoObj.top,
+        _baseScale: fotoObj._baseScale
+      } : null,
+      teks: objekTeks.map(t => ({
+        text: t.text, fontSize: t.fontSize, fill: t.fill, stroke: t.stroke,
+        fontFamily: t.fontFamily, fontStyle: t.fontStyle || 'normal',
+        strokeWidth: t.strokeWidth, backgroundColor: t.backgroundColor || '',
+        left: t.left, top: t.top, angle: t.angle,
+        scaleX: t.scaleX, scaleY: t.scaleY
+      })),
+      ts: Date.now()
+    };
+    await dbSet('drafts', agendaId, data);
+    const info = document.getElementById('draft-info');
+    info.style.display = 'block';
+    info.textContent = '💾 Draft tersimpan otomatis — ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit', minute:'2-digit'});
+  } catch(e){}
+}
+async function muatDraft(){
+  if(!agendaId) return;
+  try {
+    const draft = await dbGet('drafts', agendaId);
+    if(!draft || !draft.fotoSrc) return;
+    toast('Draft sebelumnya ditemukan. Memulihkan…', 'info', 2500);
+
+    await new Promise(res => {
+      fabric.Image.fromURL(draft.fotoSrc, function(img){
+        if(fotoObj) canvas.remove(fotoObj);
+        img._baseScale = draft.foto._baseScale;
+        img._originalSrc = draft.fotoSrc;
+        img.set({
+          scaleX: draft.foto.scaleX, scaleY: draft.foto.scaleY,
+          angle: draft.foto.angle, left: draft.foto.left, top: draft.foto.top
+        });
+        canvas.add(img); fotoObj = img; res();
+      }, { crossOrigin:'anonymous' });
+    });
+
+    objekTeks.forEach(t => canvas.remove(t));
+    objekTeks = [];
+    (draft.teks || []).forEach(t => {
+      const tObj = new fabric.IText(t.text, {
+        fontSize: t.fontSize, fill: t.fill, stroke: t.stroke,
+        fontFamily: t.fontFamily, fontWeight:'800',
+        fontStyle: t.fontStyle || 'normal',
+        strokeWidth: t.strokeWidth ?? 3, paintFirst:'stroke',
+        backgroundColor: t.backgroundColor || '',
+        left: t.left, top: t.top, angle: t.angle,
+        scaleX: t.scaleX, scaleY: t.scaleY,
+        originX:'center', originY:'center',
+        cornerSize:30, touchCornerSize:30, padding:8
+      });
+      canvas.add(tObj); objekTeks.push(tObj);
+    });
+
+    filterAktif = draft.filterAktif || 'original';
+    terapkanFilter(filterAktif);
+
+    if(overlayImg) canvas.sendToBack(overlayImg);
+    objekTeks.forEach(t => t.bringToFront());
+    if(watermarkImg) watermarkImg.bringToFront();
+    canvas.renderAll();
+
+    document.getElementById('canvas-wrapper').classList.add('has-photo');
+    const ph = document.getElementById('canvas-placeholder');
+    if(ph) ph.style.opacity = '0';
+
+    document.getElementById('draft-info').style.display = 'block';
+    document.getElementById('draft-info').textContent =
+      '💾 Draft dipulihkan — ' + new Date(draft.ts).toLocaleString('id-ID',{ dateStyle:'medium', timeStyle:'short' });
+  } catch(e){}
+}
+
+/* ============================================
+   🖼️ RIWAYAT LOKAL
+   ============================================ */
+async function simpanKeRiwayatLokal(dataURL){
+  try {
+    const list = await dbAll('riwayat');
+    if(list.length >= 12){
+      const oldest = list.reduce((a,b)=> a.ts < b.ts ? a : b);
+      await dbDel('riwayat', oldest.id);
+    }
+    await dbSet('riwayat', undefined, { dataURL, nama: namaAgendaAktif, agendaId, ts: Date.now() });
+    renderRiwayatLokal();
+  } catch(e){}
+}
+async function renderRiwayatLokal(){
+  try {
+    const list = await dbAll('riwayat');
+    const kartu = document.getElementById('kartu-riwayat-lokal');
+    const grid = document.getElementById('riwayat-grid');
+    if(!list.length){ kartu.style.display = 'none'; return; }
+    kartu.style.display = 'block';
+    list.sort((a,b)=> b.ts - a.ts);
+    grid.innerHTML = list.map(r => `
+      <button class="riwayat-thumb" onclick="bukaRiwayat(${r.id})">
+        <img src="${r.dataURL}" alt="" loading="lazy">
+      </button>
+    `).join('');
+  } catch(e){}
+}
+async function bukaRiwayat(id){
+  const list = await dbAll('riwayat');
+  const item = list.find(r => r.id === id);
+  if(!item) return;
+  document.getElementById('riwayat-preview-img').src = item.dataURL;
+  document.getElementById('riwayat-dl').href = item.dataURL;
+  document.getElementById('riwayat-dl').download = `Kampanye-${(item.nama||'karya').replace(/[^a-z0-9]/gi,'-').toLowerCase()}.png`;
+  openModal('riwayat-modal');
+}
+async function bersihkanRiwayatLokal(){
+  if(!confirm('Hapus semua karya tersimpan dari HP ini?')) return;
+  await dbClear('riwayat');
+  renderRiwayatLokal();
+  toast('Riwayat lokal dihapus.', 'success');
+}
+
+/* ============================================
+   ⏳ UNDUH + SHARE
    ============================================ */
 document.getElementById('btn-download').addEventListener('click', async function(){
   const btn = this;
   if(btn.dataset.busy === 'true') return;
-
-  // Cek apakah ada foto
-  const adaFoto = canvas.getObjects().some(o => o.type === 'image');
-  if(!adaFoto){
-    toast('Pilih foto dulu sebelum mengunduh.', 'error');
-    return;
-  }
+  if(!fotoObj){ toast('Pilih foto dulu sebelum mengunduh.', 'error'); return; }
 
   btn.dataset.busy = 'true';
   btn.disabled = true;
-  const originalHTML = btn.innerHTML;
-
-  // State: LOADING
+  const orig = btn.innerHTML;
   btn.classList.add('is-loading');
-  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan gambar…</span>';
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan…</span>';
   lucide.createIcons();
-  const toastLoading = toast('Menyiapkan karya beresolusi tinggi…', 'loading', 0);
+  const tl = toast('Menyiapkan karya beresolusi tinggi…', 'loading', 0);
 
-  // Beri napas ke UI 1 frame
   await new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
 
   try {
     canvas.discardActiveObject();
     canvas.renderAll();
-
     const dataURL = canvas.toDataURL({ format:'png', quality:1 });
-    const namaFile = namaAgendaAktif || 'Kreatif';
-    const safeNama = namaFile.replace(/[^a-z0-9]/gi,'-').toLowerCase();
+    const safeNama = (namaAgendaAktif || 'Kreatif').replace(/[^a-z0-9]/gi,'-').toLowerCase();
 
     const link = document.createElement('a');
     link.download = `Kampanye-${safeNama}.png`;
-    link.href = dataURL;
-    link.click();
+    link.href = dataURL; link.click();
 
-    closeToast(toastLoading);
-
-    // State: SUCCESS
+    await simpanKeRiwayatLokal(dataURL);
+    closeToast(tl);
     btn.classList.remove('is-loading');
     btn.classList.add('is-success');
     btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Berhasil diunduh!</span>';
@@ -884,31 +1561,107 @@ document.getElementById('btn-download').addEventListener('click', async function
     toast('Karya berhasil diunduh. Cek galeri HP Anda ✨', 'success', 4000);
     trackEvent('unduh', namaAgendaAktif);
 
-    // Reset setelah 2.2 detik
-    setTimeout(() => {
+    setTimeout(()=>{
       btn.classList.remove('is-success');
-      btn.innerHTML = originalHTML;
-      lucide.createIcons();
-      btn.dataset.busy = 'false';
-      btn.disabled = false;
+      btn.innerHTML = orig; lucide.createIcons();
+      btn.dataset.busy = 'false'; btn.disabled = false;
     }, 2200);
-
-  } catch (err){
-    closeToast(toastLoading);
+  } catch(err){
+    closeToast(tl);
     btn.classList.remove('is-loading');
-    btn.innerHTML = originalHTML;
-    lucide.createIcons();
-    btn.dataset.busy = 'false';
-    btn.disabled = false;
-    toast('Gagal menyiapkan gambar. Coba lagi ya.', 'error');
-    trackEvent('unduh-gagal', namaAgendaAktif);
+    btn.innerHTML = orig; lucide.createIcons();
+    btn.dataset.busy = 'false'; btn.disabled = false;
+    toast('Gagal menyiapkan gambar.', 'error');
   }
 });
 
-/* === INIT === */
+async function shareKarya(){
+  if(!fotoObj){ toast('Pilih foto dulu.', 'error'); return; }
+  canvas.discardActiveObject(); canvas.renderAll();
+  const btn = document.getElementById('btn-share');
+  const orig = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan…</span>';
+  lucide.createIcons();
+
+  canvas.toBlob(async blob => {
+    try {
+      const safeNama = (namaAgendaAktif || 'Kreatif').replace(/[^a-z0-9]/gi,'-').toLowerCase();
+      const file = new File([blob], `Kampanye-${safeNama}.png`, { type:'image/png' });
+      if(navigator.canShare && navigator.canShare({ files:[file] })){
+        await navigator.share({
+          files: [file],
+          title: namaAgendaAktif || 'Kreatif Kampanye',
+          text: `Karya saya untuk ${namaAgendaAktif || 'kampanye'} — Guru Berbagi Selogiri`
+        });
+        trackEvent('share-native', namaAgendaAktif);
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `Kampanye-${safeNama}.png`; a.click();
+        setTimeout(()=>URL.revokeObjectURL(url), 1000);
+        toast('Browser belum dukung share langsung — karya diunduh.', 'info', 4000);
+      }
+    } catch(err){
+      if(!(err && err.name === 'AbortError')) toast('Bagikan gagal. Coba unduh saja.', 'error');
+    } finally {
+      btn.disabled = false; btn.innerHTML = orig; lucide.createIcons();
+    }
+  }, 'image/png');
+}
+
+/* ============================================
+   🔄 RESET
+   ============================================ */
+async function resetSemua(){
+  if(!confirm('Mulai ulang dari nol? Foto, teks, dan filter akan dihapus.')) return;
+  if(fotoObj){ canvas.remove(fotoObj); fotoObj = null; }
+  objekTeks.forEach(t => canvas.remove(t));
+  objekTeks = []; teksAktif = null;
+  filterAktif = 'original';
+  document.getElementById('teks-input').value = '';
+  document.getElementById('teks-ukuran').value = 56;
+  if(agendaId) await dbDel('drafts', agendaId);
+  document.getElementById('canvas-wrapper').classList.remove('has-photo');
+  const ph = document.getElementById('canvas-placeholder'); if(ph) ph.style.opacity = '1';
+  document.getElementById('zoom-slider').value = 80;
+  document.getElementById('draft-info').style.display = 'none';
+  canvas.discardActiveObject(); canvas.requestRenderAll();
+  updateTeksEditorUI();
+  toast('Siap mulai dari awal.', 'success');
+}
+
+/* ============================================
+   📱 PWA
+   ============================================ */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault(); deferredPrompt = e;
+  document.getElementById('btn-install').style.display = 'inline-flex';
+});
+function installPWA(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(c => {
+    if(c.outcome === 'accepted') trackEvent('install-pwa');
+    deferredPrompt = null;
+    document.getElementById('btn-install').style.display = 'none';
+  });
+}
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+/* ============================================
+   INIT
+   ============================================ */
 (function init(){
-  const acc = document.documentElement.getAttribute('data-acc') || 'teal';
-  setAccent(acc);
+  setAccent(document.documentElement.getAttribute('data-acc') || 'teal');
+  renderFilterGrid();
+  updateTeksEditorUI();
+  muatAgenda();
 })();
 </script>
 </body>
