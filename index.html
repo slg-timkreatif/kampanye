@@ -8,7 +8,11 @@
 
 <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png">
 
-<!-- Preferensi aksen (anti-flicker) -->
+<!-- ============ ANALYTICS — GoatCounter ============ -->
+<!-- Daftar gratis di goatcounter.com, ganti subdomain di bawah -->
+<script data-goatcounter="https://gbs.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
 <script>
 try {
   const acc = localStorage.getItem('acc') || 'teal';
@@ -59,11 +63,26 @@ body{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
   font-weight:700; font-size:14px; border-radius:var(--r-md);
   padding:14px 20px; cursor:pointer; transition:all .2s ease;
-  border:1px solid transparent;
+  border:1px solid transparent; position:relative; overflow:hidden;
 }
+.gb-btn:disabled{ cursor:not-allowed; }
 .gb-btn-primary{ background:var(--acc); color:#fff; box-shadow:0 4px 12px var(--acc-ring); }
-.gb-btn-primary:hover{ background:var(--acc2); transform:translateY(-1px); }
-.gb-btn-primary:active{ transform:scale(.97); }
+.gb-btn-primary:hover:not(:disabled){ background:var(--acc2); transform:translateY(-1px); }
+.gb-btn-primary:active:not(:disabled){ transform:scale(.97); }
+.gb-btn-primary:disabled{ opacity:.75; }
+
+/* State unduh sukses */
+.gb-btn-primary.is-success{ background:#10b981; box-shadow:0 4px 12px rgba(16,185,129,.35); }
+.gb-btn-primary.is-success:hover{ background:#10b981; transform:none; }
+
+/* Shimmer effect saat loading */
+.gb-btn-primary.is-loading::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
+  animation:shimmer 1.4s infinite;
+}
+@keyframes shimmer{ 0%{transform:translateX(-100%);} 100%{transform:translateX(100%);} }
+
 .gb-btn-outline{ background:transparent; color:var(--acc-text); border-color:var(--acc); }
 .gb-btn-outline:hover{ background:var(--acc-soft); }
 .gb-btn-outline:active{ transform:scale(.97); }
@@ -76,12 +95,8 @@ body{
 }
 .canvas-container, .canvas-container canvas{ width:100% !important; height:100% !important; }
 
-/* Touch gestures — WAJIB untuk pinch zoom */
-.canvas-container,
-.canvas-container canvas,
-#canvas-wrapper{
-  touch-action:none !important;
-  -ms-touch-action:none !important;
+.canvas-container, .canvas-container canvas, #canvas-wrapper{
+  touch-action:none !important; -ms-touch-action:none !important;
 }
 #canvas-wrapper{ overscroll-behavior:contain; }
 
@@ -90,22 +105,17 @@ body{
 .modal-content{ transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .28s cubic-bezier(.16,1,.3,1); }
 .acc-dot{
   width:36px; height:36px; border-radius:999px; cursor:pointer;
-  border:3px solid transparent; transition:all .18s ease;
-  box-shadow:var(--shadow-1);
+  border:3px solid transparent; transition:all .18s ease; box-shadow:var(--shadow-1);
 }
 .acc-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.08); }
 .acc-dot:hover{ transform:scale(1.08); }
 
-/* ============================================
-   🎨 FLOATING GLASS TOOLBAR (Zoom + Rotate)
-   ============================================ */
+/* ===== Canvas Toolbar ===== */
 .canvas-toolbar{
-  position:absolute;
-  bottom:12px; left:50%;
+  position:absolute; bottom:12px; left:50%;
   transform:translate(-50%, 12px);
   display:flex; align-items:center; gap:4px;
-  padding:6px 8px;
-  border-radius:999px;
+  padding:6px 8px; border-radius:999px;
   background:rgba(20,18,26,.72);
   backdrop-filter:blur(14px) saturate(160%);
   -webkit-backdrop-filter:blur(14px) saturate(160%);
@@ -113,87 +123,78 @@ body{
   box-shadow:0 8px 28px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.15);
   opacity:0; pointer-events:none;
   transition:opacity .3s ease, transform .3s cubic-bezier(.16,1,.3,1);
-  z-index:20;
-  max-width:calc(100% - 24px);
+  z-index:20; max-width:calc(100% - 24px);
 }
-#canvas-wrapper.has-photo .canvas-toolbar{
-  opacity:1; pointer-events:auto;
-  transform:translate(-50%, 0);
-}
-
+#canvas-wrapper.has-photo .canvas-toolbar{ opacity:1; pointer-events:auto; transform:translate(-50%, 0); }
 .toolbar-btn{
   width:36px; height:36px; flex-shrink:0;
   display:flex; align-items:center; justify-content:center;
-  border-radius:999px;
-  background:transparent;
-  color:rgba(255,255,255,.9);
-  border:none; cursor:pointer;
-  transition:background .15s ease, transform .12s ease;
-  -webkit-tap-highlight-color:transparent;
+  border-radius:999px; background:transparent; color:rgba(255,255,255,.9);
+  border:none; cursor:pointer; transition:background .15s ease, transform .12s ease;
 }
 .toolbar-btn:hover{ background:rgba(255,255,255,.14); }
 .toolbar-btn:active{ transform:scale(.9); background:rgba(255,255,255,.22); }
 .toolbar-btn i{ width:16px; height:16px; }
-
-.toolbar-divider{
-  width:1px; height:20px;
-  background:rgba(255,255,255,.18);
-  flex-shrink:0; margin:0 2px;
-}
-
-.zoom-slider-wrap{
-  display:flex; align-items:center; gap:8px;
-  padding:0 6px;
-  min-width:110px;
-  flex-shrink:0;
-}
+.toolbar-divider{ width:1px; height:20px; background:rgba(255,255,255,.18); flex-shrink:0; margin:0 2px; }
+.zoom-slider-wrap{ display:flex; align-items:center; gap:8px; padding:0 6px; min-width:110px; flex-shrink:0; }
 #zoom-slider{
   -webkit-appearance:none; appearance:none;
   width:100%; height:4px; border-radius:999px;
-  background:rgba(255,255,255,.24);
-  outline:none; cursor:pointer;
+  background:rgba(255,255,255,.24); outline:none; cursor:pointer;
 }
 #zoom-slider::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
-  width:16px; height:16px; border-radius:50%;
-  background:#fff;
-  border:2px solid var(--acc);
-  box-shadow:0 2px 8px rgba(0,0,0,.35);
-  cursor:pointer;
-  transition:transform .12s ease;
+  width:16px; height:16px; border-radius:50%; background:#fff;
+  border:2px solid var(--acc); box-shadow:0 2px 8px rgba(0,0,0,.35);
+  cursor:pointer; transition:transform .12s ease;
 }
 #zoom-slider::-webkit-slider-thumb:active{ transform:scale(1.2); }
 #zoom-slider::-moz-range-thumb{
-  width:16px; height:16px; border-radius:50%;
-  background:#fff; border:2px solid var(--acc);
-  cursor:pointer;
+  width:16px; height:16px; border-radius:50%; background:#fff;
+  border:2px solid var(--acc); cursor:pointer;
 }
-#zoom-slider::-moz-range-track{
-  height:4px; border-radius:999px;
-  background:rgba(255,255,255,.24);
-}
-
-/* Hint bubble */
 .canvas-hint{
   position:absolute; top:12px; left:50%;
   transform:translate(-50%, -8px);
-  padding:7px 14px;
-  border-radius:999px;
+  padding:7px 14px; border-radius:999px;
   background:rgba(20,18,26,.78);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  color:#fff;
-  font-size:11px; font-weight:700;
-  display:flex; align-items:center; gap:6px;
-  white-space:nowrap;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  color:#fff; font-size:11px; font-weight:700;
+  display:flex; align-items:center; gap:6px; white-space:nowrap;
   opacity:0; pointer-events:none;
   transition:opacity .4s ease, transform .4s ease;
-  z-index:15;
-  border:1px solid rgba(255,255,255,.14);
+  z-index:15; border:1px solid rgba(255,255,255,.14);
   box-shadow:0 4px 16px rgba(0,0,0,.2);
 }
 .canvas-hint i{ width:13px; height:13px; }
 .canvas-hint.show{ opacity:1; transform:translate(-50%, 0); }
+
+/* ============================================
+   🍞 TOAST SYSTEM
+   ============================================ */
+#toast-container{
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  z-index:10000; display:flex; flex-direction:column; gap:8px;
+  pointer-events:none; width:calc(100% - 32px); max-width:400px;
+  padding-bottom:env(safe-area-inset-bottom, 0);
+}
+.toast{
+  display:flex; align-items:center; gap:10px;
+  padding:12px 16px; border-radius:14px;
+  background:rgba(20,18,26,.94); color:#fff;
+  font-size:13px; font-weight:600; line-height:1.4;
+  box-shadow:0 10px 30px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.15);
+  pointer-events:auto; border:1px solid rgba(255,255,255,.08);
+  animation:toastIn .32s cubic-bezier(.16,1,.3,1);
+  backdrop-filter:blur(10px);
+}
+.toast i{ width:16px; height:16px; flex-shrink:0; }
+.toast-success{ background:rgba(16,185,129,.96); }
+.toast-error{ background:rgba(239,68,68,.96); }
+.toast-loading{ background:rgba(20,18,26,.94); }
+.toast-out{ animation:toastOut .28s ease forwards; }
+@keyframes toastIn{ from{opacity:0; transform:translateY(24px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
+@keyframes toastOut{ to{opacity:0; transform:translateY(20px) scale(.96);} }
 </style>
 </head>
 
@@ -214,18 +215,15 @@ body{
     </a>
     <button onclick="openSettings()" aria-label="Pengaturan tampilan"
             class="gb-btn gb-btn-ghost !p-2.5 !rounded-xl">
-      <i data-lucide="settings-2" class="w-4 h-4"></i>
+      <i data-lucide="palette" class="w-4 h-4"></i>
     </button>
   </div>
 </header>
 
 <main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 md:py-10">
-
-  <!-- ============ HERO ============ -->
   <section class="text-center mb-7 md:mb-10">
     <div class="gb-pill mb-4" style="background:var(--acc-soft); color:var(--acc-text);">
-      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-      KREATIF KAMPANYE
+      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> KREATIF KAMPANYE
     </div>
     <h1 class="text-[28px] md:text-4xl font-extrabold tracking-tight leading-tight" style="color:var(--fg);">
       Satu Bingkai,<br class="sm:hidden"> Beragam Cerita.
@@ -236,10 +234,7 @@ body{
   </section>
 
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 md:gap-6 items-start">
-
-    <!-- ================= KOLOM KIRI ================= -->
     <div class="lg:col-span-2 space-y-5">
-
       <div class="gb-card p-5 md:p-6">
         <div class="flex items-center gap-2 mb-2">
           <span id="status-dot" class="w-2 h-2 rounded-full" style="background:var(--fg-subtle);"></span>
@@ -295,7 +290,6 @@ body{
       </div>
     </div>
 
-    <!-- ================= KOLOM KANAN ================= -->
     <div class="lg:col-span-3">
       <div id="area-kerja" class="gb-card p-5 md:p-6 opacity-60 pointer-events-none transition-all duration-500">
         <div class="flex items-center justify-between mb-4">
@@ -318,12 +312,10 @@ body{
           </button>
         </div>
 
-        <!-- ===== WRAPPER CANVAS + FLOATING TOOLBAR ===== -->
         <div id="canvas-wrapper"
              class="w-full rounded-2xl overflow-hidden relative flex justify-center items-center mb-4"
              style="background:var(--bg); border:2px dashed var(--border); min-height:240px;">
 
-          <!-- Placeholder -->
           <div id="canvas-placeholder"
                class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-0 px-6"
                style="color:var(--fg-subtle);">
@@ -333,42 +325,32 @@ body{
             </span>
           </div>
 
-          <!-- Canvas -->
           <div class="w-full h-full relative z-10">
             <canvas id="twibbon-canvas"></canvas>
           </div>
 
-          <!-- Hint bubble -->
           <div id="canvas-hint" class="canvas-hint">
             <i data-lucide="move" class="w-3.5 h-3.5"></i>
             <span>Cubit 2 jari atau pakai slider di bawah</span>
           </div>
 
-          <!-- 🎨 FLOATING TOOLBAR -->
           <div class="canvas-toolbar" role="toolbar" aria-label="Kontrol foto">
             <button class="toolbar-btn" onclick="zoomStep(-10)" aria-label="Perkecil">
               <i data-lucide="zoom-out"></i>
             </button>
-
             <div class="zoom-slider-wrap">
-              <input type="range" id="zoom-slider" min="30" max="300" value="80"
-                     aria-label="Zoom foto">
+              <input type="range" id="zoom-slider" min="30" max="300" value="80" aria-label="Zoom foto">
             </div>
-
             <button class="toolbar-btn" onclick="zoomStep(10)" aria-label="Perbesar">
               <i data-lucide="zoom-in"></i>
             </button>
-
             <div class="toolbar-divider"></div>
-
             <button class="toolbar-btn" onclick="rotateStep(-90)" aria-label="Putar kiri">
               <i data-lucide="rotate-ccw"></i>
             </button>
-
             <button class="toolbar-btn" onclick="rotateStep(90)" aria-label="Putar kanan">
               <i data-lucide="rotate-cw"></i>
             </button>
-
             <button class="toolbar-btn" onclick="resetObjek()" aria-label="Reset posisi">
               <i data-lucide="refresh-cw"></i>
             </button>
@@ -388,7 +370,6 @@ body{
   </div>
 </main>
 
-<!-- ============ FOOTER ============ -->
 <footer class="mt-10 py-8 border-t" style="border-color:var(--border);">
   <div class="max-w-6xl mx-auto px-4 sm:px-5 text-center">
     <div class="flex items-center justify-center gap-2 mb-2">
@@ -398,11 +379,12 @@ body{
       </p>
       <div class="h-px w-8" style="background:var(--border);"></div>
     </div>
-    <p class="text-[11px]" style="color:var(--fg-muted);">
-      &copy; 2026 GTK Kecamatan Selogiri
-    </p>
+    <p class="text-[11px]" style="color:var(--fg-muted);">&copy; 2026 GTK Kecamatan Selogiri</p>
   </div>
 </footer>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
 
 <!-- ============ MODAL DIALOG ============ -->
 <div id="dialog-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
@@ -410,8 +392,7 @@ body{
        style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
        onclick="closeModal('dialog-modal')"></div>
   <div class="gb-card w-full max-w-xs relative z-10 p-7 text-center transform scale-95 opacity-0 modal-content">
-    <div id="dialog-icon-bg"
-         class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+    <div id="dialog-icon-bg" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
          style="background:var(--acc-soft); color:var(--acc-text);">
       <i id="dialog-icon" data-lucide="info" class="w-8 h-8"></i>
     </div>
@@ -429,21 +410,16 @@ body{
   <div class="gb-card p-4 md:p-5 w-full max-w-sm flex flex-col items-center relative z-10 transform scale-95 opacity-0 modal-content">
     <div class="w-full flex items-center justify-between mb-3">
       <h3 class="font-extrabold text-base" style="color:var(--fg);">Ambil Selfie</h3>
-      <button onclick="matikanKamera()" aria-label="Tutup"
-              class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
+      <button onclick="matikanKamera()" class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
-
     <div class="w-full aspect-square rounded-2xl overflow-hidden mb-4 relative"
          style="background:#000; border:1px solid var(--border);">
-      <video id="kamera-stream" class="w-full h-full object-cover" style="transform:scaleX(-1);"
-             autoplay playsinline></video>
+      <video id="kamera-stream" class="w-full h-full object-cover" style="transform:scaleX(-1);" autoplay playsinline></video>
     </div>
-
     <button id="btn-capture" class="gb-btn gb-btn-primary w-full">
-      <i data-lucide="aperture" class="w-4 h-4"></i>
-      <span>Jepret Sekarang</span>
+      <i data-lucide="aperture" class="w-4 h-4"></i><span>Jepret Sekarang</span>
     </button>
   </div>
 </div>
@@ -459,37 +435,82 @@ body{
         <i data-lucide="palette" class="w-4 h-4" style="color:var(--acc);"></i>
         <h3 class="font-extrabold text-base" style="color:var(--fg);">Warna Aksen</h3>
       </div>
-      <button onclick="closeModal('settings-modal')" aria-label="Tutup"
-              class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
+      <button onclick="closeModal('settings-modal')" class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
-
     <p class="text-[12px] mb-4 leading-relaxed" style="color:var(--fg-muted);">
-      Pilih warna yang paling nyaman untuk Anda. Pengaturan tersimpan otomatis.
+      Pilih warna yang paling nyaman untuk Anda. Tersimpan otomatis.
     </p>
-
     <div class="flex items-center gap-3 flex-wrap justify-center py-2">
-      <button class="acc-dot" data-acc="teal"   style="background:#0D9488;" aria-label="Teal"></button>
-      <button class="acc-dot" data-acc="biru"   style="background:#2563eb;" aria-label="Biru"></button>
-      <button class="acc-dot" data-acc="violet" style="background:#7c3aed;" aria-label="Violet"></button>
-      <button class="acc-dot" data-acc="amber"  style="background:#d97706;" aria-label="Amber"></button>
-      <button class="acc-dot" data-acc="rose"   style="background:#e11d48;" aria-label="Rose"></button>
+      <button class="acc-dot" data-acc="teal"   style="background:#0D9488;"></button>
+      <button class="acc-dot" data-acc="biru"   style="background:#2563eb;"></button>
+      <button class="acc-dot" data-acc="violet" style="background:#7c3aed;"></button>
+      <button class="acc-dot" data-acc="amber"  style="background:#d97706;"></button>
+      <button class="acc-dot" data-acc="rose"   style="background:#e11d48;"></button>
     </div>
-
     <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
       <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
-        Guru Berbagi Selogiri · v2.0<br>Tim Kreatif GTK Kecamatan Selogiri
+        Guru Berbagi Selogiri · v2.1<br>Tim Kreatif GTK Kecamatan Selogiri
       </p>
     </div>
   </div>
 </div>
 
-<!-- ============ LOGIKA APLIKASI ============ -->
 <script>
 lucide.createIcons();
 
-/* ——————————— PENGATURAN AKSEN ——————————— */
+/* ============================================
+   📊 ANALYTICS HELPER
+   ============================================ */
+function trackEvent(event, detail){
+  try {
+    if(window.goatcounter && window.goatcounter.count){
+      const path = event + (detail ? '-' + String(detail).replace(/\s+/g,'-').toLowerCase().slice(0,60) : '');
+      window.goatcounter.count({
+        path,
+        title: event + (detail ? ': ' + detail : ''),
+        event: true
+      });
+    }
+  } catch(e){ /* analytics opsional, jangan sampai crash */ }
+}
+
+/* ============================================
+   🍞 TOAST SYSTEM
+   ============================================ */
+function toast(msg, type='info', durasi=3500){
+  const container = document.getElementById('toast-container');
+  if(!container) return null;
+  const el = document.createElement('div');
+  el.className = 'toast toast-' + type;
+  const icons = {
+    success: 'check-circle-2',
+    error: 'alert-triangle',
+    info: 'info',
+    loading: 'loader-2'
+  };
+  const spin = type === 'loading' ? 'animate-spin' : '';
+  el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="${spin}"></i><span>${msg}</span>`;
+  container.appendChild(el);
+  lucide.createIcons();
+  if(type !== 'loading' && durasi > 0){
+    setTimeout(() => {
+      el.classList.add('toast-out');
+      setTimeout(() => el.remove(), 280);
+    }, durasi);
+  }
+  return el;
+}
+function closeToast(el){
+  if(!el) return;
+  el.classList.add('toast-out');
+  setTimeout(() => el.remove(), 280);
+}
+
+/* ============================================
+   ⚙️ PENGATURAN AKSEN
+   ============================================ */
 function setAccent(acc){
   document.documentElement.setAttribute('data-acc', acc);
   localStorage.setItem('acc', acc);
@@ -508,7 +529,9 @@ document.querySelectorAll('.acc-dot').forEach(d=>{
 });
 function openSettings(){ openModal('settings-modal'); }
 
-/* ——————————— MODAL HELPERS ——————————— */
+/* ============================================
+   🪟 MODAL HELPERS
+   ============================================ */
 function openModal(id){
   const el = document.getElementById(id);
   if(!el) return;
@@ -548,10 +571,11 @@ function showAlert(type, title, msg){
   openModal('dialog-modal');
 }
 
-/* ——————————— CANVAS FABRIC ——————————— */
+/* ============================================
+   🎨 CANVAS FABRIC
+   ============================================ */
 const canvas = new fabric.Canvas('twibbon-canvas', {
-  width: 1080,
-  height: 1080,
+  width: 1080, height: 1080,
   preserveObjectStacking: true,
   controlsAboveOverlay: true,
   selection: false,
@@ -562,23 +586,12 @@ const canvas = new fabric.Canvas('twibbon-canvas', {
 
 fabric.Object.prototype.set({
   transparentCorners: false,
-  cornerColor: '#0D9488',
-  cornerStrokeColor: '#ffffff',
-  borderColor: '#0D9488',
-  cornerSize: 48,
-  touchCornerSize: 48,
-  padding: 12,
-  cornerStyle: 'circle',
-  borderDashArray: [7, 7],
-  hasControls: true,
-  hasBorders: true,
-  lockRotation: false,
-  lockScalingX: false,
-  lockScalingY: false,
-  lockUniScaling: false,
-  lockScalingFlip: false,
-  perPixelTargetFind: true,
-  objectCaching: false
+  cornerColor: '#0D9488', cornerStrokeColor: '#ffffff', borderColor: '#0D9488',
+  cornerSize: 48, touchCornerSize: 48, padding: 12,
+  cornerStyle: 'circle', borderDashArray: [7, 7],
+  hasControls: true, hasBorders: true, lockRotation: false,
+  lockScalingX: false, lockScalingY: false, lockUniScaling: false,
+  lockScalingFlip: false, perPixelTargetFind: true, objectCaching: false
 });
 
 function updateFabricColors(){
@@ -589,7 +602,7 @@ function updateFabricColors(){
 }
 updateFabricColors();
 
-/* ——————————— KONTROL ZOOM & ROTATE ——————————— */
+/* === Kontrol zoom & rotate === */
 function zoomStep(pct){
   const obj = canvas.getActiveObject();
   if(!obj) return;
@@ -599,7 +612,6 @@ function zoomStep(pct){
   slider.value = next;
   applyZoom(next);
 }
-
 function applyZoom(pct){
   const obj = canvas.getActiveObject();
   if(!obj || !obj._baseScale) return;
@@ -608,11 +620,9 @@ function applyZoom(pct){
   obj.setCoords();
   canvas.requestRenderAll();
 }
-
 document.getElementById('zoom-slider').addEventListener('input', e => {
   applyZoom(parseInt(e.target.value));
 });
-
 function rotateStep(deg){
   const obj = canvas.getActiveObject();
   if(!obj) return;
@@ -620,7 +630,6 @@ function rotateStep(deg){
   obj.setCoords();
   canvas.requestRenderAll();
 }
-
 function resetObjek(){
   const obj = canvas.getActiveObject();
   if(!obj || !obj._baseScale) return;
@@ -630,8 +639,6 @@ function resetObjek(){
   canvas.requestRenderAll();
   document.getElementById('zoom-slider').value = 100;
 }
-
-// Sinkron slider ketika user pinch/scale via controls
 function syncSliderFromObject(){
   const obj = canvas.getActiveObject();
   if(!obj || !obj._baseScale) return;
@@ -643,12 +650,11 @@ function syncSliderFromObject(){
 canvas.on('object:scaling', syncSliderFromObject);
 canvas.on('object:modified', syncSliderFromObject);
 
-/* ============================================================
-   📥 BACA DATA AGENDA DARI URL — TANPA BACKEND
-   Format: ?n=NAMA&d=DESKRIPSI&i=URL_GAMBAR
-   Opsional: &w=WAKTU   &a=ID (fallback ke JSON CDN)
-   ============================================================ */
+/* ============================================
+   📥 BACA DATA AGENDA DARI URL
+   ============================================ */
 const CDN_JSON = 'https://cdn.jsdelivr.net/gh/slg-timkreatif/kampanye@main/data';
+let namaAgendaAktif = '';
 
 function setStatus(state, label){
   const dot = document.getElementById('status-dot');
@@ -672,9 +678,9 @@ function muatAgenda(){
   if(nama && gambar){
     setStatus('ok', 'SIAP DIGUNAKAN');
     renderAgenda({ nama, deskripsi, gambar, waktu });
+    trackEvent('buka-agenda', nama);
     return;
   }
-
   if(id){
     setStatus('loading', 'MEMUAT AGENDA');
     fetch(`${CDN_JSON}/${id}.json`)
@@ -687,6 +693,7 @@ function muatAgenda(){
           gambar: data.gambar || data.bingkai,
           waktu: data.waktu
         });
+        trackEvent('buka-agenda', id);
       })
       .catch(() => {
         setStatus('error', 'AGENDA TIDAK DITEMUKAN');
@@ -700,7 +707,6 @@ function muatAgenda(){
       });
     return;
   }
-
   setStatus('idle', 'MENUNGGU AKSES');
   document.getElementById('judul-kampanye').innerText = 'Selamat Datang 👋';
   document.getElementById('deskripsi-kampanye').innerText =
@@ -714,6 +720,7 @@ function muatAgenda(){
 }
 
 function renderAgenda(data){
+  namaAgendaAktif = data.nama || '';
   document.getElementById('judul-kampanye').innerText = data.nama;
   document.getElementById('deskripsi-kampanye').innerText = data.deskripsi || '';
   if(data.waktu){
@@ -752,12 +759,17 @@ function renderAgenda(data){
 }
 muatAgenda();
 
-/* ——————————— UPLOAD & SELFIE ——————————— */
+/* ============================================
+   📸 UPLOAD & SELFIE
+   ============================================ */
 document.getElementById('upload-foto').addEventListener('change', function(e){
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
-  reader.onload = ev => renderKeCanvas(ev.target.result);
+  reader.onload = ev => {
+    renderKeCanvas(ev.target.result);
+    trackEvent('upload-foto', namaAgendaAktif);
+  };
   reader.readAsDataURL(file);
   e.target.value = '';
 });
@@ -794,6 +806,7 @@ document.getElementById('btn-capture').addEventListener('click', () => {
   ctx.drawImage(videoElemen, 0, 0, tmp.width, tmp.height);
   renderKeCanvas(tmp.toDataURL('image/png'));
   matikanKamera();
+  trackEvent('selfie', namaAgendaAktif);
 });
 
 function renderKeCanvas(dataUrl){
@@ -802,42 +815,97 @@ function renderKeCanvas(dataUrl){
     img._baseScale = baseScale;
     img.scale(baseScale);
     canvas.centerObject(img);
-
     canvas.getObjects().forEach(o => canvas.remove(o));
     canvas.add(img);
     canvas.setActiveObject(img);
     img.setCoords();
     canvas.requestRenderAll();
 
-    // Aktifkan toolbar + sembunyikan placeholder
     const wrap = document.getElementById('canvas-wrapper');
     wrap.classList.add('has-photo');
     const ph = document.getElementById('canvas-placeholder');
     if(ph) ph.style.opacity = '0';
 
-    // Set slider ke 80% (karena kita fit di 0.8)
     document.getElementById('zoom-slider').value = 80;
 
-    // Tampilkan hint sebentar
     const hint = document.getElementById('canvas-hint');
     hint.classList.add('show');
     setTimeout(()=> hint.classList.remove('show'), 4000);
   }, { crossOrigin: 'anonymous' });
 }
 
-/* ——————————— UNDUH ——————————— */
-document.getElementById('btn-download').addEventListener('click', function(){
-  canvas.discardActiveObject();
-  canvas.renderAll();
-  const dataURL = canvas.toDataURL({ format:'png', quality:1 });
-  const link = document.createElement('a');
-  const namaFile = new URLSearchParams(location.search).get('n') || 'Kreatif';
-  link.download = `Kampanye-${namaFile.replace(/[^a-z0-9]/gi,'-').toLowerCase()}.png`;
-  link.href = dataURL;
-  link.click();
+/* ============================================
+   ⏳ UNDUH DENGAN LOADING STATE + TOAST
+   ============================================ */
+document.getElementById('btn-download').addEventListener('click', async function(){
+  const btn = this;
+  if(btn.dataset.busy === 'true') return;
+
+  // Cek apakah ada foto
+  const adaFoto = canvas.getObjects().some(o => o.type === 'image');
+  if(!adaFoto){
+    toast('Pilih foto dulu sebelum mengunduh.', 'error');
+    return;
+  }
+
+  btn.dataset.busy = 'true';
+  btn.disabled = true;
+  const originalHTML = btn.innerHTML;
+
+  // State: LOADING
+  btn.classList.add('is-loading');
+  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyiapkan gambar…</span>';
+  lucide.createIcons();
+  const toastLoading = toast('Menyiapkan karya beresolusi tinggi…', 'loading', 0);
+
+  // Beri napas ke UI 1 frame
+  await new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
+
+  try {
+    canvas.discardActiveObject();
+    canvas.renderAll();
+
+    const dataURL = canvas.toDataURL({ format:'png', quality:1 });
+    const namaFile = namaAgendaAktif || 'Kreatif';
+    const safeNama = namaFile.replace(/[^a-z0-9]/gi,'-').toLowerCase();
+
+    const link = document.createElement('a');
+    link.download = `Kampanye-${safeNama}.png`;
+    link.href = dataURL;
+    link.click();
+
+    closeToast(toastLoading);
+
+    // State: SUCCESS
+    btn.classList.remove('is-loading');
+    btn.classList.add('is-success');
+    btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Berhasil diunduh!</span>';
+    lucide.createIcons();
+    toast('Karya berhasil diunduh. Cek galeri HP Anda ✨', 'success', 4000);
+    trackEvent('unduh', namaAgendaAktif);
+
+    // Reset setelah 2.2 detik
+    setTimeout(() => {
+      btn.classList.remove('is-success');
+      btn.innerHTML = originalHTML;
+      lucide.createIcons();
+      btn.dataset.busy = 'false';
+      btn.disabled = false;
+    }, 2200);
+
+  } catch (err){
+    closeToast(toastLoading);
+    btn.classList.remove('is-loading');
+    btn.innerHTML = originalHTML;
+    lucide.createIcons();
+    btn.dataset.busy = 'false';
+    btn.disabled = false;
+    toast('Gagal menyiapkan gambar. Coba lagi ya.', 'error');
+    trackEvent('unduh-gagal', namaAgendaAktif);
+  }
 });
 
-/* ——————————— INIT ——————————— */
+/* === INIT === */
 (function init(){
   const acc = document.documentElement.getAttribute('data-acc') || 'teal';
   setAccent(acc);
