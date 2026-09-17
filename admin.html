@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="id" data-acc="teal" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0D9488">
+<title>Buat Link Agenda — Guru Berbagi Selogiri</title>
+
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png">
+
+<!-- Preferensi tema & aksen -->
+<script>
+try {
+  const acc = localStorage.getItem('acc') || 'teal';
+  document.documentElement.setAttribute('data-acc', acc);
+  const saved = localStorage.getItem('theme');
+  const hour = new Date().getHours();
+  const isNight = hour >= 18 || hour < 6;
+  let isDark = saved === 'dark' ? true
+             : saved === 'light' ? false
+             : (isNight || window.matchMedia('(prefers-color-scheme: dark)').matches);
+  if (isDark) document.documentElement.classList.add('dark');
+} catch(e){}
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] } } }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+
+<style>
+:root{
+  --acc:#0D9488; --acc2:#14B8A6; --acc-soft:#DDF5F2;
+  --acc-text:#0B7C72; --acc-ring:rgba(13,148,136,.35);
+  --bg:#F6F5F9;
+  --card:#FFFFFF;
+  --border:#E8E6EE;
+  --fg:#14121A;
+  --fg-muted:#6B6879;
+  --fg-subtle:#9C99A6;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-2xl:24px;
+  --p-sm:12px; --p-md:16px; --p-lg:20px; --p-xl:24px;
+  --shadow-1:0 1px 3px rgba(20,18,26,.05);
+  --shadow-2:0 4px 12px rgba(20,18,26,.08);
+}
+html[data-acc="biru"]  { --acc:#2563eb; --acc2:#0ea5e9; --acc-soft:#dbeafe; --acc-text:#2563eb; --acc-ring:rgba(37,99,235,.35);}
+html[data-acc="violet"]{ --acc:#7c3aed; --acc2:#a855f7; --acc-soft:#ede9fe; --acc-text:#7c3aed; --acc-ring:rgba(124,58,237,.35);}
+html[data-acc="amber"] { --acc:#d97706; --acc2:#f59e0b; --acc-soft:#fef3c7; --acc-text:#d97706; --acc-ring:rgba(217,119,6,.35);}
+html[data-acc="rose"]  { --acc:#e11d48; --acc2:#f43f5e; --acc-soft:#ffe4e6; --acc-text:#e11d48; --acc-ring:rgba(225,29,72,.35);}
+
+html.dark{
+  --bg:#100F15;
+  --card:#1A1922;
+  --border:#2A2833;
+  --fg:#F4F3F7;
+  --fg-muted:#A5A2B0;
+  --fg-subtle:#6E6B7A;
+  --acc-soft:rgba(20,184,166,.16);
+  --shadow-1:0 1px 3px rgba(0,0,0,.35);
+  --shadow-2:0 4px 12px rgba(0,0,0,.45);
+}
+html.dark[data-acc="biru"]  { --acc-soft:rgba(37,99,235,.18);}
+html.dark[data-acc="violet"]{ --acc-soft:rgba(124,58,237,.20);}
+html.dark[data-acc="amber"] { --acc-soft:rgba(217,119,6,.20);}
+html.dark[data-acc="rose"]  { --acc-soft:rgba(225,29,72,.20);}
+
+*{ -webkit-tap-highlight-color:transparent; }
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:'Inter', system-ui, sans-serif;
+  min-height:100vh;
+  transition:background .3s ease, color .3s ease;
+}
+
+.gb-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--r-2xl); box-shadow:var(--shadow-1); }
+.gb-label{ font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--fg-subtle); }
+.gb-input{
+  width:100%; padding:12px 14px; font-size:14px; font-weight:600;
+  background:var(--bg); color:var(--fg);
+  border:1px solid var(--border); border-radius:var(--r-md);
+  transition:border-color .2s ease, box-shadow .2s ease;
+  font-family:inherit;
+}
+.gb-input:focus{
+  outline:none;
+  border-color:var(--acc);
+  box-shadow:0 0 0 3px var(--acc-ring);
+}
+.gb-input::placeholder{ color:var(--fg-subtle); font-weight:400; }
+textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
+
+.gb-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-weight:700; font-size:14px; border-radius:var(--r-md);
+  padding:12px 18px; cursor:pointer; transition:all .2s ease;
+  border:1px solid transparent; font-family:inherit;
+}
+.gb-btn-primary{ background:var(--acc); color:#fff; box-shadow:0 4px 12px var(--acc-ring); }
+.gb-btn-primary:hover{ background:var(--acc2); transform:translateY(-1px); }
+.gb-btn-primary:active{ transform:scale(.97); }
+.gb-btn-primary:disabled{ opacity:.5; cursor:not-allowed; transform:none; background:var(--acc); }
+
+.gb-btn-soft{ background:var(--acc-soft); color:var(--acc-text); }
+.gb-btn-soft:hover{ filter:brightness(.96); }
+.gb-btn-soft:active{ transform:scale(.97); }
+
+.gb-btn-outline{ background:transparent; color:var(--acc-text); border-color:var(--acc); }
+.gb-btn-outline:hover{ background:var(--acc-soft); }
+.gb-btn-outline:active{ transform:scale(.97); }
+
+.gb-btn-ghost{ background:transparent; color:var(--fg-muted); border-color:var(--border); }
+.gb-btn-ghost:hover{ background:var(--bg); color:var(--fg); }
+
+.gb-pill{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 12px; border-radius:999px;
+  font-size:11px; font-weight:700; letter-spacing:.04em;
+}
+
+.modal-open{ overflow:hidden; }
+.modal-overlay{ transition:opacity .25s ease-out; }
+.modal-content{ transition:transform .28s cubic-bezier(.16,1,.3,1), opacity .28s cubic-bezier(.16,1,.3,1); }
+.acc-dot{
+  width:36px; height:36px; border-radius:999px; cursor:pointer;
+  border:3px solid transparent; transition:all .18s ease;
+  box-shadow:var(--shadow-1);
+}
+.acc-dot[data-active="true"]{ border-color:var(--fg); transform:scale(1.08); }
+.acc-dot:hover{ transform:scale(1.08); }
+
+/* Dropzone */
+.dropzone{
+  border:2px dashed var(--border);
+  border-radius:var(--r-lg);
+  padding:24px 16px; text-align:center;
+  cursor:pointer; transition:all .2s ease;
+  background:var(--bg);
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:var(--acc);
+  background:var(--acc-soft);
+}
+.dropzone.uploading{ opacity:.6; pointer-events:none; }
+
+/* Riwayat item */
+.riwayat-item{
+  display:flex; align-items:center; gap:12px;
+  padding:12px; border-radius:var(--r-md);
+  border:1px solid var(--border); background:var(--card);
+  cursor:pointer; transition:all .15s ease;
+}
+.riwayat-item:hover{ border-color:var(--acc); background:var(--acc-soft); }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- ============ HEADER ============ -->
+<header class="border-b" style="border-color:var(--border); background:var(--card);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-5 py-3 flex items-center justify-between gap-3">
+    <a href="index.html" class="flex items-center gap-3 min-w-0">
+      <img src="https://cdn.jsdelivr.net/gh/slg-timkreatif/app@main/1768315347206.png"
+           alt="Guru Berbagi Selogiri"
+           class="w-9 h-9 rounded-xl object-contain shrink-0"
+           style="background:var(--acc-soft); padding:3px;">
+      <div class="min-w-0">
+        <p class="font-extrabold text-[13px] leading-tight truncate" style="color:var(--fg);">Guru Berbagi Selogiri</p>
+        <p class="text-[10px] font-semibold tracking-wide truncate" style="color:var(--fg-subtle);">Panel Panitia</p>
+      </div>
+    </a>
+    <div class="flex items-center gap-2">
+      <a href="index.html" class="gb-btn gb-btn-ghost !p-2.5 !rounded-xl" title="Buka app">
+        <i data-lucide="external-link" class="w-4 h-4"></i>
+      </a>
+      <button onclick="openSettings()" aria-label="Pengaturan"
+              class="gb-btn gb-btn-ghost !p-2.5 !rounded-xl">
+        <i data-lucide="settings-2" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 md:py-10">
+
+  <!-- ============ HERO ============ -->
+  <section class="text-center mb-7 md:mb-10">
+    <div class="gb-pill mb-4" style="background:var(--acc-soft); color:var(--acc-text);">
+      <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
+      PANEL PANITIA
+    </div>
+    <h1 class="text-[26px] md:text-4xl font-extrabold tracking-tight leading-tight" style="color:var(--fg);">
+      Buat Link Agenda
+    </h1>
+    <p class="text-sm md:text-base mt-3 max-w-lg mx-auto leading-relaxed" style="color:var(--fg-muted);">
+      Isi 4 kolom di bawah, salin link yang dihasilkan, lalu bagikan ke grup WhatsApp rekan guru. Tanpa sentuh kode.
+    </p>
+  </section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 md:gap-6 items-start">
+
+    <!-- ================= KOLOM KIRI: FORM ================= -->
+    <div class="lg:col-span-3 space-y-5">
+
+      <!-- Kartu Form -->
+      <div class="gb-card p-5 md:p-6">
+        <div class="flex items-center gap-2 mb-5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+               style="background:var(--acc-soft); color:var(--acc-text);">
+            <i data-lucide="edit-3" class="w-4 h-4"></i>
+          </div>
+          <h2 class="font-extrabold text-base" style="color:var(--fg);">Detail Agenda</h2>
+        </div>
+
+        <form id="form-agenda" class="space-y-4" onsubmit="buatLink(event)">
+
+          <div>
+            <label class="gb-label block mb-2" for="in-nama">
+              Nama Agenda <span style="color:#ef4444;">*</span>
+            </label>
+            <input id="in-nama" class="gb-input" type="text" required maxlength="80"
+                   placeholder="Contoh: Semarak HUT RI ke-81">
+            <p class="text-[11px] mt-1.5" style="color:var(--fg-subtle);">
+              Muncul sebagai judul besar di halaman guru.
+            </p>
+          </div>
+
+          <div>
+            <label class="gb-label block mb-2" for="in-desc">
+              Deskripsi Singkat
+            </label>
+            <textarea id="in-desc" class="gb-input" maxlength="200"
+                      placeholder="Contoh: Meriahkan kemerdekaan bersama rekan GTK Selogiri."></textarea>
+            <p class="text-[11px] mt-1.5" style="color:var(--fg-subtle);">
+              Maks 200 karakter. Kosongkan jika tidak perlu.
+            </p>
+          </div>
+
+          <div>
+            <label class="gb-label block mb-2" for="in-waktu">
+              Tanggal / Waktu <span class="normal-case font-semibold" style="color:var(--fg-subtle);">(opsional)</span>
+            </label>
+            <input id="in-waktu" class="gb-input" type="text" maxlength="60"
+                   placeholder="Contoh: 17 Agustus 2026">
+          </div>
+
+          <div>
+            <label class="gb-label block mb-2">
+              Gambar Bingkai <span style="color:#ef4444;">*</span>
+            </label>
+
+            <!-- Dropzone -->
+            <div id="dropzone" class="dropzone" onclick="document.getElementById('in-file').click()">
+              <input type="file" id="in-file" accept="image/png,image/jpeg,image/webp" class="hidden">
+              <div id="dropzone-idle">
+                <i data-lucide="upload-cloud" class="w-8 h-8 mx-auto mb-2" style="color:var(--acc);"></i>
+                <p class="text-[13px] font-bold" style="color:var(--fg);">
+                  Klik atau tarik gambar ke sini
+                </p>
+                <p class="text-[11px] mt-1" style="color:var(--fg-muted);">
+                  PNG/JPG/WebP · otomatis di-upload ke catbox.moe
+                </p>
+              </div>
+              <div id="dropzone-uploading" class="hidden">
+                <i data-lucide="loader-2" class="w-8 h-8 mx-auto mb-2 animate-spin" style="color:var(--acc);"></i>
+                <p class="text-[13px] font-bold" style="color:var(--fg);">Mengunggah…</p>
+                <div class="w-full max-w-[200px] h-1.5 rounded-full mx-auto mt-3 overflow-hidden" style="background:var(--border);">
+                  <div id="upload-progress" class="h-full transition-all duration-200" style="background:var(--acc); width:0%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 my-3">
+              <div class="h-px flex-1" style="background:var(--border);"></div>
+              <span class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--fg-subtle);">atau</span>
+              <div class="h-px flex-1" style="background:var(--border);"></div>
+            </div>
+
+            <input id="in-gambar" class="gb-input" type="url"
+                   placeholder="https://i.ibb.co/xxx/bingkai.png">
+            <p class="text-[11px] mt-1.5" style="color:var(--fg-subtle);">
+              Tempel link gambar dari <b>imgbb</b>, <b>Cloudinary</b>, atau hosting lain.
+            </p>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="gb-btn gb-btn-primary w-full">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Buat Link Agenda</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Riwayat -->
+      <div class="gb-card p-5 md:p-6" id="kartu-riwayat" style="display:none;">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                 style="background:var(--acc-soft); color:var(--acc-text);">
+              <i data-lucide="history" class="w-4 h-4"></i>
+            </div>
+            <h2 class="font-extrabold text-base" style="color:var(--fg);">Riwayat Link</h2>
+          </div>
+          <button onclick="hapusRiwayat()" class="gb-btn gb-btn-ghost !p-2 !rounded-lg" title="Bersihkan riwayat">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div id="daftar-riwayat" class="space-y-2"></div>
+      </div>
+    </div>
+
+    <!-- ================= KOLOM KANAN: HASIL ================= -->
+    <div class="lg:col-span-2 lg:sticky lg:top-4 space-y-5">
+
+      <!-- Kartu Hasil -->
+      <div class="gb-card p-5 md:p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+               style="background:var(--acc-soft); color:var(--acc-text);">
+            <i data-lucide="link" class="w-4 h-4"></i>
+          </div>
+          <h2 class="font-extrabold text-base" style="color:var(--fg);">Hasil</h2>
+        </div>
+
+        <!-- Preview bingkai -->
+        <div class="gb-label mb-2">Pratinjau Bingkai</div>
+        <div class="rounded-xl p-2 flex justify-center items-center min-h-[140px] mb-4"
+             style="background:var(--bg); border:1px solid var(--border);">
+          <img id="preview-img" alt="Pratinjau"
+               class="w-full max-w-[180px] h-auto rounded-lg"
+               style="display:none; border:1px solid var(--border);">
+          <div id="preview-empty" class="py-8 text-center" style="color:var(--fg-subtle);">
+            <i data-lucide="image" class="w-7 h-7 mx-auto mb-1 opacity-60"></i>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Belum ada gambar</span>
+          </div>
+        </div>
+
+        <!-- Preview link -->
+        <div class="gb-label mb-2">Link Agenda</div>
+        <textarea id="out-link" class="gb-input text-[11px] leading-relaxed" readonly
+                  style="min-height:100px; font-family:ui-monospace,monospace;"
+                  placeholder="Link akan muncul di sini setelah Anda klik 'Buat Link Agenda'"></textarea>
+
+        <!-- Tombol aksi -->
+        <div class="grid grid-cols-2 gap-2 mt-4">
+          <button id="btn-copy" onclick="salinLink()" class="gb-btn gb-btn-primary" disabled>
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span>Salin Link</span>
+          </button>
+          <button id="btn-buka" onclick="bukaPreview()" class="gb-btn gb-btn-outline" disabled>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            <span>Coba Link</span>
+          </button>
+          <button id="btn-wa" onclick="shareWA()" class="gb-btn gb-btn-soft" disabled>
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Share WA</span>
+          </button>
+          <button id="btn-qr" onclick="tampilkanQR()" class="gb-btn gb-btn-ghost" disabled>
+            <i data-lucide="qr-code" class="w-4 h-4"></i>
+            <span>QR Code</span>
+          </button>
+        </div>
+
+        <p class="text-[11px] mt-4 leading-relaxed" style="color:var(--fg-muted);">
+          💡 <b>Tips:</b> setelah copy, persingkat link dengan <a href="https://s.id" target="_blank" style="color:var(--acc-text); text-decoration:underline;">s.id</a> sebelum share ke grup.
+        </p>
+      </div>
+
+      <!-- Panduan Singkat -->
+      <div class="gb-card p-5 md:p-6">
+        <div class="gb-label mb-4">Panduan Cepat</div>
+        <ol class="space-y-3">
+          <li class="flex gap-3">
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-extrabold"
+                  style="background:var(--acc-soft); color:var(--acc-text);">1</span>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              Siapkan gambar bingkai (1080×1080 atau lebih besar).
+            </p>
+          </li>
+          <li class="flex gap-3">
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-extrabold"
+                  style="background:var(--acc-soft); color:var(--acc-text);">2</span>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              Upload via dropzone <b>atau</b> tempel URL dari hosting favorit.
+            </p>
+          </li>
+          <li class="flex gap-3">
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-extrabold"
+                  style="background:var(--acc-soft); color:var(--acc-text);">3</span>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              Klik <b>Buat Link</b> → copy → share ke grup WhatsApp.
+            </p>
+          </li>
+          <li class="flex gap-3">
+            <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-extrabold"
+                  style="background:var(--acc-soft); color:var(--acc-text);">4</span>
+            <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
+              Guru klik link → langsung berkarya, tanpa install apapun.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="mt-10 py-8 border-t" style="border-color:var(--border);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-5 text-center">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <div class="h-px w-8" style="background:var(--border);"></div>
+      <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:var(--fg-subtle);">
+        Tim Kreatif Selogiri
+      </p>
+      <div class="h-px w-8" style="background:var(--border);"></div>
+    </div>
+    <p class="text-[11px]" style="color:var(--fg-muted);">
+      &copy; 2026 GTK Kecamatan Selogiri
+    </p>
+  </div>
+</footer>
+
+<!-- ============ MODAL DIALOG ============ -->
+<div id="dialog-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 modal-overlay opacity-0"
+       style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
+       onclick="closeModal('dialog-modal')"></div>
+  <div class="gb-card w-full max-w-xs relative z-10 p-7 text-center transform scale-95 opacity-0 modal-content">
+    <div id="dialog-icon-bg"
+         class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+         style="background:var(--acc-soft); color:var(--acc-text);">
+      <i id="dialog-icon" data-lucide="info" class="w-8 h-8"></i>
+    </div>
+    <h3 id="dialog-title" class="text-lg font-extrabold mb-2" style="color:var(--fg);">Info</h3>
+    <p id="dialog-msg" class="text-[13px] leading-relaxed mb-6" style="color:var(--fg-muted);">…</p>
+    <div id="dialog-actions" class="w-full"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL QR ============ -->
+<div id="qr-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 modal-overlay opacity-0"
+       style="background:rgba(20,18,26,.7); backdrop-filter:blur(4px);"
+       onclick="closeModal('qr-modal')"></div>
+  <div class="gb-card w-full max-w-xs relative z-10 p-6 text-center transform scale-95 opacity-0 modal-content">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-extrabold text-base" style="color:var(--fg);">QR Code</h3>
+      <button onclick="closeModal('qr-modal')" class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <div class="rounded-xl p-3 mb-4" style="background:#fff;">
+      <img id="qr-img" alt="QR Code" class="w-full h-auto">
+    </div>
+    <p class="text-[12px] mb-4 leading-relaxed" style="color:var(--fg-muted);">
+      Scan QR ini untuk membuka link agenda langsung di HP.
+    </p>
+    <a id="qr-download" download="qr-agenda.png" class="gb-btn gb-btn-outline w-full">
+      <i data-lucide="download" class="w-4 h-4"></i>
+      <span>Unduh QR</span>
+    </a>
+  </div>
+</div>
+
+<!-- ============ MODAL PENGATURAN ============ -->
+<div id="settings-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 modal-overlay opacity-0"
+       style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
+       onclick="closeModal('settings-modal')"></div>
+  <div class="gb-card w-full max-w-sm relative z-10 p-6 transform scale-95 opacity-0 modal-content">
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-2">
+        <i data-lucide="settings-2" class="w-4 h-4" style="color:var(--acc);"></i>
+        <h3 class="font-extrabold text-base" style="color:var(--fg);">Pengaturan Tampilan</h3>
+      </div>
+      <button onclick="closeModal('settings-modal')" class="gb-btn gb-btn-ghost !p-2 !rounded-lg">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <div class="mb-5">
+      <div class="gb-label mb-2">Mode Tema</div>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="setTheme('light')" id="theme-light" class="gb-btn gb-btn-ghost">
+          <i data-lucide="sun" class="w-4 h-4"></i> Terang
+        </button>
+        <button onclick="setTheme('dark')" id="theme-dark" class="gb-btn gb-btn-ghost">
+          <i data-lucide="moon" class="w-4 h-4"></i> Gelap
+        </button>
+      </div>
+    </div>
+    <div>
+      <div class="gb-label mb-2">Warna Aksen</div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <button class="acc-dot" data-acc="teal"   style="background:#0D9488;"></button>
+        <button class="acc-dot" data-acc="biru"   style="background:#2563eb;"></button>
+        <button class="acc-dot" data-acc="violet" style="background:#7c3aed;"></button>
+        <button class="acc-dot" data-acc="amber"  style="background:#d97706;"></button>
+        <button class="acc-dot" data-acc="rose"   style="background:#e11d48;"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIKA ============ -->
+<script>
+lucide.createIcons();
+
+/* —————— TEMA & AKSEN (konsisten dengan index.html) —————— */
+function setTheme(mode){
+  const html = document.documentElement;
+  if(mode === 'dark'){ html.classList.add('dark'); localStorage.setItem('theme','dark'); }
+  else{ html.classList.remove('dark'); localStorage.setItem('theme','light'); }
+  syncThemeButtons();
+}
+function syncThemeButtons(){
+  const isDark = document.documentElement.classList.contains('dark');
+  const l = document.getElementById('theme-light');
+  const d = document.getElementById('theme-dark');
+  if(!l || !d) return;
+  [[l, !isDark], [d, isDark]].forEach(([btn, active])=>{
+    btn.classList.toggle('gb-btn-soft', active);
+    btn.classList.toggle('gb-btn-ghost', !active);
+  });
+}
+function setAccent(acc){
+  document.documentElement.setAttribute('data-acc', acc);
+  localStorage.setItem('acc', acc);
+  document.querySelectorAll('.acc-dot').forEach(d=>{
+    d.setAttribute('data-active', d.dataset.acc === acc ? 'true' : 'false');
+  });
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta){
+    const c = getComputedStyle(document.documentElement).getPropertyValue('--acc').trim();
+    meta.setAttribute('content', c);
+  }
+}
+document.querySelectorAll('.acc-dot').forEach(d=>{
+  d.addEventListener('click', ()=> setAccent(d.dataset.acc));
+});
+function openSettings(){ syncThemeButtons(); openModal('settings-modal'); }
+
+/* —————— MODAL HELPERS —————— */
+function openModal(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  document.body.classList.add('modal-open');
+  el.classList.remove('hidden'); el.classList.add('flex');
+  void el.offsetWidth;
+  const ov = el.querySelector('.modal-overlay');
+  const ct = el.querySelector('.modal-content');
+  if(ov) ov.classList.remove('opacity-0');
+  if(ct){ ct.classList.remove('opacity-0','scale-95'); ct.classList.add('opacity-100','scale-100'); }
+}
+function closeModal(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  document.body.classList.remove('modal-open');
+  const ov = el.querySelector('.modal-overlay');
+  const ct = el.querySelector('.modal-content');
+  if(ov) ov.classList.add('opacity-0');
+  if(ct){ ct.classList.remove('opacity-100','scale-100'); ct.classList.add('opacity-0','scale-95'); }
+  setTimeout(()=>{ el.classList.add('hidden'); el.classList.remove('flex'); }, 280);
+}
+function showAlert(type, title, msg){
+  const map = {
+    error:   { icon:'alert-triangle', bg:'rgba(239,68,68,.12)',  fg:'#ef4444' },
+    success: { icon:'check-circle',   bg:'rgba(16,185,129,.12)', fg:'#10b981' },
+    info:    { icon:'info',           bg:'var(--acc-soft)',      fg:'var(--acc-text)' }
+  };
+  const cfg = map[type] || map.info;
+  document.getElementById('dialog-icon-bg').style.background = cfg.bg;
+  document.getElementById('dialog-icon-bg').style.color = cfg.fg;
+  document.getElementById('dialog-icon').setAttribute('data-lucide', cfg.icon);
+  document.getElementById('dialog-title').textContent = title;
+  document.getElementById('dialog-msg').textContent = msg;
+  document.getElementById('dialog-actions').innerHTML =
+    `<button onclick="closeModal('dialog-modal')" class="gb-btn gb-btn-primary w-full">Mengerti</button>`;
+  lucide.createIcons();
+  openModal('dialog-modal');
+}
+
+/* —————— STATE —————— */
+let linkTerakhir = '';
+
+/* —————— DROPZONE UPLOAD KE CATBOX.MOE (gratis, tanpa API key) —————— */
+const dropzone = document.getElementById('dropzone');
+const inputFile = document.getElementById('in-file');
+
+['dragenter','dragover'].forEach(ev =>
+  dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('dragover'); })
+);
+['dragleave','drop'].forEach(ev =>
+  dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('dragover'); })
+);
+dropzone.addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if(file) uploadFile(file);
+});
+inputFile.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(file) uploadFile(file);
+  e.target.value = '';
+});
+
+async function uploadFile(file){
+  if(!file.type.startsWith('image/')){
+    return showAlert('error', 'Format Tidak Didukung', 'Gunakan file gambar PNG, JPG, atau WebP.');
+  }
+  if(file.size > 5 * 1024 * 1024){
+    return showAlert('error', 'Ukuran Terlalu Besar', 'Maksimal 5 MB. Kompres dulu gambarnya.');
+  }
+
+  const idle = document.getElementById('dropzone-idle');
+  const upl  = document.getElementById('dropzone-uploading');
+  const prog = document.getElementById('upload-progress');
+  idle.classList.add('hidden');
+  upl.classList.remove('hidden');
+  dropzone.classList.add('uploading');
+  prog.style.width = '10%';
+
+  const fd = new FormData();
+  fd.append('reqtype', 'fileupload');
+  fd.append('fileToUpload', file);
+
+  try {
+    // Progress bar simulasi (fetch tidak expose progress)
+    const tick = setInterval(()=>{
+      const cur = parseInt(prog.style.width) || 0;
+      if(cur < 90) prog.style.width = (cur + 8) + '%';
+    }, 200);
+
+    const res = await fetch('https://catbox.moe/user/api.php', {
+      method: 'POST',
+      body: fd
+    });
+    clearInterval(tick);
+
+    if(!res.ok) throw new Error('Upload gagal');
+    const url = (await res.text()).trim();
+
+    if(!url.startsWith('http')){
+      throw new Error('Respons tidak valid: ' + url.slice(0, 80));
+    }
+
+    prog.style.width = '100%';
+    document.getElementById('in-gambar').value = url;
+    updatePreview(url);
+
+    setTimeout(()=>{
+      idle.classList.remove('hidden');
+      upl.classList.add('hidden');
+      dropzone.classList.remove('uploading');
+      prog.style.width = '0%';
+      lucide.createIcons();
+    }, 350);
+
+    showAlert('success', 'Upload Berhasil', 'Gambar sudah di-upload dan URL-nya otomatis terisi.');
+
+  } catch(err){
+    idle.classList.remove('hidden');
+    upl.classList.add('hidden');
+    dropzone.classList.remove('uploading');
+    prog.style.width = '0%';
+    lucide.createIcons();
+    showAlert('error', 'Upload Gagal',
+      'Server upload sedang sibuk. Alternatif: upload manual ke imgbb.com lalu tempel URL-nya di kolom bawah.');
+  }
+}
+
+/* —————— PREVIEW GAMBAR —————— */
+function updatePreview(url){
+  const img = document.getElementById('preview-img');
+  const empty = document.getElementById('preview-empty');
+  if(!url){
+    img.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  img.onload = ()=>{ img.style.display = 'block'; empty.style.display = 'none'; };
+  img.onerror = ()=>{ img.style.display = 'none'; empty.style.display = 'block'; };
+  img.src = url;
+}
+document.getElementById('in-gambar').addEventListener('input', e => updatePreview(e.target.value.trim()));
+
+/* —————— BUAT LINK —————— */
+function buatLink(e){
+  e.preventDefault();
+
+  const nama      = document.getElementById('in-nama').value.trim();
+  const deskripsi = document.getElementById('in-desc').value.trim();
+  const waktu     = document.getElementById('in-waktu').value.trim();
+  const gambar    = document.getElementById('in-gambar').value.trim();
+
+  if(!nama) return showAlert('error', 'Nama Wajib Diisi', 'Isi nama agenda terlebih dahulu.');
+  if(!gambar) return showAlert('error', 'Gambar Wajib Diisi', 'Upload atau tempel URL gambar bingkai.');
+
+  // Bangun URL ke index.html
+  const basePath = location.pathname.replace(/admin\.html?$/i, '').replace(/\/$/, '') || '';
+  const baseUrl = location.origin + basePath + '/index.html';
+
+  const params = new URLSearchParams();
+  params.set('n', nama);
+  if(deskripsi) params.set('d', deskripsi);
+  if(waktu)     params.set('w', waktu);
+  params.set('i', gambar);
+
+  linkTerakhir = baseUrl + '?' + params.toString();
+
+  document.getElementById('out-link').value = linkTerakhir;
+  ['btn-copy','btn-buka','btn-wa','btn-qr'].forEach(id => document.getElementById(id).disabled = false);
+
+  simpanRiwayat({ nama, deskripsi, waktu, gambar, link: linkTerakhir });
+
+  // Auto-scroll ke hasil di mobile
+  if(window.innerWidth < 1024){
+    document.getElementById('out-link').scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+}
+
+/* —————— AKSI HASIL —————— */
+async function salinLink(){
+  if(!linkTerakhir) return;
+  try {
+    await navigator.clipboard.writeText(linkTerakhir);
+    const btn = document.getElementById('btn-copy');
+    const html = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Tersalin!</span>';
+    lucide.createIcons();
+    setTimeout(()=>{ btn.innerHTML = html; lucide.createIcons(); }, 1800);
+  } catch {
+    document.getElementById('out-link').select();
+    document.execCommand('copy');
+    showAlert('success', 'Link Tersalin', 'Link sudah masuk clipboard. Siap ditempel di grup WhatsApp.');
+  }
+}
+function bukaPreview(){
+  if(linkTerakhir) window.open(linkTerakhir, '_blank');
+}
+function shareWA(){
+  if(!linkTerakhir) return;
+  const nama = document.getElementById('in-nama').value.trim() || 'Agenda';
+  const pesan = `Assalamualaikum Bapak/Ibu Guru 🌿\n\nYuk ikut meriahkan *${nama}* dengan twibbon bersama!\n\nKlik link berikut untuk langsung berkarya (tanpa install aplikasi):\n\n${linkTerakhir}\n\nSalam hangat,\nTim Kreatif Selogiri`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(pesan), '_blank');
+}
+function tampilkanQR(){
+  if(!linkTerakhir) return;
+  const url = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=10&data=' + encodeURIComponent(linkTerakhir);
+  document.getElementById('qr-img').src = url;
+  document.getElementById('qr-download').href = url;
+  openModal('qr-modal');
+}
+
+/* —————— RIWAYAT (localStorage) —————— */
+const KEY_RIWAYAT = 'gb_kampanye_riwayat';
+
+function ambilRiwayat(){
+  try { return JSON.parse(localStorage.getItem(KEY_RIWAYAT) || '[]'); } catch { return []; }
+}
+function simpanRiwayat(item){
+  let list = ambilRiwayat();
+  // Hapus duplikat link
+  list = list.filter(x => x.link !== item.link);
+  list.unshift({ ...item, ts: Date.now() });
+  list = list.slice(0, 20);
+  localStorage.setItem(KEY_RIWAYAT, JSON.stringify(list));
+  renderRiwayat();
+}
+function hapusRiwayat(){
+  if(!confirm('Hapus semua riwayat link?')) return;
+  localStorage.removeItem(KEY_RIWAYAT);
+  renderRiwayat();
+}
+function hapusSatu(link, e){
+  e.stopPropagation();
+  const list = ambilRiwayat().filter(x => x.link !== link);
+  localStorage.setItem(KEY_RIWAYAT, JSON.stringify(list));
+  renderRiwayat();
+}
+function renderRiwayat(){
+  const list = ambilRiwayat();
+  const kartu = document.getElementById('kartu-riwayat');
+  const wrap  = document.getElementById('daftar-riwayat');
+
+  if(!list.length){ kartu.style.display = 'none'; return; }
+  kartu.style.display = 'block';
+
+  wrap.innerHTML = list.map(item => {
+    const tgl = new Date(item.ts).toLocaleString('id-ID',{ dateStyle:'medium', timeStyle:'short' });
+    const namaEsc = item.nama.replace(/</g,'&lt;');
+    return `
+      <div class="riwayat-item" onclick="muatDariRiwayat('${item.link.replace(/'/g,"\\'")}')">
+        <img src="${item.gambar}" alt="" class="w-11 h-11 rounded-lg object-cover shrink-0" style="border:1px solid var(--border);" onerror="this.style.display='none'">
+        <div class="min-w-0 flex-1">
+          <p class="text-[13px] font-bold truncate" style="color:var(--fg);">${namaEsc}</p>
+          <p class="text-[11px] mt-0.5" style="color:var(--fg-subtle);">${tgl}</p>
+        </div>
+        <button onclick="hapusSatu('${item.link.replace(/'/g,"\\'")}', event)"
+                class="gb-btn gb-btn-ghost !p-2 !rounded-lg shrink-0" title="Hapus">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    `;
+  }).join('');
+  lucide.createIcons();
+}
+
+function muatDariRiwayat(link){
+  // Isi form dari riwayat
+  try {
+    const url = new URL(link);
+    const p = url.searchParams;
+    document.getElementById('in-nama').value  = p.get('n') || '';
+    document.getElementById('in-desc').value  = p.get('d') || '';
+    document.getElementById('in-waktu').value = p.get('w') || '';
+    document.getElementById('in-gambar').value= p.get('i') || '';
+    updatePreview(p.get('i') || '');
+    linkTerakhir = link;
+    document.getElementById('out-link').value = link;
+    ['btn-copy','btn-buka','btn-wa','btn-qr'].forEach(id => document.getElementById(id).disabled = false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch {}
+}
+
+/* —————— INIT —————— */
+(function init(){
+  const acc = document.documentElement.getAttribute('data-acc') || 'teal';
+  setAccent(acc);
+  syncThemeButtons();
+  renderRiwayat();
+})();
+</script>
+</body>
+</html>
