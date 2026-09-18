@@ -67,7 +67,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
 .gb-btn-primary{ background:var(--acc); color:#fff; box-shadow:0 4px 12px var(--acc-ring); }
 .gb-btn-primary:hover:not(:disabled){ background:var(--acc2); transform:translateY(-1px); }
 .gb-btn-primary:active:not(:disabled){ transform:scale(.97); }
-.gb-btn-primary.is-success{ background:#10b981; box-shadow:0 4px 12px rgba(16,185,129,.35); }
 .gb-btn-primary.is-loading::after{
   content:''; position:absolute; inset:0;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
@@ -127,14 +126,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
   cursor:pointer; transition:all .15s ease;
 }
 .riwayat-item:hover{ border-color:var(--acc); background:var(--acc-soft); }
-
-/* Shortlink info */
-.shortlink-box{
-  margin-top:12px; padding:12px 14px; border-radius:12px;
-  background:var(--acc-soft); border:1px solid var(--border);
-  animation:slideIn .32s cubic-bezier(.16,1,.3,1);
-}
-@keyframes slideIn{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
 
 #toast-container{
   position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
@@ -199,13 +190,12 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
       Buat Link Agenda
     </h1>
     <p class="text-[13px] md:text-sm mt-2 max-w-lg mx-auto leading-relaxed" style="color:var(--fg-muted);">
-      Isi form, klik Buat Link, lalu persingkat dan bagikan ke grup WhatsApp.
+      Isi form, klik Buat Link, lalu salin dan bagikan ke grup WhatsApp rekan guru.
     </p>
   </section>
 
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-5 items-start">
 
-    <!-- ================= KOLOM KIRI: FORM ================= -->
     <div class="lg:col-span-3 space-y-4">
 
       <div class="gb-card p-5 md:p-6">
@@ -225,9 +215,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
             </label>
             <input id="in-nama" class="gb-input" type="text" required maxlength="80"
                    placeholder="Contoh: Semarak HUT RI ke-81">
-            <p class="text-[11px] mt-1.5" style="color:var(--fg-subtle);">
-              Muncul sebagai judul besar di halaman guru.
-            </p>
           </div>
 
           <div>
@@ -311,7 +298,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
         </form>
       </div>
 
-      <!-- Riwayat -->
       <div class="gb-card p-5 md:p-6" id="kartu-riwayat" style="display:none;">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
@@ -329,7 +315,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
       </div>
     </div>
 
-    <!-- ================= KOLOM KANAN: HASIL ================= -->
     <div class="lg:col-span-2 lg:sticky lg:top-20 space-y-4">
 
       <div class="gb-card p-5 md:p-6">
@@ -353,38 +338,18 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
           </div>
         </div>
 
-        <!-- Link Panjang -->
         <div class="flex items-center justify-between mb-2">
           <span class="gb-label">Link Agenda</span>
           <span class="text-[10px] font-bold" id="link-len" style="color:var(--fg-subtle);"></span>
         </div>
         <textarea id="out-link" class="gb-input text-[11px] leading-relaxed" readonly
-                  style="min-height:80px; font-family:ui-monospace,monospace;"
+                  style="min-height:100px; font-family:ui-monospace,monospace;"
                   placeholder="Link akan muncul di sini setelah Anda klik 'Buat Link Agenda'"></textarea>
 
-        <!-- Shortlink info (muncul setelah persingkat) -->
-        <div id="shortlink-info" class="shortlink-box" style="display:none;">
-          <div class="flex items-center justify-between gap-2 mb-1">
-            <div class="flex items-center gap-1.5">
-              <i data-lucide="zap" class="w-3 h-3" style="color:var(--acc-text);"></i>
-              <span class="gb-label" style="color:var(--acc-text);">Link Pendek</span>
-            </div>
-            <button onclick="copyShortlink()" class="gb-btn gb-btn-ghost gb-btn-sm !p-1.5" title="Salin">
-              <i data-lucide="copy" class="w-3 h-3"></i>
-            </button>
-          </div>
-          <p id="shortlink-text" class="text-[13px] font-mono font-bold break-all" style="color:var(--acc-text);"></p>
-        </div>
-
-        <!-- Tombol aksi -->
         <div class="grid grid-cols-2 gap-2 mt-4">
-          <button id="btn-copy" onclick="salinLink()" class="gb-btn gb-btn-primary" disabled>
+          <button id="btn-copy" onclick="salinLink()" class="gb-btn gb-btn-primary col-span-2" disabled>
             <i data-lucide="copy" class="w-4 h-4"></i>
-            <span>Salin</span>
-          </button>
-          <button id="btn-shorten" onclick="persingkatLink()" class="gb-btn gb-btn-primary" disabled>
-            <i data-lucide="zap" class="w-4 h-4"></i>
-            <span>Persingkat</span>
+            <span>Salin Link</span>
           </button>
           <button id="btn-buka" onclick="bukaPreview()" class="gb-btn gb-btn-outline" disabled>
             <i data-lucide="external-link" class="w-4 h-4"></i>
@@ -401,8 +366,10 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
         </div>
 
         <p class="text-[11px] mt-4 leading-relaxed" style="color:var(--fg-muted);">
-          💡 <b>Tips:</b> klik <b>Persingkat</b> dulu supaya link rapi waktu di-share
-          (contoh: <code style="background:var(--bg); padding:1px 4px; border-radius:4px;">is.gd/aBc12X</code>).
+          💡 <b>Tips:</b> setelah copy, Anda bisa persingkat manual di
+          <a href="https://s.id" target="_blank" style="color:var(--acc-text); text-decoration:underline;">s.id</a>
+          atau <a href="https://bit.ly" target="_blank" style="color:var(--acc-text); text-decoration:underline;">bit.ly</a>
+          sebelum share ke grup.
         </p>
       </div>
 
@@ -427,7 +394,7 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
             <span class="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-extrabold"
                   style="background:var(--acc-soft); color:var(--acc-text);">3</span>
             <p class="text-[12px] leading-snug" style="color:var(--fg-muted);">
-              Klik <b>Buat Link</b> → <b>Persingkat</b> → <b>Share WA</b>.
+              Klik <b>Buat Link</b> → <b>Salin</b> → <b>Share WA</b>.
             </p>
           </li>
           <li class="flex gap-3">
@@ -456,7 +423,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
 
 <div id="toast-container"></div>
 
-<!-- MODAL DIALOG -->
 <div id="dialog-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
   <div class="absolute inset-0 modal-overlay opacity-0"
        style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
@@ -473,7 +439,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
   </div>
 </div>
 
-<!-- MODAL QR -->
 <div id="qr-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
   <div class="absolute inset-0 modal-overlay opacity-0"
        style="background:rgba(20,18,26,.7); backdrop-filter:blur(4px);"
@@ -498,7 +463,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
   </div>
 </div>
 
-<!-- MODAL PENGATURAN -->
 <div id="settings-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
   <div class="absolute inset-0 modal-overlay opacity-0"
        style="background:rgba(20,18,26,.6); backdrop-filter:blur(4px);"
@@ -522,7 +486,7 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
     </div>
     <div class="pt-5 mt-5 border-t" style="border-color:var(--border);">
       <p class="text-[11px] text-center leading-relaxed" style="color:var(--fg-subtle);">
-        Guru Berbagi Selogiri · Admin v3.5<br>Tim Kreatif GTK Kecamatan Selogiri
+        Guru Berbagi Selogiri · Admin v3.6<br>Tim Kreatif GTK Kecamatan Selogiri
       </p>
     </div>
   </div>
@@ -531,9 +495,6 @@ textarea.gb-input{ resize:vertical; min-height:72px; line-height:1.5; }
 <script>
 lucide.createIcons();
 
-/* ============================================
-   📊 ANALYTICS
-   ============================================ */
 function trackEvent(event, detail){
   try {
     if(window.goatcounter && window.goatcounter.count){
@@ -549,9 +510,6 @@ function trackEvent(event, detail){
   } catch(e){}
 }
 
-/* ============================================
-   🍞 TOAST
-   ============================================ */
 function toast(msg, type='info', durasi=3500){
   const container = document.getElementById('toast-container');
   if(!container) return null;
@@ -573,9 +531,6 @@ function closeToast(el){
   setTimeout(() => el.remove(), 280);
 }
 
-/* ============================================
-   🎨 PENGATURAN AKSEN
-   ============================================ */
 function setAccent(acc){
   document.documentElement.setAttribute('data-acc', acc);
   localStorage.setItem('acc', acc);
@@ -593,9 +548,6 @@ document.querySelectorAll('.acc-dot').forEach(d=>{
 });
 function openSettings(){ openModal('settings-modal'); }
 
-/* ============================================
-   🪟 MODAL HELPERS
-   ============================================ */
 function openModal(id){
   const el = document.getElementById(id);
   if(!el) return;
@@ -635,15 +587,8 @@ function showAlert(type, title, msg){
   openModal('dialog-modal');
 }
 
-/* ============================================
-   📝 STATE
-   ============================================ */
 let linkTerakhir = '';
-let linkPendek = '';
 
-/* ============================================
-   📤 DROPZONE UPLOAD KE CATBOX.MOE
-   ============================================ */
 const dropzone = document.getElementById('dropzone');
 const inputFile = document.getElementById('in-file');
 
@@ -726,9 +671,6 @@ async function uploadFile(file){
   }
 }
 
-/* ============================================
-   👁️ PREVIEW GAMBAR
-   ============================================ */
 function updatePreview(url){
   const img = document.getElementById('preview-img');
   const empty = document.getElementById('preview-empty');
@@ -743,9 +685,6 @@ function updatePreview(url){
 }
 document.getElementById('in-gambar').addEventListener('input', e => updatePreview(e.target.value.trim()));
 
-/* ============================================
-   🔗 BUAT LINK
-   ============================================ */
 function buatLink(e){
   e.preventDefault();
 
@@ -775,12 +714,9 @@ function buatLink(e){
   }
 
   linkTerakhir = baseUrl + '?' + params.toString();
-  linkPendek = '';
   document.getElementById('out-link').value = linkTerakhir;
   document.getElementById('link-len').textContent = linkTerakhir.length + ' karakter';
-  document.getElementById('shortlink-info').style.display = 'none';
-  document.getElementById('shortlink-text').textContent = '';
-  ['btn-copy','btn-buka','btn-wa','btn-qr','btn-shorten'].forEach(id => document.getElementById(id).disabled = false);
+  ['btn-copy','btn-buka','btn-wa','btn-qr'].forEach(id => document.getElementById(id).disabled = false);
 
   simpanRiwayat({ nama, deskripsi, waktu, gambar, link: linkTerakhir });
   toast('Link agenda berhasil dibuat!', 'success');
@@ -791,19 +727,15 @@ function buatLink(e){
   }
 }
 
-/* ============================================
-   🎯 AKSI HASIL
-   ============================================ */
 async function salinLink(){
-  const link = linkPendek || linkTerakhir;
-  if(!link) return;
+  if(!linkTerakhir) return;
   try {
-    await navigator.clipboard.writeText(link);
+    await navigator.clipboard.writeText(linkTerakhir);
     const btn = document.getElementById('btn-copy');
     const html = btn.innerHTML;
     btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Tersalin!</span>';
     lucide.createIcons();
-    toast(linkPendek ? 'Link pendek tersalin.' : 'Link tersalin.', 'success');
+    toast('Link tersalin ke clipboard.', 'success');
     trackEvent('admin-copy-link', document.getElementById('in-nama').value.trim());
     setTimeout(()=>{ btn.innerHTML = html; lucide.createIcons(); }, 1800);
   } catch {
@@ -813,30 +745,18 @@ async function salinLink(){
   }
 }
 
-async function copyShortlink(){
-  if(!linkPendek) return;
-  try {
-    await navigator.clipboard.writeText(linkPendek);
-    toast('Link pendek tersalin.', 'success');
-  } catch {
-    toast('Gagal menyalin. Tap manual ya.', 'error');
-  }
-}
-
 function bukaPreview(){
-  const link = linkPendek || linkTerakhir;
-  if(link) window.open(link, '_blank');
+  if(linkTerakhir) window.open(linkTerakhir, '_blank');
 }
 
 function shareWA(){
   if(!linkTerakhir) return;
   const nama = document.getElementById('in-nama').value.trim() || 'Agenda';
-  const link = linkPendek || linkTerakhir;
   const pesan =
     `Assalamualaikum Bapak/Ibu Guru 🌿\n\n` +
     `Yuk ikut meriahkan *${nama}* dengan twibbon bersama!\n\n` +
     `Klik link berikut untuk langsung berkarya (tanpa install aplikasi):\n\n` +
-    `${link}\n\n` +
+    `${linkTerakhir}\n\n` +
     `Salam hangat,\nTim Kreatif Selogiri`;
   window.open('https://wa.me/?text=' + encodeURIComponent(pesan), '_blank');
   trackEvent('admin-share-wa', nama);
@@ -844,167 +764,14 @@ function shareWA(){
 
 function tampilkanQR(){
   if(!linkTerakhir) return;
-  const link = linkPendek || linkTerakhir;
   const url = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=10&data='
-              + encodeURIComponent(link);
+              + encodeURIComponent(linkTerakhir);
   document.getElementById('qr-img').src = url;
   document.getElementById('qr-download').href = url;
   openModal('qr-modal');
   trackEvent('admin-qr', document.getElementById('in-nama').value.trim());
 }
 
-/* ============================================
-   ⚡ SHORTLINK — Multi-provider fallback
-   Coba is.gd direct → is.gd via corsproxy.io
-   → TinyURL via corsproxy.io → is.gd via allorigins
-   ============================================ */
-async function persingkatLink(){
-  if(!linkTerakhir) return;
-
-  // Kalau sudah punya link pendek, langsung copy
-  if(linkPendek){
-    await copyShortlink();
-    return;
-  }
-
-  // Kalau link sudah pendek (< 60 char), tidak perlu dipersingkat
-  if(linkTerakhir.length < 60){
-    toast('Link sudah pendek, tidak perlu dipersingkat.', 'info');
-    return;
-  }
-
-  const btn = document.getElementById('btn-shorten');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.classList.add('is-loading');
-  btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Memproses…</span>';
-  lucide.createIcons();
-  const tl = toast('Mempersingkat link…', 'loading', 0);
-
-  try {
-    const short = await shortenURL(linkTerakhir);
-    linkPendek = short;
-    closeToast(tl);
-
-    // Tampilkan di UI
-    document.getElementById('shortlink-text').textContent = short;
-    document.getElementById('shortlink-info').style.display = 'block';
-
-    // Auto copy shortlink
-    let copied = false;
-    try {
-      await navigator.clipboard.writeText(short);
-      copied = true;
-    } catch(e){}
-
-    // Success state tombol
-    btn.classList.remove('is-loading');
-    btn.classList.add('is-success');
-    btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Selesai!</span>';
-    lucide.createIcons();
-
-    if(copied){
-      toast('Link pendek dibuat & tersalin otomatis ✨', 'success', 4000);
-    } else {
-      toast('Link pendek dibuat. Tap ikon copy untuk salin.', 'success', 4000);
-    }
-
-    trackEvent('admin-shorten', document.getElementById('in-nama').value.trim());
-
-    // Reset tombol setelah 2 detik
-    setTimeout(()=>{
-      btn.classList.remove('is-success');
-      btn.innerHTML = orig;
-      lucide.createIcons();
-      btn.disabled = false;
-    }, 2200);
-
-  } catch(err){
-    closeToast(tl);
-    btn.classList.remove('is-loading');
-    btn.innerHTML = orig;
-    lucide.createIcons();
-    btn.disabled = false;
-    showAlert('error', 'Gagal Mempersingkat',
-      'Layanan shortlink sedang sibuk. Alternatif: copy link panjang, lalu persingkat manual di s.id.');
-    trackEvent('admin-shorten-gagal');
-  }
-}
-
-async function shortenURL(longUrl){
-  const encoded = encodeURIComponent(longUrl);
-
-  // Daftar provider — dicoba berurutan sampai salah satu berhasil
-  const providers = [
-    // 1. is.gd direct (paling cepat kalau CORS diizinkan)
-    {
-      name: 'is.gd',
-      fn: async () => {
-        const r = await fetch(`https://is.gd/create.php?format=simple&url=${encoded}`);
-        if(!r.ok) throw new Error();
-        const t = (await r.text()).trim();
-        if(!t.startsWith('http')) throw new Error();
-        return t;
-      }
-    },
-    // 2. is.gd via corsproxy.io
-    {
-      name: 'is.gd (proxy)',
-      fn: async () => {
-        const target = `https://is.gd/create.php?format=simple&url=${encoded}`;
-        const r = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
-        if(!r.ok) throw new Error();
-        const t = (await r.text()).trim();
-        if(!t.startsWith('http')) throw new Error();
-        return t;
-      }
-    },
-    // 3. TinyURL via corsproxy.io
-    {
-      name: 'TinyURL (proxy)',
-      fn: async () => {
-        const target = `https://tinyurl.com/api-create.php?url=${encoded}`;
-        const r = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
-        if(!r.ok) throw new Error();
-        const t = (await r.text()).trim();
-        if(!t.startsWith('http')) throw new Error();
-        return t;
-      }
-    },
-    // 4. is.gd via allorigins
-    {
-      name: 'is.gd (allorigins)',
-      fn: async () => {
-        const target = `https://is.gd/create.php?format=simple&url=${encoded}`;
-        const r = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`);
-        if(!r.ok) throw new Error();
-        const t = (await r.text()).trim();
-        if(!t.startsWith('http')) throw new Error();
-        return t;
-      }
-    }
-  ];
-
-  let lastErr = null;
-  for(const p of providers){
-    try {
-      const result = await p.fn();
-      if(result && result.startsWith('http')){
-        console.log('[Shortlink] Berhasil via:', p.name, '→', result);
-        return result;
-      }
-    } catch(e){
-      lastErr = e;
-      console.warn('[Shortlink] Gagal via:', p.name);
-      continue;
-    }
-  }
-  throw lastErr || new Error('Semua provider gagal');
-}
-
-/* ============================================
-   🕐 RIWAYAT (localStorage)
-   ============================================ */
 const KEY_RIWAYAT = 'gbs_kampanye_riwayat';
 
 function ambilRiwayat(){
@@ -1076,20 +843,15 @@ function muatDariRiwayat(link){
     updatePreview(p.get('i') || '');
 
     linkTerakhir = link;
-    linkPendek = '';
     document.getElementById('out-link').value = link;
     document.getElementById('link-len').textContent = link.length + ' karakter';
-    document.getElementById('shortlink-info').style.display = 'none';
-    ['btn-copy','btn-buka','btn-wa','btn-qr','btn-shorten'].forEach(id => document.getElementById(id).disabled = false);
+    ['btn-copy','btn-buka','btn-wa','btn-qr'].forEach(id => document.getElementById(id).disabled = false);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast('Link dimuat dari riwayat. Klik Persingkat untuk buat shortlink baru.', 'info', 3000);
+    toast('Link dimuat dari riwayat.', 'info', 2500);
   } catch {}
 }
 
-/* ============================================
-   🚀 INIT
-   ============================================ */
 (function init(){
   setAccent(document.documentElement.getAttribute('data-acc') || 'teal');
   renderRiwayat();
